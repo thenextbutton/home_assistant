@@ -1,1 +1,235 @@
+blueprint:
+  name: Plex Webhook Handler RELEASE (v0.0.5)
+  description: |
+    Handles Plex webhook events for a specific player, triggering different actions based on media type and event.
 
+    **Inputs:**
+    * **Webhook ID:** The webhook ID configured in your Plex Media Server.
+    * **Local Only:** The webhook will only work on the local area network.
+    * **Plex Client:** Device name of your Plex player.
+    * **Movie Play Actions:** (Optional) Actions to run when a movie starts.
+    * **Movie Resume Mimics Play Actions:** On RESUME, Movie play actions are ran. If enabled, leave 'Movie Resume Actions' empty.
+    * **Movie Resume Actions:** (Optional) Actions to run when a movie resumes.
+    * **Movie Pause Actions:** (Optional) Actions to run when a movie is paused.
+    * **Movie Stop Actions:** (Optional) Actions to run when a movie stops.
+    * **Music Play Actions:** (Optional) Actions to run when a song starts.
+    * **Music Resume Mimics Play Actions:** On RESUME, Music play actions are ran. If enabled, leave 'Music Resume Actions' empty.
+    * **Music Resume Actions:** (Optional) Actions to run when a song resumes.    
+    * **Music Pause Actions:** (Optional) Actions to run when a song is paused.
+    * **Music Stop Actions:** (Optional) Actions to run when a song stops.
+    * **TV Show Play Actions:** (Optional) Actions to run when as TV episode starts.
+    * **TV Show Resume Mimics Play Actions:** (Optional) On RESUME, mimic the TV Show play actions. If enabled, leave 'TV Show Resume Actions' empty.
+    * **TV Show Resume Actions:** (Optional) Actions to run when a TV episode resumes.
+    * **TV Show Pause Actions:** (Optional) Actions to run when a TV episode is paused.
+    * **TV Show Stop Actions:** (Optional) Actions to run when a TVepisode stops.
+
+  domain: automation
+  source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/beta.yaml
+  input:
+    webhook_id:
+      name: Webhook ID
+      description: The webhook ID configured in your Plex Media Server.
+      selector:
+        text: {}
+      default: ""
+    local_only:
+      name: Local Only
+      description: Only allow webhook requests from the local network.
+      selector:
+        boolean: {}
+      default: true
+    plex_client:
+      name: Plex Client
+      description: The Plex client name to trigger actions for.
+      selector:
+        text: {}
+      default: ""
+    movie_play_actions:
+      name: Movie Play Actions
+      description: Actions to run when a movie starts or resumes.
+      selector:
+        action: {}
+      default: []
+    movie_resume_mimics_play:
+      name: Movie Resume Mimics Play
+      description: On RESUME mimic the Movie play actions.
+      selector:
+        boolean: {}
+      default: false
+    movie_resume_actions:
+      name: Movie Resume Actions
+      description: Actions to run when a movie starts or resumes.
+      selector:
+        action: {}
+      default: []
+    movie_pause_actions:
+      name: Movie Pause Actions
+      description: Actions to run when a movie is paused.
+      selector:
+        action: {}
+      default: []
+    movie_stop_actions:
+      name: Movie Stop Actions
+      description: Actions to run when a movie stops.
+      selector:
+        action: {}
+      default: []
+    track_play_actions:
+      name: Music Play Actions
+      description: Actions to run when a track starts or resumes.
+      selector:
+        action: {}
+      default: []
+    track_resume_mimics_play:
+      name: Music Resume Mimics Play
+      description: On RESUME mimic the Music play actions.
+      selector:
+        boolean: {}
+      default: false
+    track_resume_actions:
+      name: Music Resume Actions
+      description: Actions to run when a track starts or resumes.
+      selector:
+        action: {}
+      default: []
+    track_pause_actions:
+      name: Music Pause Actions
+      description: Actions to run when a track is paused.
+      selector:
+        action: {}
+      default: []
+    track_stop_actions:
+      name: Music Stop Actions
+      description: Actions to run when a track stops.
+      selector:
+        action: {}
+      default: []
+    episode_play_actions:
+      name: TV Show Play Actions
+      description: Actions to run when an episode starts or resumes.
+      selector:
+        action: {}
+      default: []
+    episode_resume_mimics_play:
+      name: TV Show Resume Mimics Play
+      description: On RESUME mimic the TV Show play actions.
+      selector:
+        boolean: {}
+      default: false
+    episode_resume_actions:
+      name: TV Show Resume Actions
+      description: Actions to run when an episode starts or resumes.
+      selector:
+        action: {}
+      default: []
+    episode_pause_actions:
+      name: TV Show Pause Actions
+      description: Actions to run when an episode is paused.
+      selector:
+        action: {}
+      default: []
+    episode_stop_actions:
+      name: TV Show Stop Actions
+      description: Actions to run when an episode stops.
+      selector:
+        action: {}
+      default: []
+mode: restart
+triggers:
+  - trigger: webhook
+    allowed_methods:
+      - POST
+      - PUT
+    local_only: !input local_only
+    webhook_id: !input webhook_id
+conditions: []
+
+action:
+  - variables:
+      payload: "{{ trigger.data['payload'].decode('utf-8') | from_json }}"
+      player_title: "{{ payload.Player.title | default(None) }}"
+      plex_client: !input plex_client
+      movie_resume_mimics_play: !input movie_resume_mimics_play
+      track_resume_mimics_play: !input track_resume_mimics_play
+      episode_resume_mimics_play: !input episode_resume_mimics_play
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ player_title.lower().strip() == plex_client.lower().strip() }}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'movie' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template:
+                              "{{ payload.event == 'media.play' or (payload.event
+                              == 'media.resume' and movie_resume_mimics_play) }}"
+                        sequence: !input movie_play_actions
+                      - conditions:
+                          - condition: template
+                            value_template:
+                              "{{ payload.event == 'media.resume' and not movie_resume_mimics_play
+                              }}"
+                        sequence: !input movie_resume_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.pause' }}"
+                        sequence: !input movie_pause_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.stop' }}"
+                        sequence: !input movie_stop_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'track' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template:
+                              "{{ payload.event == 'media.play' or (payload.event
+                              == 'media.resume' and track_resume_mimics_play)}}"
+                        sequence: !input track_play_actions
+                      - conditions:
+                          - condition: template
+                            value_template:
+                              "{{ payload.event == 'media.resume' and not track_resume_mimics_play
+                              }}"
+                        sequence: !input track_resume_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.pause' }}"
+                        sequence: !input track_pause_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.stop' }}"
+                        sequence: !input track_stop_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'episode' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template:
+                              "{{ payload.event == 'media.play' or (payload.event
+                              == 'media.resume' and episode_resume_mimics_play)}}"
+                        sequence: !input episode_play_actions
+                      - conditions:
+                          - condition: template
+                            value_template:
+                              "{{ payload.event == 'media.resume' and not episode_resume_mimics_play
+                              }}"
+                        sequence: !input episode_resume_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.pause' }}"
+                        sequence: !input episode_pause_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.stop' }}"
+                        sequence: !input episode_stop_actions
