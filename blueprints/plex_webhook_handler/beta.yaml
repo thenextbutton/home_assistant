@@ -24,7 +24,7 @@ Ablueprint:
     * **TV Show Stop Actions:** (Optional) Actions to run when a TVepisode stops.
 
   domain: automation
-  source_url: https://raw.githubusercontent.com/thenextbutton/home_assistant/refs/heads/main/blueprints/plex_webhook_handler_advanced/beta.yaml
+  source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/beta.yaml
   input:
     webhook_id:
       name: Webhook ID
