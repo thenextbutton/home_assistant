@@ -1,5 +1,5 @@
 blueprint:
-  name: Plex Webhook Handler BETA (v0.0.1)
+  name: Plex Webhook Handler BETA (v0.0.2)
   description: |
     Handles Plex webhook events for a specific player, triggering different actions based on media type and event.
 
