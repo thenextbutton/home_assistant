@@ -1,5 +1,5 @@
 blueprint:
-  name: Plex Webhook Handler BETA (v0.0.2)
+  name: Plex Webhook Handler BETA (v0.0.5)
   description: |
     Handles Plex webhook events for a specific player, triggering different actions based on media type and event.
 
@@ -30,114 +30,110 @@ blueprint:
       name: Webhook ID
       description: The webhook ID configured in your Plex Media Server.
       selector:
-        text:
+        text: {}
       default: ""
     local_only:
       name: Local Only
       description: Only allow webhook requests from the local network.
       selector:
-        boolean:
+        boolean: {}
       default: true
-    plex_client: # Ensure we only see Plex media players
+    plex_client:
       name: Plex Client
-      description: Choose the specific Plex client to trigger actions for.
+      description: The Plex client name to trigger actions for.
       selector:
-        device:
-          filter:
-            integration: plex
-          entity:
-            domain: media_player
+        text: {}
+      default: ""
     movie_play_actions:
       name: Movie Play Actions
       description: Actions to run when a movie starts or resumes.
       selector:
-        action:
+        action: {}
       default: []
     movie_resume_mimics_play:
       name: Movie Resume Mimics Play
       description: On RESUME mimic the Movie play actions.
       selector:
-        boolean:
+        boolean: {}
       default: false
     movie_resume_actions:
       name: Movie Resume Actions
       description: Actions to run when a movie starts or resumes.
       selector:
-        action:
+        action: {}
       default: []
     movie_pause_actions:
       name: Movie Pause Actions
       description: Actions to run when a movie is paused.
       selector:
-        action:
+        action: {}
       default: []
     movie_stop_actions:
       name: Movie Stop Actions
       description: Actions to run when a movie stops.
       selector:
-        action:
+        action: {}
       default: []
     track_play_actions:
       name: Music Play Actions
       description: Actions to run when a track starts or resumes.
       selector:
-        action:
+        action: {}
       default: []
     track_resume_mimics_play:
       name: Music Resume Mimics Play
-      description: On RESUME mimic the Music play actions
+      description: On RESUME mimic the Music play actions.
       selector:
-        boolean:
+        boolean: {}
       default: false
     track_resume_actions:
       name: Music Resume Actions
       description: Actions to run when a track starts or resumes.
       selector:
-        action:
+        action: {}
       default: []
     track_pause_actions:
       name: Music Pause Actions
       description: Actions to run when a track is paused.
       selector:
-        action:
+        action: {}
       default: []
     track_stop_actions:
       name: Music Stop Actions
       description: Actions to run when a track stops.
       selector:
-        action:
+        action: {}
       default: []
     episode_play_actions:
       name: TV Show Play Actions
       description: Actions to run when an episode starts or resumes.
       selector:
-        action:
+        action: {}
       default: []
     episode_resume_mimics_play:
       name: TV Show Resume Mimics Play
-      description: On RESUME mimic the TV Show play actions
+      description: On RESUME mimic the TV Show play actions.
       selector:
-        boolean:
+        boolean: {}
       default: false
     episode_resume_actions:
       name: TV Show Resume Actions
       description: Actions to run when an episode starts or resumes.
       selector:
-        action:
+        action: {}
       default: []
     episode_pause_actions:
       name: TV Show Pause Actions
       description: Actions to run when an episode is paused.
       selector:
-        action:
+        action: {}
       default: []
     episode_stop_actions:
       name: TV Show Stop Actions
       description: Actions to run when an episode stops.
       selector:
-        action:
+        action: {}
       default: []
-
 mode: restart
 triggers:
   - trigger: webhook
@@ -147,14 +143,19 @@ triggers:
     local_only: !input local_only
     webhook_id: !input webhook_id
 conditions: []
+
 action:
   - variables:
       payload: "{{ trigger.data['payload'].decode('utf-8') | from_json }}"
       player_title: "{{ payload.Player.title | default(None) }}"
+      plex_client: !input plex_client
+      movie_resume_mimics_play: !input movie_resume_mimics_play
+      track_resume_mimics_play: !input track_resume_mimics_play
+      episode_resume_mimics_play: !input episode_resume_mimics_play
   - choose:
       - conditions:
           - condition: template
-            value_template: "{{ trigger.data.Player.machineIdentifier == device_attr(device_id(input_plex_client), 'identifiers') | first }}"
+            value_template: "{{ player_title.lower().strip() == plex_client.lower().strip() }}"
         sequence:
           - choose:
               - conditions:
@@ -164,11 +165,15 @@ action:
                   - choose:
                       - conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and movie_resume_mimics_play) }}"
+                            value_template:
+                              "{{ payload.event == 'media.play' or (payload.event
+                              == 'media.resume' and movie_resume_mimics_play) }}"
                         sequence: !input movie_play_actions
                       - conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.resume' and not movie_resume_mimics_play }}"
+                            value_template:
+                              "{{ payload.event == 'media.resume' and not movie_resume_mimics_play
+                              }}"
                         sequence: !input movie_resume_actions
                       - conditions:
                           - condition: template
@@ -185,11 +190,15 @@ action:
                   - choose:
                       - conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and track_resume_mimics_play)}}"
+                            value_template:
+                              "{{ payload.event == 'media.play' or (payload.event
+                              == 'media.resume' and track_resume_mimics_play)}}"
                         sequence: !input track_play_actions
                       - conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.resume' and not track_resume_mimics_play }}"
+                            value_template:
+                              "{{ payload.event == 'media.resume' and not track_resume_mimics_play
+                              }}"
                         sequence: !input track_resume_actions
                       - conditions:
                           - condition: template
@@ -206,11 +215,15 @@ action:
                   - choose:
                       - conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and episode_resume_mimics_play)}}"
+                            value_template:
+                              "{{ payload.event == 'media.play' or (payload.event
+                              == 'media.resume' and episode_resume_mimics_play)}}"
                         sequence: !input episode_play_actions
                       - conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.resume' and not episode_resume_mimics_play }}"
+                            value_template:
+                              "{{ payload.event == 'media.resume' and not episode_resume_mimics_play
+                              }}"
                         sequence: !input episode_resume_actions
                       - conditions:
                           - condition: template
