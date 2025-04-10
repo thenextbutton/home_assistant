@@ -51,7 +51,7 @@ blueprint:
         action: {}
       default: []
     movie_resume_mimics_play:
-      name: Movie Resume Mimics Play
+      name: Movie Resume Mimics Play Actions
       description: On RESUME mimic the Movie play actions.
       selector:
         boolean: {}
@@ -81,7 +81,7 @@ blueprint:
         action: {}
       default: []
     track_resume_mimics_play:
-      name: Music Resume Mimics Play
+      name: Music Resume Mimics Play Actions
       description: On RESUME mimic the Music play actions.
       selector:
         boolean: {}
@@ -111,7 +111,7 @@ blueprint:
         action: {}
       default: []
     episode_resume_mimics_play:
-      name: TV Show Resume Mimics Play
+      name: TV Show Resume Mimics Play Actions
       description: On RESUME mimic the TV Show play actions.
       selector:
         boolean: {}
