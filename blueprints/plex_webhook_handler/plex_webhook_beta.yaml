@@ -1,6 +1,6 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.0.6)
+  name: Plex Webhook Handler BETA (v0.0.7)
   description: |
     Handles Plex webhook events for a specific player, triggering different actions based on media type and event.
 
@@ -22,7 +22,7 @@ blueprint:
     * **TV Show Resume Mimics Play Actions:** (Optional) On RESUME, mimic the TV Show play actions. If enabled, leave 'TV Show Resume Actions' empty.
     * **TV Show Resume Actions:** (Optional) Actions to run when a TV episode resumes.
     * **TV Show Pause Actions:** (Optional) Actions to run when a TV episode is paused.
-    * **TV Show Stop Actions:** (Optional) Actions to run when a TVepisode stops.
+    * **TV Show Stop Actions:** (Optional) Actions to run when a TV episode stops.
 
   domain: automation
   source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_beta.yaml
@@ -135,6 +135,16 @@ blueprint:
       selector:
         action: {}
       default: []
+    trace_count:
+      name: Trace Count
+      description: Number of traces to keep. (Minimum 1, Maximum 20)
+      selector:
+        number:
+          min: 1
+          max: 20
+          step: 1
+          mode: box
+      default: 5
 mode: restart
 triggers:
   - trigger: webhook
@@ -153,6 +163,7 @@ action:
       movie_resume_mimics_play: !input movie_resume_mimics_play
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
+      trace_count: !input trace_count
   - choose:
       - conditions:
           - condition: template
@@ -234,3 +245,5 @@ action:
                           - condition: template
                             value_template: "{{ payload.event == 'media.stop' }}"
                         sequence: !input episode_stop_actions
+trace:
+  stored_traces: !input trace_count
