@@ -1,6 +1,6 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.1.3)
+  name: Plex Webhook Handler BETA (v0.1.4)
   homeassistant:
     min_version: "2024.6.0"
   description: "Handles Plex Webhook Events.<br></br>A Plex Client name is only required for Movie, Music and TV Show actions."
