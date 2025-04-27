@@ -152,13 +152,13 @@ blueprint:
       input:
         admin_database_backup_actions:
           name: Admin Database Backup Actions
-          description: "Actions to run when an admin database backup event occurs."
+          description: "Actions to run when a database backup is completed successfully via Scheduled Tasks."
           selector:
             action: {}
           default: []
         admin_database_corruption_actions:
           name: Admin Database Corruption Actions
-          description: "Actions to run when an admin database corruption event occurs."
+          description: "Actions to run when a corruption is detected in the server database."
           selector:
             action: {}
           default: []
