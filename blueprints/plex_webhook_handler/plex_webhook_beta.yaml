@@ -137,7 +137,7 @@ blueprint:
       default: []
     automation_mode:
       name: Automation Mode
-      description: Mode controls how the automation responds to new webhook triggers during an active run.
+      description: Controls how the automation responds to new webhook triggers during an active run.
       selector:
         select:
           mode: list
