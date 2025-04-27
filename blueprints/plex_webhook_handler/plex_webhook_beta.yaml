@@ -1,6 +1,6 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.1.4)
+  name: Plex Webhook Handler BETA (v0.1.5)
   homeassistant:
     min_version: "2024.6.0"
   description: "Handles Plex Webhook Events.<br></br>A Plex Client name is only required for Movie, Music and TV Show actions."
@@ -146,7 +146,7 @@ blueprint:
 
     media_rated_actions:
       name: Media Rated Actions
-      description: "<br>.<br></br>"
+      description: "<br>Actions to run for when media is rated<br></br>"
       icon: mdi:star-half-full
       collapsed: true
       input:
