@@ -1,6 +1,6 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.0.7)
+  name: Plex Webhook Handler BETA (v0.0.8)
   description: |
     Handles Plex webhook events for a specific player, triggering different actions based on media type and event.
 
@@ -21,8 +21,8 @@ blueprint:
     * **TV Show Play Actions:** (Optional) Actions to run when as TV episode starts.
     * **TV Show Resume Mimics Play Actions:** (Optional) On RESUME, mimic the TV Show play actions. If enabled, leave 'TV Show Resume Actions' empty.
     * **TV Show Resume Actions:** (Optional) Actions to run when a TV episode resumes.
-    * **TV Show Pause Actions:** (Optional) Actions to run when a TV episode is paused.
-    * **TV Show Stop Actions:** (Optional) Actions to run when a TV episode stops.
+    * **Automation Mode:** (Required) How to respond when another webhook is received when the previous webhook trigger is in action.
+    * **Trace Count:** (Required) How many automation traces to store.
 
   domain: automation
   source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_beta.yaml
@@ -135,6 +135,23 @@ blueprint:
       selector:
         action: {}
       default: []
+    automation_mode:
+      name: Automation Mode
+      description: Mode controls how the automation responds to new webhook triggers during an active run.
+      selector:
+        select:
+          mode: list
+          multiple: false
+          options:
+            - label: Single
+              value: single
+            - label: Restart (Preferred & Default)
+              value: restart
+            - label: Queued
+              value: queued
+            - label: Parallel
+              value: parallel
+      default: restart
     trace_count:
       name: Trace Count
       description: Number of traces to keep. (Minimum 1, Maximum 20)
@@ -145,7 +162,7 @@ blueprint:
           step: 1
           mode: box
       default: 5
-mode: restart
+mode: !input automation_mode
 triggers:
   - trigger: webhook
     allowed_methods:
