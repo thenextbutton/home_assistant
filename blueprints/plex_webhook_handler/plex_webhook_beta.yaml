@@ -144,6 +144,49 @@ blueprint:
             action: {}
           default: []
 
+    media_rated_actions:
+      name: Media Rated Actions
+      description: "<br>.<br></br>"
+      icon: mdi:star-half-full
+      collapsed: true
+      input:
+        movie_rated_actions:
+          name: Movie Rated Actions
+          description: "Actions to run when a movie is rated"
+          selector:
+            action: {}
+          default: []
+        movie_collection_rated_actions:
+          name: Movie Collection Rated Actions
+          description: "Actions to run when a movie collection is rated"
+          selector:
+            action: {}
+          default: []
+        album_rated_actions:
+          name: Music Album Rated Actions
+          description: "Actions to run when an album is rated"
+          selector:
+            action: {}
+          default: []
+        album_artist_rated_actions:
+          name: Music Artist Rated Actions
+          description: "Actions to run when an album artist is rated"
+          selector:
+            action: {}
+          default: []
+        season_rated_actions:
+          name: TV Season Rated Actions
+          description: "Actions to run when a TV season is rated"
+          selector:
+            action: {}
+          default: []
+        show_rated_actions:
+          name: TV Show Rated Actions
+          description: "Actions to run when a TV show is rated"
+          selector:
+            action: {}
+          default: []
+
     server_actions:
       name: Server Owner Actions
       description: "<br>These events are sent only for the server owner/admin account and relate to events on the server in general.<br></br>"
@@ -242,6 +285,36 @@ action:
           - condition: template
             value_template: "{{ payload.event == 'library.new' }}"
         sequence: !input library_new_actions
+
+      - conditions:
+          - condition: template
+            value_template: "{{ payload.event == 'media.rate' }}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'movie' }}"
+                sequence: !input movie_rated_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'collection' }}"
+                sequence: !input movie_collection_rated_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'album' }}"
+                sequence: !input album_rated_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'artist' }}"
+                sequence: !input album_artist_rated_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'season' }}"
+                sequence: !input season_rated_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'show' }}"
+                sequence: !input show_rated_actions
 
       - conditions:
           - condition: template
