@@ -1,6 +1,6 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.1.5)
+  name: Plex Webhook Handler BETA (v0.1.9)
   homeassistant:
     min_version: "2024.6.0"
   description: "Handles Plex Webhook Events.<br></br>A Plex Client name is only required for Movie, Music and TV Show actions."
@@ -212,9 +212,21 @@ blueprint:
       icon: mdi:alert-decagram
       collapsed: true
       input:
-        library_new_actions:
-          name: New Library Item(s)
-          description: "A new item is added to a library."
+        library_new_movie:
+          name: New Library Movie Item(s)
+          description: "A new movie has been added to the library."
+          selector:
+            action: {}
+          default: []
+        library_new_music:
+          name: New Library Music Item(s)
+          description: "A new album has been added to the library."
+          selector:
+            action: {}
+          default: []
+        library_new_tv_show:
+          name: New Library TV Show Item(s)
+          description: "A new TV show has been added to the library."
           selector:
             action: {}
           default: []
@@ -284,7 +296,21 @@ action:
       - conditions:
           - condition: template
             value_template: "{{ payload.event == 'library.new' }}"
-        sequence: !input library_new_actions
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'movie' }}"
+                sequence: !input library_new_movie
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'album' }}"
+                sequence: !input library_new_music
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'show' }}"
+                sequence: !input library_new_tv_show
+
 
       - conditions:
           - condition: template
