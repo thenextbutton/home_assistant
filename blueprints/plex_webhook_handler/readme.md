@@ -73,5 +73,4 @@ For Artitst and Song Title:
 
 
 
-
-![plex_webhook_blueprint](https://github.com/user-attachments/assets/70b77a7b-fd49-4b11-baf5-e74760c18d6a)
+![image](https://github.com/user-attachments/assets/f0098d12-9133-4a10-91f7-887ca6041afa)
