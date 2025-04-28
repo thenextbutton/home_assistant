@@ -3,7 +3,8 @@ blueprint:
   name: Plex Webhook Handler BETA (v0.1.9)
   homeassistant:
     min_version: "2024.6.0"
-  description: "Handles Plex Webhook Events.<br></br>A Plex Client name is only required for Movie, Music and TV Show actions."
+  description: "Handles Plex Webhook Events<br></br>A Plex Client name is required for Movie, Music and TV Show actions.<br>For more information on webhooks please visit the [home assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger)<br>or assistant with Plex and webhooks please [click here](https://support.plex.tv/articles/115002267687-webhooks/)."
+
 
   domain: automation
   
@@ -12,7 +13,7 @@ blueprint:
   input:
     webhook_id:
       name: Webhook ID
-      description: "The webhook ID configured in your Plex Media Server."
+      description: "Please configure the webhook in your Plex Media Server to send notifications to:<br>http://{your-home-assistant}:8123/api/webhook/{webhook_id}"
       selector:
         text:
           multiline: false
