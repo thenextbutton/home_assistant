@@ -59,7 +59,7 @@ blueprint:
           default: false
         movie_resume_actions:
           name: Movie Resume Actions
-          description: "Actions to perform when a movie resumes playback."
+          description: "Actions to perform when a movie resumes playback. These are not executed if 'Movie Resume Mimics Play Actions' is enabled."
           selector:
             action: {}
           default: []
@@ -90,7 +90,7 @@ blueprint:
           default: []
         track_resume_mimics_play:
           name: Music Resume Mimics Play Actions
-          description: "When a track resumes, execute the same actions as when it starts."
+          description: "When a track resumes, execute the same actions as when it starts. These are not executed if 'Music Resume Mimics Play Actions' is enabled."
           selector:
             boolean: {}
           default: false
@@ -127,7 +127,7 @@ blueprint:
           default: []
         episode_resume_mimics_play:
           name: TV Show Resume Mimics Play Actions
-          description: "When an episode resumes, execute the same actions as when it starts."
+          description: "When an episode resumes, execute the same actions as when it starts. These are not executed if 'TV Show Resume Mimics Play Actions' is enabled."
           selector:
             boolean: {}
           default: false
