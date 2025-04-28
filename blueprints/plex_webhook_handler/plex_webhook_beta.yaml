@@ -1,10 +1,9 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.1.9)
+  name: Plex Webhook Handler BETA (v0.2.4)
   homeassistant:
     min_version: "2024.6.0"
-  description: "Handles Plex Webhook Events<br></br>A Plex Client name is required for Movie, Music and TV Show actions.<br>For more information on webhooks please visit the [home assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger)<br>or assistant with Plex and webhooks please [click here](https://support.plex.tv/articles/115002267687-webhooks/)."
-
+  description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/)."
 
   domain: automation
   
@@ -13,234 +12,240 @@ blueprint:
   input:
     webhook_id:
       name: Webhook ID
-      description: "Please configure the webhook in your Plex Media Server to send notifications to:<br>http://{your-home-assistant}:8123/api/webhook/{webhook_id}"
+      description: "Configure your Plex Media Server webhook to send notifications to:<br>http://{your-home-assistant}:8123/api/webhook/{webhook_id}"
       selector:
         text:
           multiline: false
           multiple: false
       default: ""
-    local_only:
-      name: Local Only
-      description: "Only allow webhook requests from the local network."
+    webhook_local_only:
+      name: Webhook Local Only
+      description: "Enable to only accept webhook requests from your local network.<br>For enhanced security, keep this on unless triggering directly from the internet."
       selector:
         boolean: {}
       default: true
     plex_client:
-      name: Plex Client
-      description: "The Plex client name to trigger actions for."
+      name: Plex Client Name
+      description: "Enter the Plex client name to trigger specific actions."
       selector:
         text:
           multiline: false
           multiple: false
       default: ""
+    plex_client_retrieve:
+      name: Plex Client Name ?
+      description: "Enable this to generate a notification in Home Assistant with the Plex client name when a webhook is triggered. Ensure webhooks are correctly configured and sending to your Home Assistant instance."
+      selector:
+        boolean: {}
+      default: false
 
     movie_actions:
       name: Movie Actions
-      description: "<br>Actions to run for Movie Plex events.<br></br>"
+      description: "<br>Define actions to execute for Movie Plex events.<br></br>"
       icon: mdi:movie
       collapsed: true
       input:
         movie_play_actions:
           name: Movie Play Actions
-          description: "Actions to run when a movie starts or resumes."
+          description: "Actions to perform when a movie starts."
           selector:
             action: {}
           default: []
         movie_resume_mimics_play:
           name: Movie Resume Mimics Play Actions
-          description: "On RESUME mimic the Movie play actions."
+          description: "When a movie resumes, execute the same actions as when it starts."
           selector:
             boolean: {}
           default: false
         movie_resume_actions:
           name: Movie Resume Actions
-          description: "Actions to run when a movie starts or resumes."
+          description: "Actions to perform when a movie resumes playback."
           selector:
             action: {}
           default: []
         movie_pause_actions:
           name: Movie Pause Actions
-          description: "Actions to run when a movie is paused."
+          description: "Actions to perform when a movie is paused."
           selector:
             action: {}
           default: []
         movie_stop_actions:
           name: Movie Stop Actions
-          description: "Actions to run when a movie stops."
+          description: "Actions to perform when a movie stops playing."
           selector:
             action: {}
           default: []
 
     music_actions:
       name: Music Actions
-      description: "<br>Actions to run for Music Plex events.<br></br>"
+      description: "<br>Define actions to execute for Music Plex events.<br></br>"
       icon: mdi:music
       collapsed: true
       input:
         track_play_actions:
           name: Music Play Actions
-          description: "Actions to run when a track starts or resumes."
+          description: "Actions to perform when a music track starts playback."
           selector:
             action: {}
           default: []
         track_resume_mimics_play:
           name: Music Resume Mimics Play Actions
-          description: "On RESUME mimic the Music play actions."
+          description: "When a track resumes, execute the same actions as when it starts."
           selector:
             boolean: {}
           default: false
         track_resume_actions:
           name: Music Resume Actions
-          description: "Actions to run when a track starts or resumes."
+          description: "Actions to perform when a music track resumes playback."
           selector:
             action: {}
           default: []
         track_pause_actions:
-          name: Music Pause Actions
-          description: "Actions to run when a track is paused."
+          name: Music Pause Action
+          description: "Actions to perform when a music track is paused."
           selector:
             action: {}
           default: []
         track_stop_actions:
           name: Music Stop Actions
-          description: "Actions to run when a track stops."
+          description: "Actions to perform when a music track stops playing."
           selector:
             action: {}
           default: []
 
     television_actions:
       name: TV Show Actions
-      description: "<br>Actions to run for TV Plex events.<br></br>"
+      description: "<br>Define actions to execute for TV Plex events.<br></br>"
       icon: mdi:television
       collapsed: true
       input:
         episode_play_actions:
           name: TV Show Play Actions
-          description: "Actions to run when an episode starts or resumes."
+          description: "Actions to perform when a TV episode starts playback."
           selector:
             action: {}
           default: []
         episode_resume_mimics_play:
           name: TV Show Resume Mimics Play Actions
-          description: "On RESUME mimic the TV Show play actions."
+          description: "When an episode resumes, execute the same actions as when it starts."
           selector:
             boolean: {}
           default: false
         episode_resume_actions:
           name: TV Show Resume Actions
-          description: "Actions to run when an episode starts or resumes."
+          description: "Actions to perform when a TV episode resumes playback."
           selector:
             action: {}
           default: []
         episode_pause_actions:
           name: TV Show Pause Actions
-          description: "Actions to run when an episode is paused."
+          description: "Actions to perform when a TV episode is paused."
           selector:
             action: {}
           default: []
         episode_stop_actions:
           name: TV Show Stop Actions
-          description: "Actions to run when an episode stops."
+          description: "Actions to perform when a TV episode stops playing."
           selector:
             action: {}
           default: []
 
     media_rated_actions:
       name: Media Rated Actions
-      description: "<br>Actions to run for when media is rated<br></br>"
+      description: "<br>Define actions to execute when media is rated.<br></br>"
       icon: mdi:star-half-full
       collapsed: true
       input:
         movie_rated_actions:
           name: Movie Rated Actions
-          description: "Actions to run when a movie is rated"
+          description: "Actions to run when a movie receives a rating."
           selector:
             action: {}
           default: []
         movie_collection_rated_actions:
           name: Movie Collection Rated Actions
-          description: "Actions to run when a movie collection is rated"
+          description: "Actions to run when a movie collection receives a rating."
           selector:
             action: {}
           default: []
         album_rated_actions:
           name: Music Album Rated Actions
-          description: "Actions to run when an album is rated"
+          description: "Actions to run when an album receives a rating."
           selector:
             action: {}
           default: []
         album_artist_rated_actions:
           name: Music Artist Rated Actions
-          description: "Actions to run when an album artist is rated"
+          description: "Actions to run when an album artist receives a rating."
           selector:
             action: {}
           default: []
         season_rated_actions:
           name: TV Season Rated Actions
-          description: "Actions to run when a TV season is rated"
+          description: "Actions to run when a TV season receives a rating."
           selector:
             action: {}
           default: []
         show_rated_actions:
           name: TV Show Rated Actions
-          description: "Actions to run when a TV show is rated"
+          description: "Actions to run when a TV show receives a rating."
           selector:
             action: {}
           default: []
 
     new_item_actions:
       name: NEW Content Actions
-      description: "<br>Actions to run for NEW Plex content.<br></br>"
+      description: "<br>Define actions to execute for new Plex content.<br></br>"
       icon: mdi:alert-decagram
       collapsed: true
       input:
         library_new_movie:
           name: New Library Movie Item(s)
-          description: "A new movie has been added to the library."
+          description: "Actions to run when a new movie is added to your library."
           selector:
             action: {}
           default: []
         library_new_music:
           name: New Library Music Item(s)
-          description: "A new album has been added to the library."
+          description: "Actions to run when a new album is added to your library."
           selector:
             action: {}
           default: []
         library_new_tv_show:
           name: New Library TV Show Item(s)
-          description: "A new TV show has been added to the library."
+          description: "Actions to run when a new TV show is added to your library."
           selector:
             action: {}
           default: []
 
     server_actions:
       name: Server Owner Actions
-      description: "<br>These events are sent only for the server owner/admin account and relate to events on the server in general.<br></br>"
+      description: "<br>These events are only for the server owner/admin and relate to general server events.<br></br>"
       icon: mdi:database-cog
       collapsed: true
       input:
         admin_database_backup_actions:
           name: Admin Database Backup Actions
-          description: "Actions to run when a database backup is completed successfully via Scheduled Tasks."
+          description: "Actions to run when a scheduled database backup completes successfully."
           selector:
             action: {}
           default: []
         admin_database_corruption_actions:
           name: Admin Database Corruption Actions
-          description: "Actions to run when a corruption is detected in the server database."
+          description: "Actions to run when corruption is detected in the server database."
           selector:
             action: {}
           default: []
 
     automation_actions:
       name: Automation Actions
-      description: "<br>These are options for how the automation should respond<br></br>"
+      description: "<br>These options control how the automation behaves.<br></br>"
       icon: mdi:cog
       collapsed: true
       input:
         automation_mode:
           name: Automation Mode
-          description: "Mode controls how the automation responds to new webhook triggers during an active run."
+          description: "Set the automation's mode to manage how it handles new triggers during an active run."
           selector:
             select:
               mode: list
@@ -257,7 +262,7 @@ blueprint:
           default: restart
         trace_count:
           name: Trace Count
-          description: "Number of traces to keep. (Minimum 1, Maximum 20 - Default 5)<br>Can be useful to increase for debugging."
+          description: "Specify the number of trace logs to keep (1-20, default is 5).<br>Increasing this can be helpful for debugging purposes."
           selector:
             number:
               min: 1
@@ -271,18 +276,30 @@ triggers:
     allowed_methods:
       - POST
       - PUT
-    local_only: !input local_only
+    local_only: !input webhook_local_only
     webhook_id: !input webhook_id
 conditions: []
 action:
   - variables:
       payload: "{{ trigger.data['payload'].decode('utf-8') | from_json }}"
       player_title: "{{ payload.Player.title if 'Player' in payload else None }}" #NEW
+      plex_client_retrieve: !input plex_client_retrieve
       plex_client: !input plex_client
       movie_resume_mimics_play: !input movie_resume_mimics_play
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
       trace_count: !input trace_count
+
+  - if:
+      - condition: template
+        value_template: "{{ plex_client_retrieve == true }}"
+    then:
+      - action: persistent_notification.create
+        data:
+          title: "Plex Client Name:"
+          message: "{{ payload.Player.title if 'Player' in payload else 'Not Found!' }}"
+          notification_id: plex_webhook_blueprint_client_name
+
   - choose:
       - conditions:
           - condition: template
@@ -311,7 +328,6 @@ action:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'show' }}"
                 sequence: !input library_new_tv_show
-
 
       - conditions:
           - condition: template
