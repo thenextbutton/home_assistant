@@ -50,7 +50,11 @@ Save the automation.
 As long as you have setup the webhook on Plex to send to Home Assistant, then...
 Play media on Plex.
 Look at Home Assistant and you will have a notification within the web page with the client name.
-Enter this value into the blueprint’s Plex client field (case-insensitive).
+
+![plex_alert_client_name](https://github.com/user-attachments/assets/4f333b2a-1af7-4b9a-8c12-d612bc734721)
+
+
+Enter this value (in this case NCC-1701-D) into the blueprint’s Plex Client Name field.
 
 
 Configure Automation Actions:
@@ -83,4 +87,23 @@ Here you can create the entire url to retreive the thumbnail:
 For Artitst and Song Title:
 
 {{ payload.Metadata.originalTitle  }} - {{ payload.Metadata.title }}
+
+
+An example of using the Admin Database Backup Actions:
+
+```yaml
+action: persistent_notification.create
+metadata: {}
+data:<br>
+  message: Plex Database Backup completed.  
+  notification_id: plex_db_backup  
+  title: Plex Alert  
+```
+
+
+produces this result:
+
+
+![plex_alert_dbbackup_complete](https://github.com/user-attachments/assets/dab3538b-7d90-494a-a73f-3e9b43664255)
+
 
