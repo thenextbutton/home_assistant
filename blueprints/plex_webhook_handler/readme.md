@@ -30,9 +30,9 @@ Configure Plex Webhook:
 
 In Plex, create a webhook pointing to your Home Assistant server:
 
-Example URL: http://<home_assistant_ip>:<port>/api/webhook/{webhook_id}
+`http://home_assistant_ip:8123/api/webhook/{webhook_id}`
 
-Example: http://10.0.1.2:8123/api/webhook/e9ee051d-31cd-464a-b3c4-034992a96be0
+Example: `http://10.0.1.2:8123/api/webhook/e9ee051d-31cd-464a-b3c4-034992a96be0`
 
 Import the Blueprint.
 
