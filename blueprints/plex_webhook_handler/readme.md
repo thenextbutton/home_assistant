@@ -75,26 +75,29 @@ Use payload.Metadata in templates to access data like cover art:
 Example(s): 
 
 Thumbnail (cover art)
-
+```yaml
 {{ payload.Metadata.thumb }}
-
+```
 
 Here you can create the entire url to retreive the thumbnail:
-
-{% set base_url = "http://<plex_server_ip>:32400" %} {% if payload.Metadata.thumb %} {{ base_url + payload.Metadata.thumb }} {% endif %}
-
+```yaml
+{% set base_url = "http://plex_ip:32400" %}
+{% if payload.Metadata.thumb %}
+{{ base_url + payload.Metadata.thumb }}
+{% endif %}
+```
 
 For Artitst and Song Title:
-
+```yaml
 {{ payload.Metadata.originalTitle  }} - {{ payload.Metadata.title }}
-
+```
 
 An example of using the Admin Database Backup Actions:
 
 ```yaml
 action: persistent_notification.create
 metadata: {}
-data:<br>
+data:
   message: Plex Database Backup completed.  
   notification_id: plex_db_backup  
   title: Plex Alert  
