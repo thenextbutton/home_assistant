@@ -205,9 +205,9 @@ blueprint:
           selector:
             action: {}
           default: []
-        library_new_music:
-          name: New Library Music Item(s)
-          description: "Actions to run when a new album is added to your library."
+        library_new_artist:
+          name: New Library Artist
+          description: "Actions to run when a new artist is added to your library."
           selector:
             action: {}
           default: []
@@ -322,8 +322,8 @@ action:
                 sequence: !input library_new_movie
               - conditions:
                   - condition: template
-                    value_template: "{{ payload.Metadata.type == 'album' }}"
-                sequence: !input library_new_music
+                    value_template: "{{ payload.Metadata.type == 'artist' }}"
+                sequence: !input library_new_artist
               - conditions:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'show' }}"
