@@ -205,9 +205,9 @@ blueprint:
           selector:
             action: {}
           default: []
-        library_new_artist:
-          name: New Library Artist
-          description: "Actions to run when a new artist is added to your library."
+        library_new_music_artist:
+          name: New Library Music Artist
+          description: "Actions to run when a new music artist is added to your library."
           selector:
             action: {}
           default: []
@@ -323,7 +323,7 @@ action:
               - conditions:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'artist' }}"
-                sequence: !input library_new_artist
+                sequence: !input library_new_music_artist
               - conditions:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'show' }}"
