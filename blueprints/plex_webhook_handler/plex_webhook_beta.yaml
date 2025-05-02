@@ -1,6 +1,6 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.2.6)
+  name: Plex Webhook Handler BETA (v0.2.9)
   homeassistant:
     min_version: "2024.6.0"
   description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/)."
@@ -34,7 +34,7 @@ blueprint:
       default: ""
     plex_client_retrieve:
       name: Plex Client Name ?
-      description: "Enable this to generate a notification in Home Assistant with the Plex client name when a webhook is triggered. Ensure webhooks are correctly configured and sending to your Home Assistant instance."
+      description: "Enable this to generate a notification in Home Assistant with the Plex client name when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
       selector:
         boolean: {}
       default: false
@@ -90,13 +90,13 @@ blueprint:
           default: []
         track_resume_mimics_play:
           name: Music Resume Mimics Play Actions
-          description: "When a track resumes, execute the same actions as when it starts.<br>**These are not executed if 'Music Resume Mimics Play Actions' is enabled.**"
+          description: "When a track resumes, execute the same actions as when it starts."
           selector:
             boolean: {}
           default: false
         track_resume_actions:
           name: Music Resume Actions
-          description: "Actions to perform when a music track resumes playback."
+          description: "Actions to perform when a music track resumes playback.<br>**These are not executed if 'Music Resume Mimics Play Actions' is enabled.**"
           selector:
             action: {}
           default: []
@@ -127,13 +127,13 @@ blueprint:
           default: []
         episode_resume_mimics_play:
           name: TV Show Resume Mimics Play Actions
-          description: "When an episode resumes, execute the same actions as when it starts.<br>**These are not executed if 'TV Show Resume Mimics Play Actions' is enabled.**"
+          description: "When an episode resumes, execute the same actions as when it starts."
           selector:
             boolean: {}
           default: false
         episode_resume_actions:
           name: TV Show Resume Actions
-          description: "Actions to perform when a TV episode resumes playback."
+          description: "Actions to perform when a TV episode resumes playback.<br>**These are not executed if 'TV Show Resume Mimics Play Actions' is enabled.**"
           selector:
             action: {}
           default: []
@@ -212,8 +212,20 @@ blueprint:
             action: {}
           default: []
         library_new_music_album:
-          name: New Library Music Album
-          description: "Actions to run when a new music album is added to your library."
+          name: New Library Music Item(s)
+          description: "Actions to run when a new album is added to your library."
+          selector:
+            action: {}
+          default: []
+        library_new_music_artist_mimics_new_music_album:
+          name: New Library Music Artist Mimics New Library Music Item(s) Actions
+          description: "**Note:** Adding a completely new artist will trigger the 'New Library Music Artist' actions instead of the 'New Library Music Item(s)' ."
+          selector:
+            boolean: {}
+          default: false
+        library_new_music_artist:
+          name: New Library Music Artist
+          description: "Actions to run when a new music artist is added to your library.<br>**These are not executed if 'New Library Music Artist Mimics New Library Music Item(s)' is enabled.**"
           selector:
             action: {}
           default: []
@@ -288,12 +300,13 @@ conditions: []
 action:
   - variables:
       payload: "{{ trigger.data['payload'].decode('utf-8') | from_json }}"
-      player_title: "{{ payload.Player.title if 'Player' in payload else None }}" #NEW
+      player_title: "{{ payload.Player.title if 'Player' in payload else None }}"
       plex_client_retrieve: !input plex_client_retrieve
       plex_client: !input plex_client
       movie_resume_mimics_play: !input movie_resume_mimics_play
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
+      library_new_music_artist_mimics_new_music_album: !input library_new_music_artist_mimics_new_music_album
       trace_count: !input trace_count
 
   - if:
@@ -328,12 +341,12 @@ action:
                 sequence: !input library_new_movie
               - conditions:
                   - condition: template
-                    value_template: "{{ payload.Metadata.type == 'artist' }}"
-                sequence: !input library_new_music_artist
+                    value_template: "{{ payload.Metadata.type == 'album' or (payload.Metadata.type == 'artist' and library_new_music_artist_mimics_new_music_album) }}"
+                sequence: !input library_new_music_album
               - conditions:
                   - condition: template
-                    value_template: "{{ payload.Metadata.type == 'album' }}"
-                sequence: !input library_new_music_album
+                    value_template: "{{ payload.Metadata.type == 'artist' and not library_new_music_artist_mimics_new_music_album }}"
+                sequence: !input library_new_music_artist
               - conditions:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'show' }}"
