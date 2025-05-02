@@ -205,12 +205,6 @@ blueprint:
           selector:
             action: {}
           default: []
-        library_new_music_artist:
-          name: New Library Music Artist
-          description: "Actions to run when a new music artist is added to your library."
-          selector:
-            action: {}
-          default: []
         library_new_music_album:
           name: New Library Music Item(s)
           description: "Actions to run when a new album is added to your library."
