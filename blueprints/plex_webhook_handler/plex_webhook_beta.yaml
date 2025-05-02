@@ -211,15 +211,9 @@ blueprint:
           selector:
             action: {}
           default: []
-        library_new_music_artist_mimics_new_music_album:
-          name: New Library Music Artist Mimics New Library Music Item(s) Actions
-          description: "**Note:** Adding a completely new artist will trigger the 'New Library Music Artist' actions instead of the 'New Library Music Item(s)' ."
-          selector:
-            boolean: {}
-          default: false
         library_new_music_artist:
           name: New Library Music Artist
-          description: "Actions to run when a new music artist is added to your library.<br>**These are not executed if 'New Library Music Artist Mimics New Library Music Item(s)' is enabled.**"
+          description: "Actions to run when a new music artist is added to your library."
           selector:
             action: {}
           default: []
@@ -300,7 +294,6 @@ action:
       movie_resume_mimics_play: !input movie_resume_mimics_play
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
-      library_new_music_artist_mimics_new_music_album: !input library_new_music_artist_mimics_new_music_album
       trace_count: !input trace_count
 
   - if:
@@ -335,11 +328,11 @@ action:
                 sequence: !input library_new_movie
               - conditions:
                   - condition: template
-                    value_template: "{{ payload.Metadata.type == 'album' or (payload.Metadata.type == 'artist' and library_new_music_artist_mimics_new_music_album) }}"
+                    value_template: "{{ payload.Metadata.type == 'album' }}"
                 sequence: !input library_new_music_album
               - conditions:
                   - condition: template
-                    value_template: "{{ payload.Metadata.type == 'artist' and not library_new_music_artist_mimics_new_music_album }}"
+                    value_template: "{{ payload.Metadata.type == 'artist' }}"
                 sequence: !input library_new_music_artist
               - conditions:
                   - condition: template
@@ -390,15 +383,11 @@ action:
                   - choose:
                       - conditions:
                           - condition: template
-                            value_template:
-                              "{{ payload.event == 'media.play' or (payload.event
-                              == 'media.resume' and movie_resume_mimics_play) }}"
+                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and movie_resume_mimics_play) }}"
                         sequence: !input movie_play_actions
                       - conditions:
                           - condition: template
-                            value_template:
-                              "{{ payload.event == 'media.resume' and not movie_resume_mimics_play
-                              }}"
+                            value_template: "{{ payload.event == 'media.resume' and not movie_resume_mimics_play }}"
                         sequence: !input movie_resume_actions
                       - conditions:
                           - condition: template
@@ -415,15 +404,11 @@ action:
                   - choose:
                       - conditions:
                           - condition: template
-                            value_template:
-                              "{{ payload.event == 'media.play' or (payload.event
-                              == 'media.resume' and track_resume_mimics_play)}}"
+                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and track_resume_mimics_play) }}"
                         sequence: !input track_play_actions
                       - conditions:
                           - condition: template
-                            value_template:
-                              "{{ payload.event == 'media.resume' and not track_resume_mimics_play
-                              }}"
+                            value_template: "{{ payload.event == 'media.resume' and not track_resume_mimics_play }}"
                         sequence: !input track_resume_actions
                       - conditions:
                           - condition: template
@@ -440,9 +425,7 @@ action:
                   - choose:
                       - conditions:
                           - condition: template
-                            value_template:
-                              "{{ payload.event == 'media.play' or (payload.event
-                              == 'media.resume' and episode_resume_mimics_play)}}"
+                            value_template: "{{ payload.event == 'media.play' or (payload.event  == 'media.resume' and episode_resume_mimics_play) }}"
                         sequence: !input episode_play_actions
                       - conditions:
                           - condition: template
