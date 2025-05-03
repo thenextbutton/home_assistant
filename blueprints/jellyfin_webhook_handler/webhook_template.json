@@ -1,19 +1,22 @@
 {
-    "Name": "{{{Name}}}",
+    "ItemType": "{{ItemType}}",
     "DeviceName": "{{DeviceName}}",
     "ClientName": "{{ClientName}}",
-    "ItemType": "{{ItemType}}",
-    "ItemId": "{{ItemId}}",
     "NotificationType": "{{NotificationType}}",
-    "ServerUrl": "{{ServerUrl}}",
     "Thumbnail": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+    "Name": "{{{Name}}}",
     {{#if_equals ItemType "Audio"}}
       "Album": "{{Album}}",
       "Artist": "{{Artist}}"
-    {{/if_equals}}
-    {{#if_equals ItemType "Episode"}}
-    "SeriesName": "{{SeriesName}}",
-    "SeasonNumber00": "{{SeasonNumber00}}",
-    "EpisodeNumber00": "{{EpisodeNumber00}}"
+    {{else}}
+        {{#if_equals ItemType "Episode"}}
+          "SeriesName": "{{SeriesName}}",
+          "SeasonNumber00": "{{SeasonNumber00}}",
+          "EpisodeNumber00": "{{EpisodeNumber00}}"
+    {{else}}
+        {{#if_equals ItemType "Movie"}}
+          "Year": "{{Year}}"
+        {{/if_equals}}
+        {{/if_equals}}
     {{/if_equals}}
 }
