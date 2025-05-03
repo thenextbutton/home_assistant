@@ -1,0 +1,15 @@
+{
+    "Name": "{{{Name}}}",
+    "SeriesName": "{{SeriesName}}",
+    "SeasonNumber00": "{{SeasonNumber00}}",
+    "EpisodeNumber00": "{{EpisodeNumber00}}",
+    "NotificationType": "{{NotificationType}}",
+    "DeviceName": "{{DeviceName}}",
+    "ClientName": "{{ClientName}}",
+    "ItemType": "{{ItemType}}",
+    "ItemId": "{{ItemId}}",
+    "ServerUrl": "{{ServerUrl}}",
+    "Thumbnail": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+    "Album": "{{Album}}",
+    "Artist": "{{Artist}}"
+}
