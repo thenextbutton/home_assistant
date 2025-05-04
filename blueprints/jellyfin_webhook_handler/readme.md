@@ -1,9 +1,13 @@
 <p align="center">
 <img src="https://github.com/user-attachments/assets/2f3a76d5-cda6-49b0-982c-97f4af36d2f4"  height="250" width="250" >
 </p>
+<br>
+Release:<br>
 
-Ensure you have the [Jellyfin Webook plugin install](https://github.com/jellyfin/jellyfin-plugin-webhook)<br><br>
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fthenextbutton%2Fhome_assistant%2Fblob%2Fmain%2Fblueprints%2Fjellyfin_webhook_handler%2Fjellyfin_webhook_release.yaml)
+<br><br>
 
+Ensure you have the [Jellyfin Webook plugin installed](https://github.com/jellyfin/jellyfin-plugin-webhook)<br><br>
 
 Setting up webhooks from Jellyfin:<br><br>
 
