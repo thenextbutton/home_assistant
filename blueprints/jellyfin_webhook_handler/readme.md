@@ -12,7 +12,6 @@ Ensure you have the [Jellyfin Webook plugin installed](https://github.com/jellyf
 Setting up webhooks from Jellyfin:<br><br>
 
 Menu/Settings > Administration > Dashboard > Plugins > My Plugins > Webhook<br><br>
-
 Add a Generic Destination.<br>
 Give the webhook a Name (i.e. Home Assistant)<br>
 Enter the webhook url (treat this as a password, try not to share it)<br>
@@ -40,3 +39,9 @@ Key: Content-Type<br>
 Value: application/json<br>
 
 Click on Save.<br>
+
+Within Home Assistant, create a new automation from the blueprint, enter the <webhook_id> in to the Webhook ID field in the automation.
+
+You will also need to enter the device name (playback client) in the Jellyfin Device Name field, if you are not sure what that is enable the 'Jellyfin Device Name ?' and click save. Start a movie, music or tv episode and a notification within home assistant will let you know the device name.
+
+![image](https://github.com/user-attachments/assets/eb5d6801-4b55-418d-b760-ab9fc7f9fe5f)
