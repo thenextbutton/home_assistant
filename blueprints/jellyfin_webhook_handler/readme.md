@@ -7,7 +7,7 @@ Ensure you have the [Jellyfin Webook plugin install](https://github.com/jellyfin
 
 Setting up webhooks from Jellyfin:<br><br>
 
-Menu/Settings > Administration > Dashboard<br><br>
+Menu/Settings > Administration > Dashboard > Plugins > My Plugins > Webhook<br><br>
 
 Add a Generic Destination.<br>
 Give the webhook a Name (i.e. Home Assistant)<br>
