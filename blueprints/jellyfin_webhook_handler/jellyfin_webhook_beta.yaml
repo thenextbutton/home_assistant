@@ -1,1 +1,208 @@
+id: jellyfin_webhook_handler_beta
+blueprint:
+  name: Jellyfin Webhook Handler BETA (v0.0.1)
+  homeassistant:
+    min_version: "2024.6.0"
+  description: "Jellyfin webhooks are handled by this blueprint.<br></br>A  Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Jellyfin and webhooks? [Click here](https://github.com/jellyfin/jellyfin-plugin-webhook)."
 
+  domain: automation
+  
+  source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler/jellyfin_webhook_beta.yaml
+  
+  input:
+    webhook_id:
+      name: Webhook ID
+      description: "Configure your Jellyfin Media Server webhook to send notifications to:<br>http://{your-home-assistant}:8123/api/webhook/{webhook_id}"
+      selector:
+        text:
+          multiline: false
+          multiple: false
+      default: ""
+    webhook_local_only:
+      name: Webhook Local Only
+      description: "Enable to only accept webhook requests from your local network.<br>For enhanced security, keep this on unless triggering directly from the internet."
+      selector:
+        boolean: {}
+      default: true
+    jellyfin_client:
+      name: Jellyfin Client Name
+      description: "Enter the Jellyfin client name to trigger specific actions."
+      selector:
+        text:
+          multiline: false
+          multiple: false
+      default: ""
+    jellyfin_client_retrieve:
+      name: Jellyfin Client Name ?
+      description: "Enable this to generate a notification in Home Assistant with the Jellyfin client name when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
+      selector:
+        boolean: {}
+      default: false
+    movie_actions:
+      name: Movie Actions
+      description: "<br>Define actions to execute for Movie Jellyfin events.<br></br>"
+      icon: mdi:movie
+      collapsed: true
+      input:
+        movie_play_actions:
+          name: Movie Play Actions
+          description: "Actions to perform when a movie starts."
+          selector:
+            action: {}
+          default: []
+        movie_stop_actions:
+          name: Movie Stop Actions
+          description: "Actions to perform when a movie stops playing."
+          selector:
+            action: {}
+          default: []
+
+    music_actions:
+      name: Music Actions
+      description: "<br>Define actions to execute for Music Jellyfin events.<br></br>"
+      icon: mdi:music
+      collapsed: true
+      input:
+        track_play_actions:
+          name: Music Play Actions
+          description: "Actions to perform when a music track starts playback."
+          selector:
+            action: {}
+          default: []
+        track_stop_actions:
+          name: Music Stop Actions
+          description: "Actions to perform when a music track stops playing."
+          selector:
+            action: {}
+          default: []
+
+    television_actions:
+      name: TV Show Actions
+      description: "<br>Define actions to execute for TV Jellyfin events.<br></br>"
+      icon: mdi:television
+      collapsed: true
+      input:
+        episode_play_actions:
+          name: TV Show Play Actions
+          description: "Actions to perform when a TV episode starts playback."
+          selector:
+            action: {}
+          default: []
+        episode_stop_actions:
+          name: TV Show Stop Actions
+          description: "Actions to perform when a TV episode stops playing."
+          selector:
+            action: {}
+          default: []
+
+    automation_actions:
+      name: Automation Actions
+      description: "<br>These options control how the automation behaves.<br></br>"
+      icon: mdi:cog
+      collapsed: true
+      input:
+        automation_mode:
+          name: Automation Mode
+          description: "Set the automation's mode to manage how it handles new triggers during an active run."
+          selector:
+            select:
+              mode: list
+              multiple: false
+              options:
+                - label: Single
+                  value: single
+                - label: Restart (Default)
+                  value: restart
+                - label: Queued
+                  value: queued
+                - label: Parallel
+                  value: parallel
+          default: restart
+        trace_count:
+          name: Trace Count
+          description: "Specify the number of trace logs to keep (1-20, default is 5).<br>Increasing this can be helpful for debugging purposes."
+          selector:
+            number:
+              min: 1
+              max: 20
+              step: 1
+              mode: box
+          default: 5
+mode: !input automation_mode
+triggers:
+  - trigger: webhook
+    allowed_methods:
+      - POST
+      - PUT
+    local_only: !input webhook_local_only
+    webhook_id: !input webhook_id
+conditions: []
+action:
+  - variables:
+      jellyfin_payload: "{{ trigger.json }}"
+      player_title: "{{ jellyfin_payload.clientname if 'clientname' in jellyfin_payload else None }}"
+      jellyfin_client_retrieve: !input jellyfin_client_retrieve
+      jellyfin_client: !input jellyfin_client
+      trace_count: !input trace_count
+
+  - if:
+      - condition: template
+        value_template: "{{ jellyfin_client_retrieve == true }}"
+    then:
+      - action: persistent_notification.create
+        data:
+          title: "Jellyfin Client Name:"
+          message: "{{ jellyfin_payload.clientname if 'clientname' in jellyfin_payload else 'Not Found!' }}"
+          notification_id: jellyfin_webhook_blueprint_client_name
+
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ player_title.lower().strip() == jellyfin_client.lower().strip()}}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ jellyfin_payload.itemtype == 'Movie' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ jellyfin_payload.notificationtype == 'PlaybackStart' }}"
+                        sequence: !input movie_play_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ jellyfin_payload.notificationtype == 'PlaybackStop' }}"
+                        sequence: !input movie_stop_actions
+
+              - conditions:
+                  - condition: template
+                    value_template: "{{ jellyfin_payload.itemtype == 'Audio' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ jellyfin_payload.notificationtype == 'PlaybackStart' }}"
+                        sequence: !input track_play_actions
+
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ jellyfin_payload.notificationtype == 'PlaybackStop' }}"
+                        sequence: !input track_stop_actions
+
+              - conditions:
+                  - condition: template
+                    value_template: "{{ jellyfin_payload.itemtype == 'Episode' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ jellyfin_payload.notificationtype == 'PlaybackStart' }}"
+                        sequence: !input episode_play_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ jellyfin_payload.notificationtype == 'PlaybackStop' }}"
+                        sequence: !input episode_stop_actions
+
+trace:
+  stored_traces: !input trace_count
