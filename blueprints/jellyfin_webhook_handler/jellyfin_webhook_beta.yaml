@@ -140,7 +140,7 @@ conditions: []
 action:
   - variables:
       jellyfin_payload: "{{ trigger.json }}"
-      player_title: "{{ jellyfin_payload.clientname if 'clientname' in jellyfin_payload else None }}"
+      player_title: "{{ jellyfin_payload.devicename if 'devicename' in jellyfin_payload else None }}"
       jellyfin_client_retrieve: !input jellyfin_client_retrieve
       jellyfin_client: !input jellyfin_client
       trace_count: !input trace_count
@@ -152,7 +152,7 @@ action:
       - action: persistent_notification.create
         data:
           title: "Jellyfin Client Name:"
-          message: "{{ jellyfin_payload.clientname if 'clientname' in jellyfin_payload else 'Not Found!' }}"
+          message: "{{ jellyfin_payload.devicename if 'devicename' in jellyfin_payload else 'Not Found!' }}"
           notification_id: jellyfin_webhook_blueprint_client_name
 
   - choose:
