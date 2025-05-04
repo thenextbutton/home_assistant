@@ -1,6 +1,6 @@
 id: jellyfin_webhook_handler_release
 blueprint:
-  name: Jellyfin Webhook Handler RELEASE (v0.0.1)
+  name: Jellyfin Webhook Handler RELEASE (v0.0.2)
   homeassistant:
     min_version: "2024.6.0"
   description: "Jellyfin webhooks are handled by this blueprint.<br></br>A  Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Jellyfin and webhooks? [Click here](https://github.com/jellyfin/jellyfin-plugin-webhook)."
