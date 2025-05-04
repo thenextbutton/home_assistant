@@ -12,9 +12,10 @@ Menu/Settings > Administration > Dashboard<br><br>
 Add a Generic Destination.<br>
 Give the webhook a Name (i.e. Home Assistant)<br>
 Enter the webhook url (treat this as a password, try not to share it)<br>
+Use a tool like [GUID Generator](https://guidgenerator.com/) to create a random string for the <webhook_id>.<br>
 (example)<br>
 `http://<home_assistant_ip>:8123/api/webhook/<webhook_id>`<br>
-`http://10.0.1.2:8123/api/webhook/my_super_secret_webhook_key`<br>
+`http://10.0.1.2:8123/api/webhook/4ed1c518-9131-4c59-8f4e-08ccdc8d7f7d`<br>
 
 Check Status: Enable<br><br>
 
