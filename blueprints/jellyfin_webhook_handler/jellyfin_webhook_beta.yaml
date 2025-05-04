@@ -25,16 +25,16 @@ blueprint:
         boolean: {}
       default: true
     jellyfin_client:
-      name: Jellyfin Client Name
-      description: "Enter the Jellyfin client name to trigger specific actions."
+      name: Jellyfin Device Name
+      description: "Enter the Jellyfin Device Name to trigger specific actions."
       selector:
         text:
           multiline: false
           multiple: false
       default: ""
     jellyfin_client_retrieve:
-      name: Jellyfin Client Name ?
-      description: "Enable this to generate a notification in Home Assistant with the Jellyfin client name when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
+      name: Jellyfin Device Name ?
+      description: "Enable this to generate a notification in Home Assistant with the Jellyfin Device Name when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
       selector:
         boolean: {}
       default: false
@@ -151,7 +151,7 @@ action:
     then:
       - action: persistent_notification.create
         data:
-          title: "Jellyfin Client Name:"
+          title: "Jellyfin Device Name:"
           message: "{{ jellyfin_payload.devicename if 'devicename' in jellyfin_payload else 'Not Found!' }}"
           notification_id: jellyfin_webhook_blueprint_client_name
 
