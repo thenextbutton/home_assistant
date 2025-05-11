@@ -9,7 +9,7 @@ blueprint:
   
   source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_beta.yaml
   
-  input:
+input:
     webhook_id:
       name: Webhook ID
       description: "Configure your Plex Media Server webhook to send notifications to:<br>http://{your-home-assistant}:8123/api/webhook/{webhook_id}"
@@ -75,6 +75,12 @@ blueprint:
           selector:
             action: {}
           default: []
+        movie_scrobble_actions:
+          name: Movie Scrobble Actions
+          description: "Actions to perform when Plex sends a scrobble event."
+          selector:
+            action: {}
+          default: []
 
     music_actions:
       name: Music Actions
@@ -112,6 +118,12 @@ blueprint:
           selector:
             action: {}
           default: []
+        track_scrobble_actions:
+          name: Music Scrobble Actions
+          description: "Actions to perform when Plex sends a scrobble event."
+          selector:
+            action: {}
+          default: []
 
     television_actions:
       name: TV Show Actions
@@ -146,6 +158,12 @@ blueprint:
         episode_stop_actions:
           name: TV Show Stop Actions
           description: "Actions to perform when a TV episode stops playing."
+          selector:
+            action: {}
+          default: []
+        episode_scrobble_actions:
+          name: TV Show Scrobble Actions
+          description: "Actions to perform when Plex sends a scrobble event."
           selector:
             action: {}
           default: []
@@ -397,6 +415,11 @@ action:
                           - condition: template
                             value_template: "{{ payload.event == 'media.stop' }}"
                         sequence: !input movie_stop_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.scrobble' }}"
+                        sequence: !input movie_scrobble_actions
+
               - conditions:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'track' }}"
@@ -418,6 +441,11 @@ action:
                           - condition: template
                             value_template: "{{ payload.event == 'media.stop' }}"
                         sequence: !input track_stop_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.scrobble' }}"
+                        sequence: !input track_scrobble_actions
+
               - conditions:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'episode' }}"
@@ -425,7 +453,7 @@ action:
                   - choose:
                       - conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.play' or (payload.event  == 'media.resume' and episode_resume_mimics_play) }}"
+                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and episode_resume_mimics_play) }}"
                         sequence: !input episode_play_actions
                       - conditions:
                           - condition: template
@@ -441,6 +469,10 @@ action:
                           - condition: template
                             value_template: "{{ payload.event == 'media.stop' }}"
                         sequence: !input episode_stop_actions
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.event == 'media.scrobble' }}"
+                        sequence: !input episode_scrobble_actions
 
 trace:
   stored_traces: !input trace_count
