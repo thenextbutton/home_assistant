@@ -325,13 +325,13 @@ blueprint:
               options:
                 - label: Single
                   value: single
-                - label: Restart (Default)
+                - label: Restart
                   value: restart
                 - label: Queued
                   value: queued
-                - label: Parallel
+                - label: Parallel (Default)
                   value: parallel
-          default: restart
+          default: parallel
         trace_count:
           name: Trace Count
           description: "Specify the number of trace logs to keep (1-20, default is 5).<br>Increasing this can be helpful for debugging purposes."
