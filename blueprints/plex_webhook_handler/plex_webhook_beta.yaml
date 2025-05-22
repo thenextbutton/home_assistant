@@ -1,6 +1,6 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.3.6)
+  name: Plex Webhook Handler BETA (v0.3.7)
   homeassistant:
     min_version: "2024.6.0"
   description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/)."
@@ -241,6 +241,12 @@ blueprint:
           selector:
             action: {}
           default: []
+        library_new_tv_episode:
+          name: New Library TV episode Item(s)
+          description: "Actions to run when a new TV episode is added to your library."
+          selector:
+            action: {}
+          default: []
 
     server_actions:
       name: Server Owner Actions
@@ -414,6 +420,10 @@ action:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'show' }}"
                 sequence: !input library_new_tv_show
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.Metadata.type == 'episode' }}"
+                sequence: !input library_new_tv_episode
 
       - conditions:
           - condition: template
