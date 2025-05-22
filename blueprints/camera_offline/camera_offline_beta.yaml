@@ -1,0 +1,98 @@
+id: camera_offline_notifier
+blueprint:
+  name: Camera Offline Notifier (v0.0.1)
+  homeassistant:
+    min_version: "2024.6.0"
+  description: Sends a push notification to your mobile device when one or more selected cameras go offline (become 'unavailable').
+  domain: automation
+  input:
+    cameras:
+      name: Cameras to Monitor
+      description: Select one or more camera entities that you want to monitor for offline status.
+      selector:
+        entity:
+          filter:
+            domain: camera
+          multiple: true
+    notify_devices:
+      name: Device(s) to Notify
+      description: Select the mobile device (running the Home Assistant app) to send the offline notification to.
+      selector:
+        device:
+          filter:
+            integration: mobile_app
+          multiple: false
+    offline_duration:
+      name: Offline Duration
+      description: How long the camera must be offline (unavailable) before triggering the notification.
+      default: 5
+      selector:
+        number:
+          min: 0
+          max: 59
+          step: 1
+          unit_of_measurement: "seconds"
+          mode: slider
+    notification_title:
+      name: Notification title
+      description: what you want the title to be
+      default: "🚨 Camera Offline Alert"
+      selector:
+        text:
+          multiline: false
+          type: text
+          multiple: false
+    notification_message:
+      name: Notification message
+      description: what you want the message to be
+      default: "Camera '{{ trigger.to_state.attributes.friendly_name }}' ({{ trigger.entity_id }}) is offline!"
+      selector:
+        text:
+          multiline: false
+          type: text
+          multiple: false
+    notification_critical:
+      name: Notification critical
+      description: do you want this to be critical?
+      default: false
+      selector:
+        boolean:
+
+mode: queued
+triggers:
+  - trigger: state
+    entity_id: !input cameras
+    to: "unavailable"
+    for:
+      seconds: !input offline_duration
+
+action:
+  - variables:
+      notification_title: !input notification_title
+      notification_message: !input notification_message
+      notification_critical: !input notification_critical
+
+  - alias: "Send a notification to the device"
+    sequence:
+      - device_id: !input notify_devices
+        domain: mobile_app
+        type: notify
+        title: !input notification_title
+        message: !input notification_message
+        data: >
+          {% if notification_critical %}
+          {% set critical_data = {
+              'ttl': 0,
+              'priority': 'high',
+              'push': {
+                  'sound': {
+                      'name': 'default',
+                      'critical': 1,
+                      'volume': 1.0
+                  }
+              }
+          } %}
+          {{ critical_data }}
+          {% else %}
+          {}
+          {% endif %}
