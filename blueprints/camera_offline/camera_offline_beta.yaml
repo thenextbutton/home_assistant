@@ -4,7 +4,11 @@ blueprint:
   homeassistant:
     min_version: "2024.6.0"
   description: Sends a push notification to your mobile device when one or more selected cameras go offline (become 'unavailable').
+  
   domain: automation
+  
+  source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/camera_offline/camera_offline_beta.yaml
+  
   input:
     cameras:
       name: Cameras to Monitor
