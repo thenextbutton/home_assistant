@@ -1,23 +1,24 @@
 id: camera_offline_notifier
 blueprint:
-  name: Camera Offline Notifier BETA (v0.0.3)
+  name: Camera Offline Notifier BETA (v0.0.4)
   homeassistant:
     min_version: "2024.6.0"
-  description: Sends a push notification to your mobile device when one or more selected cameras go offline (become 'unavailable').
+  description: Receive push notifications on a mobile device when selected cameras go offline. This ensures timely awareness of any camera connectivity issues.
   
   domain: automation
   
   source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/camera_offline/camera_offline_beta.yaml
+
   input:
     camera_selection:
       name: Camera Selection
-      description: <br>Select Cameras to be monitored for offline notifications<br></br>
+      description: "Choose which cameras to monitor for offline events."
       icon: mdi:cctv
       collapsed: false
       input:
         cameras:
           name: Cameras to Monitor
-          description: Select one or more camera entities that you want to monitor for offline status.
+          description: Select one or more camera entities for offline status monitoring.
           selector:
             entity:
               filter:
@@ -25,14 +26,14 @@ blueprint:
               multiple: true
 
     notification_actions:
-      name: Notification Actions
-      description: <br>Configure the notification to the device.<br></br>
+      name: Notification Settings
+      description: "Configure how alerts are received for offline cameras."
       icon: mdi:cellphone
       collapsed: true
       input:
         notify_devices:
           name: Device(s) to Notify
-          description: Select the mobile device (running the Home Assistant app) to send the offline notification to.
+          description: Select the mobile device (running the Home Assistant app) to receive offline notifications.
           selector:
             device:
               filter:
@@ -40,15 +41,15 @@ blueprint:
               multiple: false
         offline_duration:
           name: Offline Duration
-          description: How long the camera must be offline (unavailable) before triggering the notification.
+          description: Set the duration a camera must be offline (unavailable) before a notification is sent.
           default: { hours: 0, minutes: 2, seconds: 0 }
           selector:
             duration:
               enable_day: false
               enable_millisecond: false
         notification_title:
-          name: Notification title
-          description: what you want the title to be
+          name: Notification Title
+          description: Enter the desired title for the push notification.
           default: "🚨 Camera Offline Alert 🚨"
           selector:
             text:
@@ -56,8 +57,8 @@ blueprint:
               type: text
               multiple: false
         notification_message:
-          name: Notification message
-          description: what you want the message to be
+          name: Notification Message
+          description: Customize the message that will appear in the push notification.
           default: >
             {% set total_seconds = (now() - trigger.to_state.last_changed).total_seconds() | int %}
             {% set seconds = total_seconds % 60 %}
@@ -70,8 +71,8 @@ blueprint:
               type: text
               multiple: false
         notification_critical:
-          name: Notification critical
-          description: do you want this to be critical?
+          name: Critical Notification
+          description: Enable this option to send a critical alert that bypasses silent mode settings on the device.
           default: false
           selector:
             boolean:
