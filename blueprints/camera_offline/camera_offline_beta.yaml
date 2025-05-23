@@ -29,18 +29,15 @@ blueprint:
     offline_duration:
       name: Offline Duration
       description: How long the camera must be offline (unavailable) before triggering the notification.
-      default: 5
+      default: "00:01:00"
       selector:
-        number:
-          min: 0
-          max: 59
-          step: 1
-          unit_of_measurement: "seconds"
-          mode: slider
+        duration:
+          enable_day: false
+          enable_millisecond: false
     notification_title:
       name: Notification title
       description: what you want the title to be
-      default: "🚨 Camera Offline Alert"
+      default: "🚨 Camera Offline Alert 🚨"
       selector:
         text:
           multiline: false
@@ -49,10 +46,15 @@ blueprint:
     notification_message:
       name: Notification message
       description: what you want the message to be
-      default: "Camera '{{ trigger.to_state.attributes.friendly_name }}' ({{ trigger.entity_id }}) is offline!"
+      default: >
+        {% set total_seconds = (now() - trigger.to_state.last_changed).total_seconds() | int %}
+        {% set seconds = total_seconds % 60 %}
+        {% set minutes = (total_seconds // 60) % 60 %}
+        {% set hours = total_seconds // 3600 %}
+        Camera '{{ trigger.to_state.attributes.friendly_name }}' ({{ trigger.entity_id }}) is offline and has been for {{ "%02d:%02d:%02d" | format(hours, minutes, seconds) }}!
       selector:
         text:
-          multiline: false
+          multiline: true
           type: text
           multiple: false
     notification_critical:
@@ -67,8 +69,7 @@ triggers:
   - trigger: state
     entity_id: !input cameras
     to: "unavailable"
-    for:
-      seconds: !input offline_duration
+    for: !input offline_duration
 
 action:
   - variables:
