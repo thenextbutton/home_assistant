@@ -1,6 +1,6 @@
 id: camera_offline_notifier
 blueprint:
-  name: Camera Offline Notifier BETA (v0.0.4)
+  name: Camera Offline Notifier BETA (v0.0.6)
   homeassistant:
     min_version: "2024.6.0"
   description: Receive push notifications on a mobile device when selected cameras go offline. This ensures timely awareness of any camera connectivity issues.
@@ -12,12 +12,12 @@ blueprint:
   input:
     camera_selection:
       name: Camera Selection
-      description: "Choose which cameras to monitor for offline events."
+      description: "Choose which camera(s) to monitor for offline events."
       icon: mdi:cctv
       collapsed: false
       input:
         cameras:
-          name: Cameras to Monitor
+          name: Camera(s) to Monitor
           description: Select one or more camera entities for offline status monitoring.
           selector:
             entity:
@@ -38,7 +38,8 @@ blueprint:
             device:
               filter:
                 integration: mobile_app
-              multiple: false
+              multiple: true
+
         offline_duration:
           name: Offline Duration
           description: Set the duration a camera must be offline (unavailable) before a notification is sent.
@@ -47,6 +48,16 @@ blueprint:
             duration:
               enable_day: false
               enable_millisecond: false
+
+        cooldown_duration:
+          name: Cooldown Duration
+          description: Set the cooldown duration to prevent repeated notifications. Set to 0 for no cooldown.
+          default: { hours: 0, minutes: 0, seconds: 0 }
+          selector:
+            duration:
+              enable_day: false
+              enable_millisecond: false
+
         notification_title:
           name: Notification Title
           description: Enter the desired title for the push notification.
@@ -56,6 +67,7 @@ blueprint:
               multiline: false
               type: text
               multiple: false
+
         notification_message:
           name: Notification Message
           description: Customize the message that will appear in the push notification.
@@ -70,6 +82,7 @@ blueprint:
               multiline: true
               type: text
               multiple: false
+
         notification_critical:
           name: Critical Notification
           description: Enable this option to send a critical alert that bypasses silent mode settings on the device.
@@ -90,28 +103,43 @@ action:
       notification_message: !input notification_message
       notification_critical: !input notification_critical
       notify_devices: !input notify_devices
+      cooldown_input_data: !input cooldown_duration
+      cooldown_seconds: >
+        {{ (
+            ( cooldown_input_data.hours | default(0) ) | int * 3600 ) +
+            ( ( cooldown_input_data.minutes | default(0) ) | int * 60 ) +
+            ( ( cooldown_input_data.seconds | default(0) ) | int )
+        }}
 
-  - alias: "Send a notification to the device"
-    sequence:
-      - device_id: !input notify_devices
-        domain: mobile_app
-        type: notify
-        title: !input notification_title
-        message: !input notification_message
-        data: >
-          {% if notification_critical %}
-          {% set critical_data = {
-              'ttl': 0,
-              'priority': 'high',
-              'push': {
-                  'sound': {
-                      'name': 'default',
-                      'critical': 1,
-                      'volume': 1.0
+  - condition: template
+    value_template: >
+      {% if cooldown_seconds == 0 %}
+        true # No cooldown, always allow
+      {% else %}
+        {{ not this.attributes.last_triggered or (now() - this.attributes.last_triggered).total_seconds() >= cooldown_seconds }}
+      {% endif %}
+
+  - repeat:
+      for_each: !input notify_devices 
+      sequence:
+        - service_template: 'notify.mobile_app_{{ device_attr(repeat.item, ''name'') | lower | replace('' '', ''_'') | replace("''", '''') | replace(''’'', '''') }}'
+          data:
+            title: "{{ notification_title }}"
+            message: "{{ notification_message }}"
+            data: >
+              {% if notification_critical %}
+              {% set critical_data = {
+                  'ttl': 0,
+                  'priority': 'high',
+                  'push': {
+                      'sound': {
+                          'name': 'default',
+                          'critical': 1,
+                          'volume': 1.0
+                      }
                   }
-              }
-          } %}
-          {{ critical_data }}
-          {% else %}
-          {}
-          {% endif %}
+              } %}
+              {{ critical_data }}
+              {% else %}
+              {}
+              {% endif %}
