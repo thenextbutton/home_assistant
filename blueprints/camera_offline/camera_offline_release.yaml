@@ -1,6 +1,6 @@
 id: camera_offline_notifier
 blueprint:
-  name: Camera Offline Notifier RELEASE (v0.0.2)
+  name: Camera Offline Notifier RELEASE (v0.0.7)
   homeassistant:
     min_version: "2024.6.0"
   description: Receive push notifications on a mobile device when selected cameras go offline. This ensures timely awareness of any camera connectivity issues.
