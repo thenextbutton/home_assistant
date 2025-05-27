@@ -1,6 +1,6 @@
 id: camera_offline_notifier
 blueprint:
-  name: Camera Offline Notifier BETA (v0.0.6)
+  name: Camera Offline Notifier BETA (v0.0.7)
   homeassistant:
     min_version: "2024.6.0"
   description: Receive push notifications on a mobile device when selected cameras go offline. This ensures timely awareness of any camera connectivity issues.
@@ -51,7 +51,7 @@ blueprint:
 
         cooldown_duration:
           name: Cooldown Duration
-          description: Set the cooldown duration to prevent repeated notifications. Set to 0 for no cooldown.
+          description: "Set the cooldown duration. Once a camera offline notification is sent, **no further notifications (for any camera)** will be sent until this period expires. Set to 0 to disable."
           default: { hours: 0, minutes: 0, seconds: 0 }
           selector:
             duration:
