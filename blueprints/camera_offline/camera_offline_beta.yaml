@@ -113,11 +113,7 @@ action:
 
   - condition: template
     value_template: >
-      {% if cooldown_seconds == 0 %}
-        true # No cooldown, always allow
-      {% else %}
-        {{ not this.attributes.last_triggered or (now() - this.attributes.last_triggered).total_seconds() >= cooldown_seconds }}
-      {% endif %}
+      {{ cooldown_seconds == 0 or this.attributes.last_triggered is not defined or this.attributes.last_triggered is none or (now() - this.attributes.last_triggered).total_seconds() >= cooldown_seconds }}
 
   - repeat:
       for_each: !input notify_devices 
