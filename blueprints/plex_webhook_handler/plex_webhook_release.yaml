@@ -393,7 +393,7 @@ action:
         data:
           title: "Plex Client Name/UUID:"
           message: |
-            Client: {{ payload.Player.title if 'Player' in payload else 'Not Found!' }}
+            Name: {{ payload.Player.title if 'Player' in payload else 'Not Found!' }}
             UUID: {{ payload.Player.uuid if 'Player' in payload else 'Not Found!' }}
           notification_id: plex_webhook_blueprint_client_name
 
