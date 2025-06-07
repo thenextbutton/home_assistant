@@ -1,0 +1,135 @@
+{
+    "notification_type": "{{NotificationType}}",
+    "user_name": "{{NotificationUsername}}",
+    "device_name": "{{DeviceName}}",
+    "device_id": "{{DeviceId}}",
+    "client_name": "{{ClientName}}",
+    "server_name": "{{ServerName}}",
+    "server_id": "{{ServerId}}",
+    "server_version": "{{ServerVersion}}"
+    {{#if_equals ItemType "Movie"}}
+        ,"item_id": "{{ItemId}}",
+        "item_type": "{{ItemType}}",
+        "item_name": "{{Name}}",
+        "thumbnail_url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+        "year": "{{Year}}",
+        "overview": "{{Overview}}",
+        "genres": "{{Genres}}"
+    {{/if_equals}}
+    {{#if_equals ItemType "Audio"}}
+        ,"item_id": "{{ItemId}}",
+        "item_type": "{{ItemType}}",
+        "item_name": "{{Name}}",
+        "thumbnail_url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+        "album": "{{Album}}",
+        "artist": "{{Artist}}",
+        "genres": "{{Genres}}",
+        "year": "{{Year}}"
+    {{/if_equals}}
+    {{#if_equals ItemType "MusicAlbum"}}
+        ,"item_id": "{{ItemId}}",
+        "item_type": "{{ItemType}}",
+        "item_name": "{{Name}}",
+        "thumbnail_url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+        "album": "{{Album}}",
+        "artist": "{{Artist}}",
+        "genres": "{{Genres}}",
+        "year": "{{Year}}",
+        "runtime_ticks": "{{RunTimeTicks}}",
+        "runtime": "{{RunTime}}"
+    {{/if_equals}}
+    {{#if_equals ItemType "Episode"}}
+        ,"item_id": "{{ItemId}}",
+        "item_type": "{{ItemType}}",
+        "item_name": "{{Name}}",
+        "thumbnail_url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+        "series_name": "{{SeriesName}}",
+        "season_number": "{{SeasonNumber}}",
+        "season_number_00": "{{SeasonNumber00}}",
+        "episode_number": "{{EpisodeNumber}}",
+        "episode_number_00": "{{EpisodeNumber00}}",
+        "episode_year": "{{Year}}",
+        "overview": "{{Overview}}",
+        "genres": "{{Genres}}"
+        "series_id": "{{SeriesId}}"
+    {{/if_equals}}
+    {{#if_equals ItemType "Season"}}
+        ,"item_id": "{{ItemId}}",
+        "item_type": "{{ItemType}}",
+        "item_name": "{{Name}}",
+        "thumbnail_url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+        "series_name": "{{SeriesName}}",
+        "series_id": "{{SeriesId}}",
+        "season_number": "{{SeasonNumber}}",
+        "season_number_00": "{{SeasonNumber00}}",
+        "overview": "{{Overview}}",
+        "year": "{{Year}}"
+    {{/if_equals}}
+    {{#if_equals ItemType "Series"}}
+        ,"item_id": "{{ItemId}}",
+        "item_type": "{{ItemType}}",
+        "item_name": "{{Name}}",
+        "thumbnail_url": "{{ServerUrl}}/Items/{{ItemId}}/Images/Primary",
+        "overview": "{{Overview}}",
+        "year": "{{Year}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "PlaybackStart"}}
+        ,"event_type": "playback_start",
+        "runtime_ticks": "{{RunTimeTicks}}",
+        "play_method": "{{PlayMethod}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "PlaybackProgress"}}
+        ,"event_type": "playback_progress",
+        "playback_position_ticks": "{{PlaybackPositionTicks}}",
+        "runtime_ticks": "{{RunTimeTicks}}",
+        "is_paused": "{{IsPaused}}",
+        "play_method": "{{PlayMethod}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "PlaybackStop"}}
+        ,"event_type": "playback_stop",
+        "played_to_completion": "{{PlayedToCompletion}}",
+        "playback_position_ticks": "{{PlaybackPositionTicks}}",
+        "runtime_ticks": "{{RunTimeTicks}}",
+        "play_method": "{{PlayMethod}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "UserCreated"}}
+        ,"event_type": "user_created",
+        "user_id": "{{UserId}}",
+        "is_admin": "{{IsAdmin}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "UserDeleted"}}
+        ,"event_type": "user_deleted",
+        "user_id": "{{UserId}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "UserLockedOut"}}
+        ,"event_type": "user_locked_out",
+        "user_id": "{{UserId}}",
+        "is_locked_out": "{{IsLockedOut}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "UserPasswordChanged"}}
+        ,"event_type": "user_password_changed",
+        "user_id": "{{UserId}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "UserUpdated"}}
+        ,"event_type": "user_updated",
+        "user_id": "{{UserId}}",
+        "is_admin": "{{IsAdmin}}",
+        "is_locked_out": "{{IsLockedOut}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "AuthenticationSuccess"}}
+        ,"event_type": "authentication_success",
+        "user_id": "{{UserId}}",
+        "last_login_date": "{{LastLoginDate}}",
+        "last_activity_date": "{{LastActivityDate}}",
+        "client": "{{Client}}",
+        "remote_end_point": "{{RemoteEndPoint}}"
+    {{/if_equals}}
+    {{#if_equals NotificationType "AuthenticationFailure"}}
+        ,"event_type": "authentication_failure",
+        "username": "{{Username}}",
+        "user_id": "{{UserId}}",
+        "app": "{{App}}",
+        "app_version": "{{AppVersion}}",
+        "remote_end_point": "{{RemoteEndPoint}}"
+    {{/if_equals}}
+}
