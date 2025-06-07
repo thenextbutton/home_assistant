@@ -1,0 +1,704 @@
+id: jellyfin_webhook_handler_v2_release
+blueprint:
+  name: Jellyfin Webhook Handler v2 RELEASE (v2.4.9)
+  homeassistant:
+    min_version: "2024.6.0"
+  description: |
+    Automate Home Assistant actions using Jellyfin webhooks.
+    A Client Name or ID is required for playback and media event actions.
+
+    **Important:** This blueprint requires a specific webhook template to be configured in Jellyfin.
+    - Full setup instructions: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler_v2/readme.md
+    - Required webhook template design: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler_v2/webhook_template.handlebars
+
+    For general webhook setup, see:
+    - Home Assistant webhook trigger: https://www.home-assistant.io/docs/automation/trigger#webhook-trigger
+    - Jellyfin Webhook Plugin: https://github.com/jellyfin/jellyfin-plugin-webhook
+
+  domain: automation
+  
+  source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler_v2/jellyfin_webhook_release_v2.yaml
+  
+  input:
+    webhook_id:
+      name: Webhook ID
+      description: |
+        Enter the unique ID for your webhook.
+        Configure Jellyfin to send notifications to:
+        `http://{your-home-assistant}:8123/api/webhook/{webhook_id}`
+      selector:
+        text:
+          multiline: false
+          multiple: false
+      default: ""
+    webhook_local_only:
+      name: Webhook Local Only
+      description: |
+        Enable to accept webhooks only from your local network.
+        For enhanced security, keep this enabled unless triggering directly from the internet.
+      selector:
+        boolean: {}
+      default: true
+    jellyfin_ispaused_helper:
+      name: Select a Toggle Helper for pause events
+      description: Select a Toggle Boolean helper to track Jellyfin's paused state.
+      selector:
+        entity:
+          multiple: false
+          filter:
+            - domain: input_boolean
+
+    jellyfin_player_details:
+      name: Player Details
+      description: Jellyfin client name or ID. ID takes precedence if both are provided.
+      icon: mdi:devices
+      collapsed: false
+      input:
+        jellyfin_client_id:
+          name: Jellyfin Client ID
+          description: Trigger actions for a specific Jellyfin client by its ID.
+          selector:
+            text:
+              multiline: false
+              multiple: false
+          default: ""
+        jellyfin_client:
+          name: Jellyfin Client Name
+          description: Trigger actions for a specific Jellyfin client by its name.
+          selector:
+            text:
+              multiline: false
+              multiple: false
+          default: ""
+        jellyfin_client_retrieve:
+          name: Jellyfin Client Name/ID ?
+          description: |
+            Enable to receive a notification in Home Assistant containing the Jellyfin client name/ID when a webhook is triggered.
+            Ensure webhooks are correctly configured in Jellyfin and sending to Home Assistant.
+          selector:
+            boolean: {}
+          default: false
+
+    movie_actions:
+      name: Movie Actions
+      description: Configure actions for Jellyfin Movie events.
+      icon: mdi:movie
+      collapsed: true
+      input:
+        movie_play_actions:
+          name: Movie Play Actions
+          description: Actions when a movie starts playing.
+          selector:
+            action: {}
+          default: []
+        movie_paused_actions:
+          name: Movie Pause Actions
+          description: Actions when a movie is paused.
+          selector:
+            action: {}
+          default: []
+        movie_resume_mimics_play:
+          name: Movie Resume Mimics Play Actions
+          description: If enabled, 'Play Actions' will run when a movie resumes from pause.
+          selector:
+            boolean: {}
+          default: false
+        movie_resume_actions:
+          name: Movie Resume Actions
+          description: Actions when a movie resumes playing from pause. These actions are not used if 'Resume Mimics Play' is enabled.
+          selector:
+            action: {}
+          default: []
+        movie_stop_actions:
+          name: Movie Stop Actions
+          description: Actions when a movie stops playing.
+          selector:
+            action: {}
+          default: []
+
+    music_actions:
+      name: Music Actions
+      description: Configure actions for Jellyfin Music events.
+      icon: mdi:music
+      collapsed: true
+      input:
+        audio_play_actions:
+          name: Music Play Actions
+          description: Actions when a music track starts playing.
+          selector:
+            action: {}
+          default: []
+        audio_paused_actions:
+          name: Music Pause Actions
+          description: Actions when a music track is paused.
+          selector:
+            action: {}
+          default: []
+        audio_resume_mimics_play:
+          name: Music Resume Mimics Play Actions
+          description: If enabled, 'Play Actions' will run when a track resumes from pause.
+          selector:
+            boolean: {}
+          default: false
+        audio_resume_actions:
+          name: Music Resume Actions
+          description: Actions when a music track resumes playing from pause. These actions are not used if 'Resume Mimics Play' is enabled.
+          selector:
+            action: {}
+          default: []
+        audio_stop_actions:
+          name: Music Stop Actions
+          description: Actions when a music track stops playing.
+          selector:
+            action: {}
+          default: []
+
+    television_actions:
+      name: TV Show Actions
+      description: Configure actions for Jellyfin TV Show events.
+      icon: mdi:television
+      collapsed: true
+      input:
+        episode_play_actions:
+          name: TV Show Play Actions
+          description: Actions when a TV episode starts playing.
+          selector:
+            action: {}
+          default: []
+        episode_paused_actions:
+          name: TV Show Pause Actions
+          description: Actions when a TV episode is paused.
+          selector:
+            action: {}
+          default: []
+        episode_resume_mimics_play:
+          name: TV Show Resume Mimics Play Actions
+          description: If enabled, 'Play Actions' will run when a TV episode resumes.
+          selector:
+            boolean: {}
+          default: false
+        episode_resume_actions:
+          name: TV Show Resume Actions
+          description: Actions when a TV episode resumes playing from pause. These actions are not used if 'Resume Mimics Play' is enabled.
+          selector:
+            action: {}
+          default: []
+        episode_stop_actions:
+          name: TV Show Stop Actions
+          description: Actions when a TV episode stops playing.
+          selector:
+            action: {}
+          default: []
+
+    securtity_actions:
+      name: Security Events
+      description: Configure actions for Jellyfin authentication events.
+      icon: mdi:shield-account
+      collapsed: true
+      input:
+        authentication_success_actions:
+          name: Authentication Success
+          description: Actions when a user successfully logs in to the server.
+          selector:
+            action: {}
+          default: []
+        authentication_failure_actions:
+          name: Authentication Failure
+          description: Actions when a user fails to log in to the server.
+          selector:
+            action: {}
+          default: []
+
+    user_actions:
+      name: User Account Management
+      description: Configure actions for Jellyfin user account management events (creation, deletion, password changes, lockouts).
+      icon: mdi:card-account-details
+      collapsed: true
+      input:
+        user_created_actions:
+          name: User Created Actions
+          description: Actions when a user is created.
+          selector:
+            action: {}
+          default: []
+        user_deleted_actions:
+          name: User Deleted Actions
+          description: Actions when a user is deleted.
+          selector:
+            action: {}
+          default: []
+        user_updated_actions:
+          name: User Updated Actions
+          description: Actions when a user account is updated.
+          selector:
+            action: {}
+          default: []
+        user_password_actions:
+          name: User Password Changed Actions
+          description: Actions when a user password is changed.
+          selector:
+            action: {}
+          default: []
+        user_locked_actions:
+          name: User Locked Out Actions
+          description: Actions when a user account is locked out.
+          selector:
+            action: {}
+          default: []
+
+    items_added_actions:
+      name: Items Added
+      description: Configure actions for newly added Jellyfin library items.
+      icon: mdi:new-box
+      collapsed: true
+      input:
+        movie_new_actions:
+          name: New Movie Actions
+          description: Actions when a new movie is added to the library.
+          selector:
+            action: {}
+          default: []
+        music_new_actions:
+          name: New Music Actions
+          description: Actions when new music is added to the library.
+          selector:
+            action: {}
+          default: []
+        album_new_actions:
+          name: New Music Album Actions
+          description: Actions when new music album is added to the library.
+          selector:
+            action: {}
+          default: []
+        episode_new_actions:
+          name: New TV Episode Actions
+          description: Actions when a new TV episode is added to the library.
+          selector:
+            action: {}
+          default: []
+        series_new_actions:
+          name: New TV Series Actions
+          description: Actions when a new TV series is added to the library.
+          selector:
+            action: {}
+          default: []
+        season_new_actions:
+          name: New TV Season Actions
+          description: Actions when a new TV season is added to the library.
+          selector:
+            action: {}
+          default: []
+
+    items_deleted_actions:
+      name: Items Deleted
+      description: Configure actions for Jellyfin library items deleted.
+      icon: mdi:delete
+      collapsed: true
+      input:
+        movie_deleted_actions:
+          name: Movie Deleted Actions
+          description: Actions when a movie is deleted from the library.
+          selector:
+            action: {}
+          default: []
+        music_deleted_actions:
+          name: Music Deleted Actions
+          description: Actions when music is deleted from the library.
+          selector:
+            action: {}
+          default: []
+        album_deleted_actions:
+          name: Music Album Deleted Actions
+          description: Actions when music album is deleted from the library.
+          selector:
+            action: {}
+          default: []
+        episode_deleted_actions:
+          name: TV Episode Deleted Actions
+          description: Actions when a TV episode is deleted from the library.
+          selector:
+            action: {}
+          default: []
+        series_deleted_actions:
+          name: TV Series Deleted Actions
+          description: Actions when a TV series is deleted from the library.
+          selector:
+            action: {}
+          default: []
+        season_deleted_actions:
+          name: TV Season Deleted Actions
+          description: Actions when a TV season is deleted from the library.
+          selector:
+            action: {}
+          default: []
+
+    automation_actions:
+      name: Automation Actions
+      description: Advanced settings for automation behavior.
+      icon: mdi:cog
+      collapsed: true
+      input:
+        automation_mode:
+          name: Automation Mode
+          description: "Set the automation's mode to manage how it handles new triggers during an active run."
+          selector:
+            select:
+              mode: list
+              multiple: false
+              options:
+                - label: Single
+                  value: single
+                - label: Restart
+                  value: restart
+                - label: Queued
+                  value: queued
+                - label: Parallel (Default)
+                  value: parallel
+          default: parallel
+        trace_count:
+          name: Trace Count
+          description: Number of trace logs to store for debugging (1-20, default 5).
+          selector:
+            number:
+              min: 1
+              max: 20
+              step: 1
+              mode: box
+          default: 5
+
+mode: !input automation_mode
+
+triggers:
+  - trigger: webhook
+    allowed_methods:
+      - POST
+      - PUT
+    local_only: !input webhook_local_only
+    webhook_id: !input webhook_id
+
+conditions: []
+
+action:
+  - variables:
+      payload: "{{ trigger.json }}"
+      player_id: "{{ payload.device_id if 'device_id' in payload else None }}"
+      player_title: "{{ payload.device_name if 'device_name' in payload else None }}"
+      jellyfin_client_retrieve: !input jellyfin_client_retrieve
+      jellyfin_client: !input jellyfin_client
+      jellyfin_client_id: !input jellyfin_client_id
+      jellyfin_ispaused_helper: !input jellyfin_ispaused_helper
+      movie_resume_mimics_play: !input movie_resume_mimics_play
+      episode_resume_mimics_play: !input episode_resume_mimics_play
+      audio_resume_mimics_play: !input audio_resume_mimics_play
+      trace_count: !input trace_count
+
+  - if:
+      - condition: template
+        value_template: "{{ jellyfin_client_retrieve == true }}"
+    then:
+      - action: persistent_notification.create
+        data:
+          title: "Jellyfin Client Name/ID:"
+          message: |
+            Client: {{ payload.device_name if 'device_name' in payload else 'Not Found!' }}
+            ID: {{ payload.device_id if 'device_id' in payload else 'Not Found!' }}
+          notification_id: jellyfin_webhook_client_name
+
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ payload.notification_type == 'ItemAdded' }}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Movie'}}"
+                sequence: !input movie_new_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Series'}}"
+                sequence: !input series_new_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Season'}}"
+                sequence: !input season_new_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Episode'}}"
+                sequence: !input episode_new_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'MusicAlbum'}}"
+                sequence: !input album_new_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Audio'}}"
+                sequence: !input music_new_actions
+
+      - conditions:
+          - condition: template
+            value_template: "{{ payload.notification_type == 'ItemDeleted' }}"
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Movie'}}"
+                sequence: !input movie_deleted_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Series'}}"
+                sequence: !input series_deleted_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Season'}}"
+                sequence: !input season_deleted_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Episode'}}"
+                sequence: !input episode_deleted_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'MusicAlbum'}}"
+                sequence: !input album_deleted_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.item_type == 'Audio'}}"
+                sequence: !input music_deleted_actions
+
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ payload.notification_type in [
+              'UserCreated',
+                'UserDeleted',
+                'UserUpdated',
+                'UserPasswordChanged',
+                'UserLockedOut'
+              ] }}
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'UserCreated' }}"
+                sequence: !input user_created_actions
+
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'UserDeleted' }}"
+                sequence: !input user_deleted_actions
+
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'UserUpdated' }}"
+                sequence: !input user_updated_actions
+
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'UserPasswordChanged' }}"
+                sequence: !input user_password_actions
+
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'UserLockedOut' }}"
+                sequence: !input user_locked_actions
+
+      - conditions:
+          - condition: template
+            value_template: >
+              {{ payload.notification_type in [
+              'AuthenticationSuccess',
+                'AuthenticationFailure'
+              ] }}
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'AuthenticationSuccess' }}"
+                sequence: !input authentication_success_actions
+
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'AuthenticationFailure' }}"
+                sequence: !input authentication_failure_actions
+
+      - conditions:
+          - condition: template
+            value_template:
+              "{{ player_id.lower().strip() == jellyfin_client_id.lower().strip() or
+              player_title.lower().strip() == jellyfin_client.lower().strip()}}"
+
+        #PLAYBACK START EVENTS
+        sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'PlaybackStart' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Movie' }}"
+                        sequence:
+                          - parallel:
+                              - sequence: !input movie_play_actions
+                              - service: input_boolean.turn_off
+                                target:
+                                  entity_id: !input jellyfin_ispaused_helper
+
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Episode' }}"
+                        sequence:
+                          - parallel:
+                              - sequence: !input episode_play_actions
+                              - service: input_boolean.turn_off
+                                target:
+                                  entity_id: !input jellyfin_ispaused_helper
+
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Audio' }}"
+                        sequence:
+                          - parallel:
+                              - sequence: !input audio_play_actions
+                              - service: input_boolean.turn_off
+                                target:
+                                  entity_id: !input jellyfin_ispaused_helper
+
+              #PLAYBACK STOP EVENTS
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'PlaybackStop' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Movie' }}"
+                        sequence:
+                          - parallel:
+                              - sequence: !input movie_stop_actions
+                              - service: input_boolean.turn_off
+                                target:
+                                  entity_id: !input jellyfin_ispaused_helper
+
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Episode' }}"
+                        sequence:
+                          - parallel:
+                              - sequence: !input episode_stop_actions
+                              - service: input_boolean.turn_off
+                                target:
+                                  entity_id: !input jellyfin_ispaused_helper
+
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Audio' }}"
+                        sequence:
+                          - parallel:
+                              - sequence: !input audio_stop_actions
+                              - service: input_boolean.turn_off
+                                target:
+                                  entity_id: !input jellyfin_ispaused_helper
+
+              #PLAYBACK PROGRESS EVENTS
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.notification_type == 'PlaybackProgress' }}"
+                sequence:
+                  - choose:
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Movie' }}"
+                        sequence:
+                          - choose:
+                              - conditions:
+                                  - condition: template
+                                    value_template: >
+                                      {{ payload.is_paused == "True" and states(jellyfin_ispaused_helper) == 'off' }}
+                                sequence:
+                                  - service: input_boolean.turn_on
+                                    target:
+                                      entity_id: !input jellyfin_ispaused_helper
+                                  - sequence: !input movie_paused_actions
+                              - conditions:
+                                  - condition: template
+                                    value_template: >
+                                      {{ payload.is_paused == "False" and states(jellyfin_ispaused_helper) == 'on' }}
+                                sequence:
+                                  - service: input_boolean.turn_off
+                                    target:
+                                      entity_id: !input jellyfin_ispaused_helper
+                                  - choose:
+                                      - conditions:
+                                          - condition: template
+                                            value_template: "{{ movie_resume_mimics_play }}"
+                                        sequence:
+                                          - sequence: !input movie_play_actions
+                                    default:
+                                      - sequence: !input movie_resume_actions
+
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Episode' }}"
+                        sequence:
+                          - choose:
+                              - conditions:
+                                  - condition: template
+                                    value_template: >
+                                      {{ payload.is_paused == "True" and states(jellyfin_ispaused_helper) == 'off' }}
+                                sequence:
+                                  - service: input_boolean.turn_on
+                                    target:
+                                      entity_id: !input jellyfin_ispaused_helper
+                                  - sequence: !input episode_paused_actions
+                              - conditions:
+                                  - condition: template
+                                    value_template: >
+                                      {{ payload.is_paused == "False" and states(jellyfin_ispaused_helper) == 'on' }}
+                                sequence:
+                                  - service: input_boolean.turn_off
+                                    target:
+                                      entity_id: !input jellyfin_ispaused_helper
+                                  - choose:
+                                      - conditions:
+                                          - condition: template
+                                            value_template: "{{ episode_resume_mimics_play }}"
+                                        sequence:
+                                          - sequence: !input episode_play_actions
+                                    default:
+                                      - sequence: !input episode_resume_actions
+
+                      - conditions:
+                          - condition: template
+                            value_template: "{{ payload.item_type == 'Audio' }}"
+                        sequence:
+                          - choose:
+                              - conditions:
+                                  - condition: template
+                                    value_template: >
+                                      {{ payload.is_paused == "True" and states(jellyfin_ispaused_helper) == 'off' }}
+                                sequence:
+                                  - service: input_boolean.turn_on
+                                    target:
+                                      entity_id: !input jellyfin_ispaused_helper
+                                  - sequence: !input audio_paused_actions
+                              - conditions:
+                                  - condition: template
+                                    value_template: >
+                                      {{ payload.is_paused == "False" and states(jellyfin_ispaused_helper) == 'on' }}
+                                sequence:
+                                  - service: input_boolean.turn_off
+                                    target:
+                                      entity_id: !input jellyfin_ispaused_helper
+                                  - choose:
+                                      - conditions:
+                                          - condition: template
+                                            value_template: "{{ audio_resume_mimics_play }}"
+                                        sequence:
+                                          - sequence: !input audio_play_actions
+                                    default:
+                                      - sequence: !input audio_resume_actions
+
+trace:
+  stored_traces: !input trace_count
