@@ -52,17 +52,18 @@ Item Type:
 <br><br>Add Requester Header:
 <br>Key: Content-Type
 <br>Value: application/json
+<br><br>
+Home Assistant:<br><br>
 
-Home Assistant
-
-Create a new toggle helper<br>
+Create a new toggle helper<br><br>
 Settings > Devices & services > Helpers > + Create Helper
-<br>
+<br><br>
 Call it something memorable, you will need more than one if deploying to more than one client/room.
-<br>
+<br><br>
 Settings > Automations & scenes > Blueprints > select Jellyfin Webhook v2
-<br>
+<br><br>
 Enter Webhook ID, Select the Toggle Helper you have just created and enter the Jellyfin Client ID/Name (if not sure then save the automation without it and toggle the 'Jellyfin Client Name/ID', as long as you have setup the webhook information correctly a notification will appear within home assistant with the details. It is probably preferred to use the Client ID but the name option is there if needed, If you enter the ID and a Name the ID will take preference over Name.
 <br><br>
-![image](https://github.com/user-attachments/assets/3d68feaf-bada-4856-8f9d-97774953005e)
+![image](https://github.com/user-attachments/assets/d8ba6c65-e508-4109-b101-26628f7cd775)
+
 
