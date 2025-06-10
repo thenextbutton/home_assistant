@@ -1,4 +1,4 @@
-Here are example payloads of what are sent from the Jellyfin server when webhooks are received when using the required [template](https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler_v2/webhook_template.handlebars)
+ ,Here are example payloads of what are sent from the Jellyfin server when webhooks are received when using the required [template](https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler_v2/webhook_template.handlebars)
 
 ---
 
@@ -23,10 +23,13 @@ Here are example payloads of what are sent from the Jellyfin server when webhook
 * [Music Audio Item Added](#music-audio-item-added)
 * [Music Audio Item Deleted](#music-audio-item-deleted)
 * [Movie Playback Start](#movie-playback-start)
+* [Movie Playback Progress](#movie-playback-progress)
 * [Movie Playback Stop](#movie-playback-stop)
 * [TV Show Episode Playback Start](#tv-show-episode-playback-start)
+* [TV Show Episode Playback Progress](#tv-show-episode-playback-progress)
 * [TV Show Episode Playback Stop](#tv-show-episode-playback-stop)
 * [Music Playback Start](#music-playback-start)
+* [Music Playback Progress](#music-playback-progress)
 * [Music Playback Stop](#music-playback-stop)
 * [Jinja Examples](#jinja-examples)
 
@@ -464,6 +467,36 @@ payload:
   play_method: DirectPlay
   is_paused: 'False'
 ```
+## Movie Playback Progress
+```yaml
+
+payload:
+  notification_type: PlaybackProgress
+  user_name: my_username
+  device_name: my_funky_player_name
+  device_id: >-
+    my_funky_player_id
+  client_name: Jellyfin Media Player
+  server_name: my_funky_server_name
+  server_id: my_funky_server_id
+  server_version: 10.10.7
+  item_id: f14f3e48-e868-df8e-9b1e-86f04e5eb0c0
+  item_type: Movie
+  item_name: The Adventures of Andr&#233; and Wally B.
+  thumbnail_url: >-
+    http://10.0.1.101:8096/Items/f14f3e48-e868-df8e-9b1e-86f04e5eb0c0/Images/Primary
+  year: '1984'
+  overview: >-
+    There's nothing like a restful nap in a pleasant wooded valley. But when
+    Andr&#233; awakens and is greeted by a pesky yellow-and-black striped insect
+    with a nasty stinger, he ends up taking a quick (and painful) hike.
+  genres: Family, Animation, Comedy
+  event_type: playback_progress
+  playback_position_ticks: '532820000'
+  runtime_ticks: '1231780000'
+  is_paused: 'False'
+  play_method: DirectPlay
+```
 ## Movie Playback Stop
 ```yaml
 
@@ -529,6 +562,41 @@ payload:
   play_method: DirectPlay
   is_paused: 'False'
 ```
+## TV Show Episode Playback Progress
+```yaml
+
+payload:
+  notification_type: PlaybackProgress
+  user_name: my_username
+  device_name: my_funky_player_name
+  device_id: >-
+    my_funky_player_id
+  client_name: Jellyfin Media Player
+  server_name: my_funky_server_name
+  server_id: my_funky_server_id
+  server_version: 10.10.7
+  item_id: 14072a95-20c9-c1af-49ab-13dda856613b
+  item_type: Episode
+  item_name: Uno
+  thumbnail_url: >-
+    http://10.0.1.101:8096/Items/14072a95-20c9-c1af-49ab-13dda856613b/Images/Primary
+  series_name: Better Call Saul
+  season_number: '1'
+  season_number_00: '01'
+  episode_number: '1'
+  episode_number_00: '01'
+  episode_year: '2015'
+  overview: >-
+    Jimmy works his magic in the courtroom. Unexpected inspiration leads him to
+    an unconventional pursuit of potential clients.
+  genres: Crime, Drama
+  series_id: 16c6001b-e2a4-0f2a-72d2-3bcedcdc6add
+  event_type: playback_progress
+  playback_position_ticks: '14932600000'
+  runtime_ticks: '31852030000'
+  is_paused: 'False'
+  play_method: DirectPlay
+```
 ## TV Show Episode Playback Stop
 ```yaml
 
@@ -592,6 +660,34 @@ payload:
   runtime_ticks: '2288933330'
   play_method: DirectPlay
   is_paused: 'False'
+```
+## Music Playback Progress
+```yaml
+
+payload:
+  notification_type: PlaybackProgress
+  user_name: my_username
+  device_name: my_funky_player_name
+  device_id: >-
+    my_funky_player_id
+  client_name: Jellyfin Media Player
+  server_name: my_funky_server_name
+  server_id: my_funky_server_id
+  server_version: 10.10.7
+  item_id: 2648c078-2a6c-fb48-f873-b2f7cdcf968f
+  item_type: Audio
+  item_name: Mr. Brownstone
+  thumbnail_url: >-
+    http://10.0.1.101:8096/Items/2648c078-2a6c-fb48-f873-b2f7cdcf968f/Images/Primary
+  album: Appetite for Destruction
+  artist: Guns N&#8217; Roses
+  genres: Hard Rock
+  year: '1987'
+  event_type: playback_progress
+  playback_position_ticks: '1136410000'
+  runtime_ticks: '2288933330'
+  is_paused: 'False'
+  play_method: DirectPlay
 ```
 ## Music Playback Stop
 ```yaml
