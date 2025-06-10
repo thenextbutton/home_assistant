@@ -16,7 +16,7 @@ blueprint:
     - Jellyfin Webhook Plugin: https://github.com/jellyfin/jellyfin-plugin-webhook
 
     Progress Process calculates the following usable variables within the progress actions:
-    - '{{ media_playback_time	}}' : 00:00:32 (format hh:mm:ss)
+    - '{{ media_playback_time }}' : 00:00:32 (format hh:mm:ss)
     - '{{ media_remaining_time }}' : 00:05:31 (format hh:mm:ss)
     - '{{ media_total_time }}': 00:06:03 (format hh:mm:ss)
     - '{{ media_played_percentange }}': 008.8% (format 000.0%)
