@@ -1,6 +1,6 @@
 id: plex_webhook_handler_release
 blueprint:
-  name: Plex Webhook Handler RELEASE (v0.3.8)
+  name: Plex Webhook Handler RELEASE (v0.4.2)
   homeassistant:
     min_version: "2024.6.0"
   description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/)."
@@ -32,12 +32,13 @@ blueprint:
       collapsed: false
       input:
         plex_client_uuid:
-          name: Plex Client UUID
-          description: "Enter the Plex client UUID to trigger the Movie, Music and TV Show actions."
+          name: Plex Client uuid
+          description: "Enter the Plex client uuid to trigger the Movie, Music and TV Show actions."
           selector:
             text:
               multiline: false
-              multiple: false
+              multiple: true
+              type: text
           default: ""
         plex_client:
           name: Plex Client Name
@@ -48,8 +49,8 @@ blueprint:
               multiple: false
           default: ""
         plex_client_retrieve:
-          name: Plex Client Name/UUID ?
-          description: "Enable this to generate a notification in Home Assistant with the Plex client name/UUID when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
+          name: Plex Client Name/uuid ?
+          description: "Enable this to generate a notification in Home Assistant with the Plex client name/uuid when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
           selector:
             boolean: {}
           default: false
@@ -391,10 +392,10 @@ action:
     then:
       - action: persistent_notification.create
         data:
-          title: "Plex Client Name/UUID:"
+          title: "Plex Client Name/uuid:"
           message: |
             Name: {{ payload.Player.title if 'Player' in payload else 'Not Found!' }}
-            UUID: {{ payload.Player.uuid if 'Player' in payload else 'Not Found!' }}
+            uuid: {{ payload.Player.uuid if 'Player' in payload else 'Not Found!' }}
           notification_id: plex_webhook_blueprint_client_name
 
   - choose:
@@ -476,9 +477,9 @@ action:
 
       - conditions:
           - condition: template
-            value_template:
-              "{{ player_uuid.lower().strip() == plex_client_uuid.lower().strip() or
-              player_title.lower().strip() == plex_client.lower().strip() }}"
+            value_template: >
+              {{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or
+                 (player_title | default('')).lower().strip() == plex_client.lower().strip() }}
         sequence:
           - choose:
               - conditions:
