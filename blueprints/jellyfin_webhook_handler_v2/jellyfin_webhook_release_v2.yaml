@@ -1,6 +1,6 @@
 id: jellyfin_webhook_handler_v2_release
 blueprint:
-  name: Jellyfin Webhook Handler v2 RELEASE (v2.4.9)
+  name: Jellyfin Webhook Handler RELEASE (v2.4.12)
   homeassistant:
     min_version: "2024.6.0"
   description: |
@@ -14,6 +14,14 @@ blueprint:
     For general webhook setup, see:
     - Home Assistant webhook trigger: https://www.home-assistant.io/docs/automation/trigger#webhook-trigger
     - Jellyfin Webhook Plugin: https://github.com/jellyfin/jellyfin-plugin-webhook
+
+    Progress Process calculates the following usable variables within the progress actions:
+    - '{{ media_playback_time	}}' : 00:00:32 (format hh:mm:ss)
+    - '{{ media_remaining_time }}' : 00:05:31 (format hh:mm:ss)
+    - '{{ media_total_time }}': 00:06:03 (format hh:mm:ss)
+    - '{{ media_played_percentange }}': 008.8% (format 000.0%)
+    - '{{ media_left_precentage }}': 091.2% (format 000.0%)
+
 
   domain: automation
   
@@ -115,43 +123,31 @@ blueprint:
           selector:
             action: {}
           default: []
-
-    music_actions:
-      name: Music Actions
-      description: Configure actions for Jellyfin Music events.
-      icon: mdi:music
-      collapsed: true
-      input:
-        audio_play_actions:
-          name: Music Play Actions
-          description: Actions when a music track starts playing.
-          selector:
-            action: {}
-          default: []
-        audio_paused_actions:
-          name: Music Pause Actions
-          description: Actions when a music track is paused.
-          selector:
-            action: {}
-          default: []
-        audio_resume_mimics_play:
-          name: Music Resume Mimics Play Actions
-          description: If enabled, 'Play Actions' will run when a track resumes from pause.
+        movie_progress_enabled:
+          name: Movie Playback Progress Process
+          description: When enabled, this processes movie playback progress. Be aware this feature could be resource-intensive, so use it carefully.
           selector:
             boolean: {}
           default: false
-        audio_resume_actions:
-          name: Music Resume Actions
-          description: Actions when a music track resumes playing from pause. These actions are not used if 'Resume Mimics Play' is enabled.
+        movie_progress_actions:
+          name: Movie Progress Actions
+          description: Actions when a playback progress update is received.
           selector:
             action: {}
-          default: []
-        audio_stop_actions:
-          name: Music Stop Actions
-          description: Actions when a music track stops playing.
-          selector:
-            action: {}
-          default: []
+          default:
+            - action: persistent_notification.create
+              alias: Movie Progress Example
+              metadata: {}
+              data:
+                message: |
+                  {{ payload.item_name }}
+
+                  user: {{ payload.user_name }}
+                  position: {{ media_playback_time }} ({{ media_percentage_played }})
+                  remaining: {{ media_remaining_time }} ({{ media_percentage_left }})
+                  total: {{ media_total_time }}
+                title: Movie Progress
+                notification_id: "{{ payload.user_name }}_movie_jellyfin_playbackprogress"
 
     television_actions:
       name: TV Show Actions
@@ -189,6 +185,94 @@ blueprint:
           selector:
             action: {}
           default: []
+        episode_progress_enabled:
+          name: TV Show Playback Progress Process
+          description: When enabled, this processes tv show playback progress. Be aware this feature could be resource-intensive, so use it carefully.
+          selector:
+            boolean: {}
+          default: false
+        episode_progress_actions:
+          name: TV Show Progress Actions
+          description: Actions when a playback progress update is received.
+          selector:
+            action: {}
+          default:
+            - action: persistent_notification.create
+              alias: Episode Progress Example
+              metadata: {}
+              data:
+                message: |
+                  {{ payload.series_name }} - Season {{ payload.season_number_00 }}, 
+                  Episode {{ payload.episode_number_00 }} ({{payload.item_name}})
+
+                  user: {{ payload.user_name }}
+                  position: {{ media_playback_time }} ({{ media_percentage_played }}) 
+                  remaining: {{ media_remaining_time }} ({{ media_percentage_left }}) 
+                  total: {{ media_total_time }}
+                title: TV Episode Progress
+                notification_id: "{{ payload.user_name }}_epsiode_jellyfin_playbackprogress"
+
+    music_actions:
+      name: Music Actions
+      description: Configure actions for Jellyfin Music events.
+      icon: mdi:music
+      collapsed: true
+      input:
+        audio_play_actions:
+          name: Music Play Actions
+          description: Actions when a music track starts playing.
+          selector:
+            action: {}
+          default: []
+        audio_paused_actions:
+          name: Music Pause Actions
+          description: Actions when a music track is paused.
+          selector:
+            action: {}
+          default: []
+        audio_resume_mimics_play:
+          name: Music Resume Mimics Play Actions
+          description: If enabled, 'Play Actions' will run when a track resumes from pause.
+          selector:
+            boolean: {}
+          default: false
+        audio_resume_actions:
+          name: Music Resume Actions
+          description: Actions when a music track resumes playing from pause. These actions are not used if 'Resume Mimics Play' is enabled.
+          selector:
+            action: {}
+          default: []
+        audio_stop_actions:
+          name: Music Stop Actions
+          description: Actions when a music track stops playing.
+          selector:
+            action: {}
+          default: []
+        audio_progress_enabled:
+          name: Music Playback Progress Process
+          description: When enabled, this processes music playback progress. Be aware this feature could be resource-intensive, so use it carefully.
+          selector:
+            boolean: {}
+          default: false
+        audio_progress_actions:
+          name: Music Progress Actions
+          description: Actions when a playback progress update is received.
+          selector:
+            action: {}
+          default:
+            - action: persistent_notification.create
+              alias: Music Progress Example
+              metadata: {}
+              data:
+                message: |
+                  {{ payload.artist }} - {{ payload.item_name }}
+
+                  user: {{ payload.user_name }}
+                  position: {{ media_playback_time }} ({{ media_percentage_played }})
+                  remaining: {{ media_remaining_time }} ({{ media_percentage_left }})
+                  total: {{ media_total_time }}
+                title: Music Progress
+                notification_id: "{{ payload.user_name }}_music_jellyfin_playbackprogress"
 
     securtity_actions:
       name: Security Events
@@ -391,6 +475,9 @@ action:
       episode_resume_mimics_play: !input episode_resume_mimics_play
       audio_resume_mimics_play: !input audio_resume_mimics_play
       trace_count: !input trace_count
+      movie_progress_enabled: !input movie_progress_enabled
+      episode_progress_enabled: !input episode_progress_enabled
+      audio_progress_enabled: !input audio_progress_enabled
 
   - if:
       - condition: template
@@ -526,10 +613,99 @@ action:
             value_template:
               "{{ player_id.lower().strip() == jellyfin_client_id.lower().strip() or
               player_title.lower().strip() == jellyfin_client.lower().strip()}}"
-
-        #PLAYBACK START EVENTS
         sequence:
+          #PLAYBACK PROGRESS
+          - if:
+              - condition: template
+                value_template: >
+                  {{ states(jellyfin_ispaused_helper) == 'off' and payload.notification_type == 'PlaybackProgress' and (
+                    (movie_progress_enabled and payload.item_type == 'Movie') or
+                    (episode_progress_enabled and payload.item_type == 'Episode') or
+                    (audio_progress_enabled and payload.item_type == 'Audio')
+                    )
+                  }}
+            then:
+              - variables:
+                  current_ticks_value: "{{ payload.playback_position_ticks | int(0) }}"
+                  total_ticks_value: "{{ payload.runtime_ticks | int(0) }}"
+
+                  media_playback_time: >
+                    {% set ticks = current_ticks_value | int %} {# Cast to int for calculation #}
+                    {% if ticks is not none and ticks >= 0 %}
+                    {% set td = timedelta(microseconds=(ticks/10)) %}
+                    {% set total_seconds_int = td.total_seconds() | int %}
+                    {% set hours = (total_seconds_int // 3600) %}
+                    {% set minutes = (total_seconds_int % 3600 // 60) %}
+                    {% set seconds = (total_seconds_int % 60) %}
+                    {{ "%02d:%02d:%02d" | format(hours, minutes, seconds) }}
+                    {% else %}
+                    00:00:00
+                    {% endif %}
+
+                  media_total_time: >
+                    {% set ticks = total_ticks_value | int %} {# Cast to int for calculation #}
+                    {% if ticks is not none and ticks >= 0 %}
+                    {% set td = timedelta(microseconds=(ticks/10)) %}
+                    {% set total_seconds_int = td.total_seconds() | int %}
+                    {% set hours = (total_seconds_int // 3600) %}
+                    {% set minutes = (total_seconds_int % 3600 // 60) %}
+                    {% set seconds = (total_seconds_int % 60) %}
+                    {{ "%02d:%02d:%02d" | format(hours, minutes, seconds) }}
+                    {% else %}
+                    00:00:00
+                    {% endif %}
+
+                  remaining_ticks: >
+                    {# Cast to int for subtraction #}
+                    {% set r_ticks = total_ticks_value | int - current_ticks_value | int %}
+                    {% if r_ticks < 0 %}
+                      {% set r_ticks = 0 %}
+                    {% endif %}
+                    {{ r_ticks }} {# This will be an integer, but might be read as string later #}
+
+                  media_remaining_time: >
+                    {# Cast remaining_ticks to int again for reliable calculation #}
+                    {% set td_remaining = timedelta(microseconds=(remaining_ticks | int / 10)) %}
+                    {% set total_seconds_remaining_int = td_remaining.total_seconds() | int %}
+                    {% set hours_remaining = (total_seconds_remaining_int // 3600) %}
+                    {% set minutes_remaining = (total_seconds_remaining_int % 3600 // 60) %}
+                    {% set seconds_remaining = (total_seconds_remaining_int % 60) %}
+                    {{ "%02d:%02d:%02d" | format(hours_remaining, minutes_remaining, seconds_remaining) }}
+
+                  media_percentage_played: >
+                    {# Cast to float for accurate percentage calculation #}
+                    {% if total_ticks_value | float > 0 %}
+                    {% set percentage_val = (current_ticks_value | float / total_ticks_value | float) * 100 %}
+                    {{ "%05.1f" | format(percentage_val) }}%
+                    {% else %}
+                      000.0%
+                    {% endif %}
+
+                  media_percentage_left: >
+                    {# Cast to float for accurate percentage calculation #}
+                    {% if total_ticks_value | float > 0 %}
+                    {% set percentage_val = (remaining_ticks | float / total_ticks_value | float) * 100 %}
+                    {{ "%05.1f" | format(percentage_val) }}%
+                    {% else %}
+                      000.0%
+                    {% endif %}
+
+              - choose:
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ payload.item_type == 'Movie' }}"
+                    sequence: !input movie_progress_actions
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ payload.item_type == 'Episode' }}"
+                    sequence: !input episode_progress_actions
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ payload.item_type == 'Audio' }}"
+                    sequence: !input audio_progress_actions
+
           - choose:
+              #PLAYBACK START EVENTS
               - conditions:
                   - condition: template
                     value_template: "{{ payload.notification_type == 'PlaybackStart' }}"
