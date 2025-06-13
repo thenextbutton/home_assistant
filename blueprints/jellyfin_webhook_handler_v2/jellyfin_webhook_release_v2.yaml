@@ -1,6 +1,6 @@
 id: jellyfin_webhook_handler_v2_release
 blueprint:
-  name: Jellyfin Webhook Handler RELEASE (v2.4.12)
+  name: Jellyfin Webhook Handler RELEASE (v2.4.14)
   homeassistant:
     min_version: "2024.6.0"
   description: |
@@ -68,7 +68,8 @@ blueprint:
           selector:
             text:
               multiline: false
-              multiple: false
+              multiple: true
+              type: text
           default: ""
         jellyfin_client:
           name: Jellyfin Client Name
@@ -76,7 +77,8 @@ blueprint:
           selector:
             text:
               multiline: false
-              multiple: false
+              multiple: true
+              type: text
           default: ""
         jellyfin_client_retrieve:
           name: Jellyfin Client Name/ID ?
@@ -611,8 +613,8 @@ action:
       - conditions:
           - condition: template
             value_template:
-              "{{ player_id.lower().strip() == jellyfin_client_id.lower().strip() or
-              player_title.lower().strip() == jellyfin_client.lower().strip()}}"
+              "{{ (player_id | default('')).lower().strip() in (jellyfin_client_id | map('lower') | map('trim') | list) or\n
+              (player_title | default('')).lower().strip() in (jellyfin_client | map('lower') | map('trim') | list) }}\n"
         sequence:
           #PLAYBACK PROGRESS
           - if:
