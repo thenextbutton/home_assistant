@@ -488,7 +488,7 @@ action:
 
       - conditions:
           - condition: template
-            value_template: >
+            value_template:
               "{{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or\n
               (player_title | default('')).lower().strip() in (plex_client | map('lower') | map('trim') | list) }}\n"
         sequence:
