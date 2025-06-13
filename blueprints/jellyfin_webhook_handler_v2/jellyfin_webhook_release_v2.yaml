@@ -63,8 +63,8 @@ blueprint:
       collapsed: false
       input:
         jellyfin_client_id:
-          name: Jellyfin Client ID
-          description: Trigger actions for a specific Jellyfin client by its ID.
+          name: Jellyfin Client ID(s)
+          description: Trigger actions for a specific Jellyfin client by its ID. Multiple entries are allowed in case there are more than 1 player in a room.
           selector:
             text:
               multiline: false
@@ -72,8 +72,8 @@ blueprint:
               type: text
           default: ""
         jellyfin_client:
-          name: Jellyfin Client Name
-          description: Trigger actions for a specific Jellyfin client by its name.
+          name: Jellyfin Client Name(s)
+          description: Trigger actions for a specific Jellyfin client by its name. Multiple entries are allowed in case there are more than 1 player in a room.
           selector:
             text:
               multiline: false
