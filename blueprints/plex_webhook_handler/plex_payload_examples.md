@@ -33,85 +33,81 @@ Here are example payloads of data sent from the Plex server
 * [NEW Device](#new-device)
 * [Playback Started](#playback-started)
 
+
 ---
 
 ## Movie Play
-
+##### Movie starts playing.
 ```yaml
 
 ```
 ## Movie Pause
-
+##### Movie playback pauses.
 ```yaml
 
 ```
 ## Movie Resume
-
+##### Movie playback resumes.
 ```yaml
 
 ```
 ## Movie Scrobble
-
+##### Movie is viewed (played past the 90% mark).
 ```yaml
 
 ```
 ## Movie Stop
-
+##### Movie playback stops.
 ```yaml
 
 ```
 ## Episode Play
-
+##### TV Episode starts playing.
 ```yaml
 
 ```
 ## Episode Pause
-
+##### TV Episode playback pauses.
 ```yaml
 
 ```
 ## Episode Resume
-
+##### TV Episode playback resumes.
 ```yaml
 
 ```
 ## Episode Scrobble
-
+##### TV Episode is viewed (played past the 90% mark).
 ```yaml
 
 ```
 ## Episode Stop
-
-```yaml
-
-```
-## Episode Rate
-
+##### TV Episode playback stops.
 ```yaml
 
 ```
 ## Track Play
-
+##### Music Track starts playing.
 ```yaml
 
 ```
 ## Track Pause
-
+##### Music Track playback pauses.
 ```yaml
 
 ```
 ## Track Resume
-
+##### Music Track playback resumes.
 ```yaml
 
 ```
 ## Track Scrobble
-
+##### Music Track is played (played past the 90% mark).
 ```yaml
 
 ```
 ## Track Stop
-
+##### Music Track playback stops.
 ```yaml
 
 ```
@@ -141,45 +137,47 @@ Here are example payloads of data sent from the Plex server
 
 ```
 ## Movie Rate
-
+##### Movie is rated.
 ```yaml
 
 ```
 ## Collection Rate
-
+##### A Collection is rated.
 ```yaml
 
 ```
 ## Album Rate
-
+##### Album is rated.
 ```yaml
 
 ```
 ## Artist Rate
-
+##### Artist is rated.
 ```yaml
 
 ```
 ## Track Rate
-
+##### Music Track is rated.
 ```yaml
 
 ```
 ## Season Rate
-
+##### TV Season is rated.
 ```yaml
 
 ```
 ## Episode Rate
-
+##### TV Episode is rated.
 ```yaml
 
 ```
 ## Admin Database Backup
+##### A database backup is completed successfully via Scheduled Tasks.
 ```yaml
 
 ```
 ## Admin Database Corrupted
+##### Corruption is detected in the server database.
 ```yaml
 
 ```
@@ -188,6 +186,7 @@ Here are example payloads of data sent from the Plex server
 
 ```
 ## Playback Started
+##### Playback is started by a shared user for the server.
 ```yaml
 
 ```
