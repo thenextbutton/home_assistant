@@ -22,12 +22,19 @@ Here are example payloads of data sent from the Plex server
 * [Item Added Artist](#item-added-artist)
 * [Item Added Album](#item-added-album)
 * [Movie Rate](#movie-rate)
+* * [Star Ratings](#star-ratings)
 * [Collection Rate](#collection-rate)
+* * [Star Ratings](#star-ratings)
 * [Album Rate](#album-rate)
+* * [Star Ratings](#star-ratings)
 * [Artist Rate](#artist-rate)
+* * [Star Ratings](#star-ratings)
 * [Track Rate](#track-rate)
+* * [Star Ratings](#star-ratings)
 * [Season Rate](#season-rate)
+* * [Star Ratings](#star-ratings)
 * [Episode Rate](#episode-rate)
+* * [Star Ratings](#star-ratings)
 * [Admin Database Backup](#admin-database-backup)
 * [Admin Database Corrupted](#admin-database-corrupted)
 * [NEW Device](#new-device)
@@ -190,3 +197,4 @@ Here are example payloads of data sent from the Plex server
 ```yaml
 
 ```
+## Star Ratings
