@@ -197,4 +197,38 @@ Here are example payloads of data sent from the Plex server
 ```yaml
 
 ```
+
 ## Star Ratings
+
+☆☆☆☆☆<br>
+0 Stars / {payload.rating} = -1
+
+½☆☆☆☆<br>
+½ Star / {payload.rating} = 1
+
+★☆☆☆☆<br>
+1 Star / {payload.rating} = 2
+
+★½☆☆☆<br>
+1½ Stars / {payload.rating} = 3
+
+★★☆☆☆<br>
+2 Stars / {payload.rating} = 4
+
+★★½☆☆<br>
+2½ Stars / {payload.rating} = 5
+
+★★★☆☆<br>
+3 Stars / {payload.rating} = 6
+
+★★★½☆<br>
+3½ Stars / {payload.rating} = 7
+
+★★★★☆<br>
+4 Stars / {payload.rating} = 8
+
+★★★★½<br>
+4½ Stars / {payload.rating} = 9
+
+★★★★★<br>
+5 Stars / {payload.rating} = 10
