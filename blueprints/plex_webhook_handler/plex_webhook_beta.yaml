@@ -46,7 +46,8 @@ blueprint:
           selector:
             text:
               multiline: false
-              multiple: false
+              multiple: true
+              type: text
           default: ""
         plex_client_retrieve:
           name: Plex Client Name/UUID ?
@@ -488,8 +489,8 @@ action:
       - conditions:
           - condition: template
             value_template: >
-              {{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or
-                 (player_title | default('')).lower().strip() == plex_client.lower().strip() }}
+              "{{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or\n
+              (player_title | default('')).lower().strip() in (plex_client | map('lower') | map('trim') | list) }}\n"
         sequence:
           - choose:
               - conditions:
