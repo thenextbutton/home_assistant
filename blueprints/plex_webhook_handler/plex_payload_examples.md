@@ -6,24 +6,28 @@ Here are example payloads of data sent from the Plex server
 * [Movie Resume](#movie-resume)
 * [Movie Scrobble](#movie-scrobble)
 * [Movie Stop](#movie-stop)
-* [Movie Rate](#movie-rate)
 * [Episode Play](#episode-play)
 * [Episode Pause](#episode-pause)
 * [Episode Resume](#episode-resume)
 * [Episode Scrobble](#episode-scrobble)
 * [Episode Stop](#episode-stop)
-* [Episode Rate](#episode-rate)
 * [Track Play](#track-play)
 * [Track Pause](#track-pause)
 * [Track Resume](#track-resume)
 * [Track Scrobble](#track-scrobble)
 * [Track Stop](#track-stop)
-* [Track Rate](#track-rate)
 * [Item Added Movie](#item-added-movie)
 * [Item Added Show](#item-added-show)
 * [Item Added Episode](#item-added-episode)
 * [Item Added Artist](#item-added-artist)
 * [Item Added Album](#item-added-album)
+* [Movie Rate](#movie-rate)
+* [Collection Rate](#collection-rate)
+* [Album Rate](#album-rate)
+* [Artist Rate](#artist-rate)
+* [Track Rate](#track-rate)
+* [Season Rate](#season-rate)
+* [Episode Rate](#episode-rate)
 * [Admin Database Backup](#admin-database-backup)
 * [Admin Database Corrupted](#admin-database-corrupted)
 * [NEW Device](#new-device)
@@ -52,11 +56,6 @@ Here are example payloads of data sent from the Plex server
 
 ```
 ## Movie Stop
-
-```yaml
-
-```
-## Movie Rate
 
 ```yaml
 
@@ -116,11 +115,6 @@ Here are example payloads of data sent from the Plex server
 ```yaml
 
 ```
-## Track Rate
-
-```yaml
-
-```
 ## Item Added Movie
 
 ```yaml
@@ -142,6 +136,41 @@ Here are example payloads of data sent from the Plex server
 
 ```
 ## Item Added Album
+
+```yaml
+
+```
+## Movie Rate
+
+```yaml
+
+```
+## Collection Rate
+
+```yaml
+
+```
+## Album Rate
+
+```yaml
+
+```
+## Artist Rate
+
+```yaml
+
+```
+## Track Rate
+
+```yaml
+
+```
+## Season Rate
+
+```yaml
+
+```
+## Episode Rate
 
 ```yaml
 
