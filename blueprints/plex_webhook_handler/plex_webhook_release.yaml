@@ -1,6 +1,6 @@
 id: plex_webhook_handler_release
 blueprint:
-  name: Plex Webhook Handler RELEASE (v0.4.2)
+  name: Plex Webhook Handler RELEASE (v0.4.4)
   homeassistant:
     min_version: "2024.6.0"
   description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/)."
@@ -27,13 +27,13 @@ blueprint:
 
     plex_player_details:
       name: Player Details
-      description: "<br>Please enter the name <b>OR</b> the uuid of the Plex client. You can place both if you want, uuid will take precedence.<br></br>"
+      description: "<br>Please enter the name <b>OR</b> the UUID of the Plex client. You can place both if you want, uuid will take precedence.<br></br>"
       icon: mdi:plex
       collapsed: false
       input:
         plex_client_uuid:
-          name: Plex Client uuid
-          description: "Enter the Plex client uuid to trigger the Movie, Music and TV Show actions."
+          name: Plex Client UUID
+          description: "Enter the Plex client UUID to trigger the Movie, Music and TV Show actions."
           selector:
             text:
               multiline: false
@@ -46,11 +46,12 @@ blueprint:
           selector:
             text:
               multiline: false
-              multiple: false
+              multiple: true
+              type: text
           default: ""
         plex_client_retrieve:
-          name: Plex Client Name/uuid ?
-          description: "Enable this to generate a notification in Home Assistant with the Plex client name/uuid when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
+          name: Plex Client Name/UUID ?
+          description: "Enable this to generate a notification in Home Assistant with the Plex client name/UUID when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
           selector:
             boolean: {}
           default: false
@@ -214,6 +215,12 @@ blueprint:
           selector:
             action: {}
           default: []
+        track_artist_rated_actions:
+          name: Music Track Rated Actions
+          description: Actions to run when a music track receives a rating.
+          selector:
+            action: {}
+          default: []
         season_rated_actions:
           name: TV Season Rated Actions
           description: "Actions to run when a TV season receives a rating."
@@ -298,7 +305,7 @@ blueprint:
 
         admin_device_new:
           name: Admin New Device
-          description: "A device accesses the server (which may come from background connection testing and doesnâ€™t necessarily indicate active browsing or playback)"
+          description: "A device accesses the server (which may come from background connection testing and doesn’t necessarily indicate active browsing or playback)"
           selector:
             action: {}
           default:
@@ -392,10 +399,10 @@ action:
     then:
       - action: persistent_notification.create
         data:
-          title: "Plex Client Name/uuid:"
+          title: "Plex Client Name/UUID:"
           message: |
             Name: {{ payload.Player.title if 'Player' in payload else 'Not Found!' }}
-            uuid: {{ payload.Player.uuid if 'Player' in payload else 'Not Found!' }}
+            UUID: {{ payload.Player.uuid if 'Player' in payload else 'Not Found!' }}
           notification_id: plex_webhook_blueprint_client_name
 
   - choose:
@@ -468,6 +475,10 @@ action:
                 sequence: !input album_artist_rated_actions
               - conditions:
                   - condition: template
+                    value_template: "{{ payload.Metadata.type == 'track' }}"
+                sequence: !input track_artist_rated_actions
+              - conditions:
+                  - condition: template
                     value_template: "{{ payload.Metadata.type == 'season' }}"
                 sequence: !input season_rated_actions
               - conditions:
@@ -477,9 +488,9 @@ action:
 
       - conditions:
           - condition: template
-            value_template: >
-              {{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or
-                 (player_title | default('')).lower().strip() == plex_client.lower().strip() }}
+            value_template:
+              "{{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or\n
+              (player_title | default('')).lower().strip() in (plex_client | map('lower') | map('trim') | list) }}\n"
         sequence:
           - choose:
               - conditions:
