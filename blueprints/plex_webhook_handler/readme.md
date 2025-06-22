@@ -7,7 +7,7 @@ Release:
 
 
 
-<img width="718" alt="plex_webhook_blueprint" src="https://github.com/user-attachments/assets/5ae5e4e8-9484-41f1-b6ac-7af7596211be" />
+<img width="718" alt="plex_webhook_blueprint" src="https://github.com/user-attachments/assets/c44efbb4-f314-4546-a774-2407f8f1689a" />
 
 
 
@@ -45,17 +45,19 @@ Enter your generated webhook ID and the Plex client name.
 Determine Plex Client Name:
 
 If unsure of the client name:
-Enable the 'Plex Client Name?' option within the blueprint.
+Enable the 'Plex Client Name.UUID ?' option within the blueprint.
 Save the automation.
 As long as you have setup the webhook on Plex to send to Home Assistant, then...
 Play media on Plex.
-Look at Home Assistant and you will have a notification within the web page with the client name.
+Look at Home Assistant and you will have a notification within the web page with the client name and the client uuid.
 
-![plex_alert_client_name](https://github.com/user-attachments/assets/4f333b2a-1af7-4b9a-8c12-d612bc734721)
+![image](https://github.com/user-attachments/assets/540c68c0-4be0-499b-b5e6-b6120d744fd9)
 
 
-Enter this value (in this case NCC-1701-D) into the blueprint’s Plex Client Name field.
+Enter either the uuid or the client name into the blueprint’s Plex UUID / Client Name field.
 
+UUID is preffered as you could have 2 devices with the same name on the network.
+(multiple player are allowed, incase there are more than 2 devices within the one room).
 
 Configure Automation Actions:
 
@@ -91,22 +93,4 @@ For Artitst and Song Title:
 ```yaml
 {{ payload.Metadata.originalTitle  }} - {{ payload.Metadata.title }}
 ```
-
-An example of using the Admin Database Backup Actions:
-
-```yaml
-action: persistent_notification.create
-metadata: {}
-data:
-  message: Plex Database Backup completed.  
-  notification_id: plex_db_backup  
-  title: Plex Alert  
-```
-
-
-produces this result:
-
-
-![plex_alert_dbbackup_complete](https://github.com/user-attachments/assets/dab3538b-7d90-494a-a73f-3e9b43664255)
-
 
