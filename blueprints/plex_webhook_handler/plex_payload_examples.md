@@ -8631,17 +8631,453 @@ payload:
 ## Collection Rate
 ##### A Collection is rated.
 ```yaml
-
+payload:
+  rating: 9
+  event: media.rate
+  user: true
+  owner: true
+  Account:
+    id: {plex account id}
+    thumb: https://plex.tv/users/{url to plex avatar}
+    title: {plex account name}
+  Server:
+    title: {plex server title}
+    uuid: {plex server uuid}
+  Player:
+    local: true
+    publicAddress: {plex player public ip}
+    title: {plex player title}
+    uuid: {plex public uuid}
+  Metadata:
+    librarySectionType: movie
+    ratingKey: '9874'
+    key: /library/collections/9874/children
+    guid: collection://f555c4e8-9eb2-4caf-947e-153df7103048
+    type: collection
+    title: Ghostbusters
+    librarySectionTitle: Films
+    librarySectionID: 6
+    librarySectionKey: /library/sections/6
+    subtype: movie
+    summary: ''
+    index: 51023
+    ratingCount: 1
+    userRating: 9
+    lastRatedAt: 1750616923
+    thumb: /library/metadata/9874/thumb/1737910261
+    addedAt: 1737848573
+    updatedAt: 1737910261
+    childCount: 3
+    maxYear: '2024'
+    minYear: '1984'
+    Image:
+      - alt: Ghostbusters
+        type: coverPoster
+        url: /library/metadata/9874/thumb/1737910261
+    UltraBlurColors:
+      topLeft: '113140'
+      topRight: 061a24
+      bottomRight: '9e3617'
+      bottomLeft: '924040'
+    Field:
+      - locked: true
+        name: title
+      - locked: true
+        name: thumb
 ```
 ## Album Rate
 ##### Album is rated.
 ```yaml
-
+payload:
+  rating: 5
+  event: media.rate
+  user: true
+  owner: true
+  Account:
+    id: {plex account id}
+    thumb: https://plex.tv/users/{url to plex avatar}
+    title: {plex account name}
+  Server:
+    title: {plex server title}
+    uuid: {plex server uuid}
+  Player:
+    local: true
+    publicAddress: {plex player public ip}
+    title: {plex player title}
+    uuid: {plex public uuid}
+  Metadata:
+    librarySectionType: artist
+    ratingKey: '18109'
+    key: /library/metadata/18109/children
+    parentRatingKey: '18108'
+    guid: plex://album/5d07c1b8403c64029086bee3
+    parentGuid: plex://artist/5d07bc02403c6402904aa13d
+    studio: Roadrunner Records
+    type: album
+    title: All the Right Reasons
+    parentKey: /library/metadata/18108
+    librarySectionTitle: Music
+    librarySectionID: 8
+    librarySectionKey: /library/sections/8
+    parentTitle: Nickelback
+    summary: >-
+      With their fourth album, All the Right Reasons, Nickelback ditch any
+      pretense of being a grunge band and finally acknowledge they're a
+      straight-up heavy rock band. Not that they've left the angst of grunge
+      behind: they're a modern rock band living in a post-grunge world, so there
+      are lots of tortured emotions threaded throughout the 11 songs here. But
+      where their previous albums roiled with anger -- their breakthrough "How
+      You Remind Me" was not affectionate, it was snide and cynical -- there's a
+      surprisingly large sentimental streak running throughout All the Right
+      Reasons, and it's not just limited to heart-on-sleeve power ballads like
+      "Far Away" and "Savin' Me," the latter being the latest entry in their
+      soundalike sweepstakes. No, lead singer/songwriter Chad Kroeger is in a
+      particularly pensive mood here, looking back fondly at his crazy times in
+      high school on "Photograph" ("Look at this photograph/Every time I do it
+      makes me laugh/How did our eyes get so red?/And what the hell is on Joey's
+      head?"), lamenting the murder of Dimebag Darrell on "Side of a Bullet"
+      (where a Dimebag solo is overdubbed), and, most touching of all, imagining
+      "the day when nobody died" on "If Everyone Cared" (which would be brought
+      about "If everyone cared and nobody cried/If everyone loved and nobody
+      lied"). Appropriately enough for an album that finds Kroeger's emotional
+      palette opening up, Nickelback try a few new things here, adding more
+      pianos, keyboards, and acoustic guitars to not just their ballads, but a
+      few of their big, anthemic rockers; they even sound a little bit light and
+      limber on "Someone That You're With," the fastest tune here and a bit of
+      relief after all the heavy guitars. All this makes for a more varied
+      Nickelback album, but it doesn't really change their essence. Sure, they
+      stretch a little bit, but they still favor clumsy, plodding riffs, still
+      incessantly rewrite the same chords and melody, still harmonize exactly
+      the same way on every song, Kroeger still sounds as if he's singing with a
+      hernia, he still writes shockingly stupid lines that make you long for the
+      days of such subtle double-entendres as "she's using her head again" (such
+      as "She'd be pissed if she could see the parts of you that I've been
+      kissing," "It's just a little hard to leave/When you're going down on me"
+      -- and, mind you, this album does not carry a Parental Advisory sticker,
+      even though "a**holes" is prominently used in two songs), and despite the
+      attempted sarcasm of "Rockstar," he still shows no discernible sense of
+      humor. Which means, despite all their newly developed relative nuances,
+      Nickelback remain unchanged: they're still unspeakably awful. ~ Stephen
+      Thomas Erlewine
+    index: 1
+    rating: 4
+    userRating: 5
+    skipCount: 5
+    lastViewedAt: 1744234953
+    lastRatedAt: 1750616840
+    year: 2005
+    thumb: /library/metadata/18109/thumb/1749766114
+    art: /library/metadata/18108/art/1750469639
+    parentThumb: /library/metadata/18108/thumb/1750469639
+    originallyAvailableAt: '2005-09-26'
+    leafCount: 11
+    viewedLeafCount: 0
+    addedAt: 1749766110
+    updatedAt: 1749766114
+    loudnessAnalysisVersion: '2'
+    Image:
+      - alt: All the Right Reasons
+        type: coverPoster
+        url: /library/metadata/18109/thumb/1749766114
+      - alt: All the Right Reasons
+        type: background
+        url: /library/metadata/18108/art/1750469639
+    UltraBlurColors:
+      topLeft: 48220b
+      topRight: 385c9a
+      bottomRight: '254879'
+      bottomLeft: 112e5c
+    Genre:
+      - id: 38623
+        filter: genre=38623
+        tag: Pop/Rock
+    Style:
+      - id: 39402
+        filter: style=39402
+        tag: Alternative Metal
+      - id: 39403
+        filter: style=39403
+        tag: Heavy Metal
+      - id: 39404
+        filter: style=39404
+        tag: Contemporary Pop/Rock
+      - id: 39405
+        filter: style=39405
+        tag: Post-Grunge
+    Format:
+      - id: 38742
+        filter: format=38742
+        tag: Album
+    Guid:
+      - id: mbid://cba9936e-b7dd-415d-9ec5-5872741a55be
+    Mood:
+      - id: 39438
+        filter: mood=39438
+        tag: Ominous
+      - id: 38940
+        filter: mood=38940
+        tag: Dramatic
+      - id: 38951
+        filter: mood=38951
+        tag: Swaggering
+      - id: 39285
+        filter: mood=39285
+        tag: Bleak
+      - id: 39276
+        filter: mood=39276
+        tag: Harsh
+      - id: 39124
+        filter: mood=39124
+        tag: Volatile
+      - id: 38741
+        filter: mood=38741
+        tag: Aggressive
+      - id: 38634
+        filter: mood=38634
+        tag: Fiery
+      - id: 39465
+        filter: mood=39465
+        tag: Menacing
+      - id: 38739
+        filter: mood=38739
+        tag: Yearning
+      - id: 39107
+        filter: mood=39107
+        tag: Earnest
+      - id: 38740
+        filter: mood=38740
+        tag: Rousing
+      - id: 39123
+        filter: mood=39123
+        tag: Cathartic
+      - id: 39257
+        filter: mood=39257
+        tag: Nostalgic
+      - id: 39301
+        filter: mood=39301
+        tag: Weary
+      - id: 39125
+        filter: mood=39125
+        tag: Autumnal
+      - id: 39131
+        filter: mood=39131
+        tag: Bittersweet
+      - id: 38845
+        filter: mood=38845
+        tag: Searching
+      - id: 39132
+        filter: mood=39132
+        tag: Wistful
+      - id: 38997
+        filter: mood=38997
+        tag: Reflective
+      - id: 38938
+        filter: mood=38938
+        tag: Angst-Ridden
+      - id: 38735
+        filter: mood=38735
+        tag: Brooding
+      - id: 39122
+        filter: mood=39122
+        tag: Poignant
 ```
 ## Artist Rate
 ##### Artist is rated.
 ```yaml
-
+payload:
+  rating: 9
+  event: media.rate
+  user: true
+  owner: true
+  Account:
+    id: {plex account id}
+    thumb: https://plex.tv/users/{url to plex avatar}
+    title: {plex account name}
+  Server:
+    title: {plex server title}
+    uuid: {plex server uuid}
+  Player:
+    local: true
+    publicAddress: {plex player public ip}
+    title: {plex player title}
+    uuid: {plex public uuid}
+  Metadata:
+    librarySectionType: artist
+    ratingKey: '18271'
+    key: /library/metadata/18271/children
+    guid: plex://artist/5d07bc03403c6402904aa5ba
+    type: artist
+    title: Red Hot Chili Peppers
+    librarySectionTitle: Music
+    librarySectionID: 8
+    librarySectionKey: /library/sections/8
+    summary: "Over the decades, Red Hot Chili Peppers have evolved from fun-loving party boys to alt-rock elder statesmen. Perfecting a rousing musical style that combined funk and punk rock (with an explosive stage show to boot), the Chili Peppers spawned a slew of imitators in their wake, but still managed to be the leaders of the pack into the 21st century. Making noise on the Los Angeles scene with early albums such as 1985's Freaky Styley and 1989's Mother's Milk, they made a huge breakthrough with 1991's landmark Blood Sugar Sex Magik, a multi-platinum smash hit that spawned some of their most recognized songs, including \"Give It Away\" and \"Under the Bridge.\" That album's success was bested in 1999 with another catalog peak, the chart-topping Californication, which found the band in a more reflective and melodic state. Into the 2000s, they remained fixtures at the top of the international charts with By the Way and the double-album Stadium Arcadium, the latter of which hit number one in almost two dozen countries. While the 2010s were quieter for the group, they still scored platinum hits with \"The Adventures of Rain Dance Maggie\" from 2011's I'm with You and \"Dark Necessities\" from 2016's The Getaway. In 2022, the Chili Peppers returned with a pair of full-lengths, Unlimited Love and Return of the Dream Canteen.\r\nThe roots of the band lie in a friendship forged by three school friends, Anthony Kiedis, Michael Balzary, and Hillel Slovak, while they attended Fairfax High School in California back in the late '70s and early '80s. While Balzary and Slovak showed great musical promise (on trumpet and guitar, respectively), Kiedis focused on poetry and acting during his high school years. During this time, Slovak taught Balzary how to play bass, while the duo encouraged Kiedis to start putting his poetry to music, which he soon did. Influenced heavily by the burgeoning L.A. punk scene (the Germs, Black Flag, Fear, Minutemen, X, etc.) as well as funk (Parliament-Funkadelic, Sly & the Family Stone, etc.), the trio began to rehearse with another friend, drummer Jack Irons, leading to the formation of Tony Flow & the Miraculously Majestic Masters of Mayhem, a quartet that played strip bars along the Sunset Strip during the early '80s. It was during this time that the four honed their sound and live act (as they stumbled across a stage gimmick that would soon become their trademark -- performing on-stage completely naked, except for a tube sock covering a certain part of their anatomy). By 1983, Balzary had begun to go by the name \"Flea,\" and the group changed their name to the Red Hot Chili Peppers.\r\nWord spread quickly about the up-and-coming band, resulting in a recording contract with EMI. But before the Chili Peppers could begin work on their debut, Flea and Kiedis were dealt a disappointing blow when both Slovak and Irons announced that they were leaving to focus more on another group they were in, What Is This. With replacement members Jack Sherman (guitar) and Cliff Martinez (drums) filling in, the Peppers released their self-titled debut in 1984. The absence of the two original members showed, though, as the album failed to capture the excitement of their live show. While the record didn't set the world on fire sales-wise, the band began to build a dedicated underground following with college radio buffs. By 1985, What Is This were kaput (after issuing a single self-titled album) and Slovak and Irons returned to the Peppers, resulting in the George Clinton-produced Freaky Styley. While the album was an improvement over its predecessor, it still lacked the fire of the band's in-concert experience, a problem that would finally be solved with their next long-player, 1987's The Uplift Mofo Party Plan. The album was the group's first to make an impression on the charts, and they followed it up a year later with a stopgap five-track release, The Abbey Road EP, in 1988. However, just as the world was warming up to the Peppers, tragedy struck when Slovak died from a heroin overdose on June 25, 1988.\r\nIn the wake of Slovak's death, Irons left the group for the second and final time, while Kiedis (who was also battling drug addiction at the time) and Flea decided to soldier on. After a new lineup featuring former Parliament guitarist Blackbyrd McKnight and former Dead Kennedys drummer D.H. Peligro didn't work out, the duo found worthy replacements in newcomers John Frusciante and Chad Smith. The new-look Chili Peppers hit paydirt straight away, as their first album together, 1989's Mother's Milk, became a surprise hit due to MTV's exposure of their videos for a cover of Stevie Wonder's \"Higher Ground\" and a song about their fallen friend Slovak, \"Knock Me Down,\" as the album was certified gold by early 1990. The bandmembers knew that their next release would be the most important one of their career, so they moved into a mansion-turned-recording studio with producer Rick Rubin to work on what would become their most successful release yet, the stripped-down Blood Sugar Sex Magik (their first for the Warner Bros. label). The record became a monster hit upon its September 1991 release (eventually going on to sell a staggering seven million copies in the U.S. alone), and it spawned such hits as \"Give It Away\" and the group's first Top Ten single, \"Under the Bridge.\"\r\nBut not all was well in the Chili Peppers camp. Like his predecessor, Frusciante had become addicted to hard drugs, and abruptly left the band mid-tour in early 1992. Undeterred, the group enlisted new member Arik Marshall, and they headlined Lollapalooza II in the summer. When the band returned to the studio to work on their sixth release overall, it quickly became apparent that Marshall didn't fit in, and he was replaced by Jesse Tobias. But before Tobias could record a note with the group, he was handed his walking papers as well, and former Jane's Addiction guitarist Dave Navarro signed on. After a layoff of four years, the Peppers' much-delayed follow-up to BSSM, One Hot Minute, was released in 1995. While the album was a sizable hit, it failed to match the success and musical focus of its predecessor, as it became apparent during the record's ensuing tour that Navarro wasn't fitting in as well as originally hoped, and he left the band in early 1998.\r\nFollowing Frusciante's departure from the group, he released a pair of obscure solo releases, 1995's Niandra Lades and Usually Just a T-Shirt and 1997's Smile from the Streets You Hold, yet rumors circulated that the guitarist was homeless, penniless, and sickly with a death-defying drug habit. After checking himself into rehab and putting his demons behind him, Frusciante emerged once again refocused and re-energized, and promptly accepted an invitation to rejoin the Peppers. The group's reunion album, 1999's Californication, proved to be another monster success, reconfirming the Chili Peppers as one of alternative rock's top bands.\r\nThe group put in a quick guest appearance on Fishbone's Psychotic Friends Nuttwerx before hitting the road to support the album. The following months found the band getting involved in bizarre situations and controversies. First, their refusal to play songs from One Hot Minute during the tour was an unpopular decision with some fans and a sore spot for Dave Navarro. Next, they re-ignited a personal feud between Kiedis and Mr. Bungle singer Mike Patton by refusing to play a series of European concerts with Bungle. Patton responded with a \"tribute\" show for the Peppers, where Bungle mocked their stage moves, faked shooting up heroin, and imitated Kiedis' comments about Patton. They also played the ill-fated Woodstock '99 Festival, where their headlining performance was met with piles of burning rubble and a full-scale riot. Tours with the Foo Fighters and Pearl Jam brought them into the next year without problems, but the Peppers stepped off the road after a planned stop in Israel was halted due to security worries.\r\nThe band returned to the studio in November 2001, and by the summer of 2002 they had a new album ready for release, By the Way. Warner Bros. issued a Greatest Hits compilation in 2003, followed by a chart-topping two-CD album of all-new material, Stadium Arcadium, in 2006. After an extensive supporting tour, the Red Hot Chili Peppers took an extended hiatus and the members pursued individual interests. Flea began studying music theory at USC and played in a variety of side projects. Kiedis attempted to turn his autobiography, Scar Tissue, into a television show. Smith joined Sammy Hagar, Michael Anthony, and Joe Satriani in the party supergroup Chickenfoot. Frusciante released The Empyrean in 2009, by which time he had left the band. His replacement was Josh Klinghoffer, who played secondary guitar on the Stadium Arcadium tour.\r\nKlinghoffer's first album with the band, the Rick Rubin-produced I'm with You, was released in late summer of 2011. It performed well around the world, hitting number one in numerous countries and reaching gold or platinum status. Touring the globe occupied much of the next three years for the Chili Peppers, although their most prominent appearance was in America, playing with Bruno Mars at the half-time show at 2014's Super Bowl. By the end of the year, they'd begun writing songs, and entered the studio with Danger Mouse in the production chair and Nigel Godrich mixing. In 2016, the band released their 11th studio album, The Getaway, which featured the platinum-certified lead single \"Dark Necessities.\"\r\nIn the years that followed, the group made an appearance at the 2019 Grammy Awards and even played a show in the shadows of the Pyramids of Giza for a livestream event. At the end of the year, they parted ways with Klinghoffer to welcome Frusciante back to the fold once again. Work began on their next album, which arrived in 2022. Teased by the lead single \"Black Summer,\" Unlimited Love was released in April. Produced by Rick Rubin, the set also featured the track \"Poster Child.\" To support the effort, the Chili Peppers embarked on a massive stadium tour with the Strokes and a rotating cast of supporting acts that included Thundercat, St. Vincent, and more. In October, they issued another full-length, Return of the Dream Canteen. Recorded during the same Rubin sessions that yielded Unlimited Love, the equally funky effort included the single \"Tippa My Tongue\" and a Van Halen tribute titled \"Eddie.\" ~ Greg Prato & Neil Z. Yeung"
+    index: 1
+    userRating: 9
+    lastRatedAt: 1750616747
+    thumb: /library/metadata/18271/thumb/1750606357
+    art: /library/metadata/18271/art/1750606357
+    addedAt: 1750606353
+    updatedAt: 1750606357
+    Image:
+      - alt: Red Hot Chili Peppers
+        type: coverPoster
+        url: /library/metadata/18271/thumb/1750606357
+      - alt: Red Hot Chili Peppers
+        type: background
+        url: /library/metadata/18271/art/1750606357
+    UltraBlurColors:
+      topLeft: 4f1a0a
+      topRight: 9f313f
+      bottomRight: 9d333b
+      bottomLeft: a42906
+    Genre:
+      - id: 38623
+        filter: genre=38623
+        tag: Pop/Rock
+    Country:
+      - id: 87
+        filter: country=87
+        tag: United States of America
+    Style:
+      - id: 38850
+        filter: style=38850
+        tag: Alternative/Indie Rock
+      - id: 38978
+        filter: style=38978
+        tag: Alternative Pop/Rock
+      - id: 39133
+        filter: style=39133
+        tag: Adult Alternative Pop/Rock
+      - id: 41900
+        filter: style=41900
+        tag: Funk Metal
+    Guid:
+      - id: mbid://8bfac288-ccc5-448d-9573-c33ea2aa5c30
+    Similar:
+      - id: 67580
+        filter: similar=67580
+        tag: John Frusciante
+      - id: 39098
+        filter: similar=39098
+        tag: Foo Fighters
+      - id: 47588
+        filter: similar=47588
+        tag: Audioslave
+      - id: 67581
+        filter: similar=67581
+        tag: Ataxia
+      - id: 41911
+        filter: similar=41911
+        tag: Incubus
+      - id: 41907
+        filter: similar=41907
+        tag: Jane's Addiction
+      - id: 39236
+        filter: similar=39236
+        tag: Pearl Jam
+      - id: 39230
+        filter: similar=39230
+        tag: Stone Temple Pilots
+      - id: 41920
+        filter: similar=41920
+        tag: Rage Against the Machine
+      - id: 39224
+        filter: similar=39224
+        tag: Soundgarden
+      - id: 43287
+        filter: similar=43287
+        tag: Lenny Kravitz
+      - id: 41915
+        filter: similar=41915
+        tag: Chris Cornell
+      - id: 39083
+        filter: similar=39083
+        tag: The Offspring
+      - id: 43675
+        filter: similar=43675
+        tag: Queens of the Stone Age
+      - id: 39234
+        filter: similar=39234
+        tag: The Smashing Pumpkins
+      - id: 41905
+        filter: similar=41905
+        tag: Primus
+      - id: 39397
+        filter: similar=39397
+        tag: Oasis
+      - id: 67582
+        filter: similar=67582
+        tag: Faith No More
+      - id: 42362
+        filter: similar=42362
+        tag: Cake
+      - id: 67583
+        filter: similar=67583
+        tag: Flea
+      - id: 43677
+        filter: similar=43677
+        tag: Jet
+      - id: 41517
+        filter: similar=41517
+        tag: Kings of Leon
+      - id: 39390
+        filter: similar=39390
+        tag: R.E.M.
+      - id: 39223
+        filter: similar=39223
+        tag: Alice in Chains
+      - id: 39240
+        filter: similar=39240
+        tag: Pixies
+      - id: 65284
+        filter: similar=65284
+        tag: Temple of the Dog
+      - id: 39396
+        filter: similar=39396
+        tag: The White Stripes
+      - id: 41677
+        filter: similar=41677
+        tag: U2
+      - id: 41916
+        filter: similar=41916
+        tag: Velvet Revolver
+      - id: 44883
+        filter: similar=44883
+        tag: Third Eye Blind
+    Mood:
+      - id: 39071
+        filter: mood=39071
+        tag: Freewheeling
+      - id: 38950
+        filter: mood=38950
+        tag: Brash
+      - id: 38627
+        filter: mood=38627
+        tag: Confident
+      - id: 39511
+        filter: mood=39511
+        tag: Provocative
+      - id: 38731
+        filter: mood=38731
+        tag: Carefree
+      - id: 67578
+        filter: mood=67578
+        tag: Improvisatory
+      - id: 39439
+        filter: mood=39439
+        tag: Indulgent
+      - id: 39370
+        filter: mood=39370
+        tag: Sprawling
+      - id: 38946
+        filter: mood=38946
+        tag: Warm
+      - id: 67579
+        filter: mood=67579
+        tag: Loose
+    Location:
+      - path: /storage/DS215J/Media/Music/Red Hot Chili Peppers
 ```
 ## Track Rate
 ##### Music Track is rated.
@@ -8728,7 +9164,81 @@ payload:
 ## Season Rate
 ##### TV Season is rated.
 ```yaml
-
+payload:
+  rating: 8
+  event: media.rate
+  user: true
+  owner: true
+  Account:
+    id: {plex account id}
+    thumb: https://plex.tv/users/{url to plex avatar}
+    title: {plex account name}
+  Server:
+    title: {plex server title}
+    uuid: {plex server uuid}
+  Player:
+    local: true
+    publicAddress: {plex player public ip}
+    title: {plex player title}
+    uuid: {plex public uuid}
+  Metadata:
+    librarySectionType: show
+    ratingKey: '1965'
+    key: /library/metadata/1965/children
+    parentRatingKey: '1964'
+    guid: plex://season/602e7abd88e0a9002dfa0c65
+    parentGuid: plex://show/5ec75ff037d69c0039b83267
+    parentSlug: star-trek-strange-new-worlds
+    parentStudio: Secret Hideout
+    type: season
+    title: Season 1
+    parentKey: /library/metadata/1964
+    librarySectionTitle: TV
+    librarySectionID: 7
+    librarySectionKey: /library/sections/7
+    parentTitle: 'Star Trek: Strange New Worlds'
+    summary: >-
+      The series follows the voyages of the Starfleet starship USS Enterprise
+      (NCC-1701), captained by Christopher Pike, during its second five-year
+      mission (2259-2264), which precedes Captain James T. Kirk's five-year
+      mission narrated in the television series Star Trek. The series picks up
+      on stardate 1738.12 (2259), a couple of years after the events that
+      occurred in the second season of the television series Star Trek:
+      Discovery, when Pike temporarily captained the USS Discovery.
+    index: 1
+    parentIndex: 1
+    userRating: 8
+    viewCount: 1
+    skipCount: 2
+    lastViewedAt: 1749681329
+    lastRatedAt: 1750616630
+    parentYear: 2022
+    thumb: /library/metadata/1965/thumb/1733009675
+    art: /library/metadata/1964/art/1750210743
+    parentThumb: /library/metadata/1964/thumb/1750210743
+    parentTheme: /library/metadata/1964/theme/1750210743
+    leafCount: 10
+    viewedLeafCount: 0
+    addedAt: 1733009522
+    updatedAt: 1733009675
+    Image:
+      - alt: Season 1
+        type: coverPoster
+        url: /library/metadata/1965/thumb/1733009675
+      - alt: Season 1
+        type: background
+        url: /library/metadata/1964/art/1750210743
+      - alt: Season 1
+        type: clearLogo
+        url: /library/metadata/1964/clearLogo/1750210743
+    UltraBlurColors:
+      topLeft: '511711'
+      topRight: '742403'
+      bottomRight: a72622
+      bottomLeft: 743a1f
+    Guid:
+      - id: tmdb://151012
+      - id: tvdb://1842998
 ```
 ## Episode Rate
 ##### TV Episode is rated.
