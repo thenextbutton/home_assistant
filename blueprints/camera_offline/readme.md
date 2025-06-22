@@ -4,7 +4,7 @@ Release:<br>
 <br><br>
 
 Send a notification to devices that a camera is offline, used with [Frigate](https://docs.frigate.video/)
-<br>
-<img src="https://github.com/user-attachments/assets/cf51d73a-f5c1-4150-8f8c-4a60bbb7035a"  width="500px">
 <br><br>
-![image](https://github.com/user-attachments/assets/2708bd3d-38a5-4a22-9829-a60ca5d670de)
+
+<br><br>
+![image](https://github.com/user-attachments/assets/c3a06098-d09f-4afa-ba4f-cf8afb943e2b)
