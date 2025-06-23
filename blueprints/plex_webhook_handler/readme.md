@@ -94,3 +94,19 @@ For Artitst and Song Title:
 {{ payload.Metadata.originalTitle  }} - {{ payload.Metadata.title }}
 ```
 
+An example of using the Admin Database Backup Actions:
+
+```yaml
+action: persistent_notification.create
+metadata: {}
+data:
+  message: Plex Database Backup completed.  
+  notification_id: plex_db_backup  
+  title: Plex Alert  
+```
+
+
+produces this result:
+
+![image](https://github.com/user-attachments/assets/0629608b-b024-47c1-be27-5d5a72096e8d)
+
