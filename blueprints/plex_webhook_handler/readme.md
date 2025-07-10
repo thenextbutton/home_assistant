@@ -133,3 +133,5 @@ data:
   message: Plex Database Backup completed.
   notification_id: plex_db_backup
   title: Plex Alert
+```
+![image](https://github.com/user-attachments/assets/0629608b-b024-47c1-be27-5d5a72096e8d)
