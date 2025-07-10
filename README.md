@@ -24,17 +24,23 @@ Below are the blueprints currently available in this collection. Click the "Impo
 
 Blueprint for Home Assistant to allow automation actions when webhooks are sent from [Plex](https://www.plex.tv/). Great for lowering the lights when a movie starts to play, pausing specific automations during playback, and more.
 
+
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_release.yaml)
 
 ### 2. Jellyfin Webhooks
 
 Blueprint for Home Assistant to allow automation actions when webhooks are configured for [Jellyfin](https://jellyfin.org/). Great for lowering the lights when a movie starts to play, updating a media sensor, and other automations based on playback events.
 
+
+**Important Note:** Don't forget that the webhook template is also needed to be set up within Jellyfin using this template handlebar code: [webhook_template.handlebars](https://raw.githubusercontent.com/thenextbutton/home_assistant/main/blueprints/jellyfin_webhook_handler_v2/webhook_template.handlebars)
+
+
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fthenextbutton%2Fhome_assistant%2Fblob%2Fmain%2Fblueprints%2Fjellyfin_webhook_handler_v2%2Fjellyfin_webhook_release_v2.yaml)
 
 ### 3. Frigate Camera Offline
 
 Blueprint for Home Assistant to notify a device if a camera goes offline within [Frigate](https://frigate.video/).
+
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fthenextbutton%2Fhome_assistant%2Fblob%2Fmain%2Fblueprints%2Fcamera_offline%2Fcamera_offline_release.yaml)
 
