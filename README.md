@@ -50,7 +50,7 @@ Blueprint for Home Assistant to notify a device if a camera goes offline within 
 6.  Save your new automation!
 
 Alternatively, you can manually import a blueprint:
-1.  Copy the raw URL of the blueprint YAML file (e.g., `https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/blueprints/blueprint_name.yaml`).
+1.  Copy the raw URL of the blueprint YAML file (e.g., `https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_release.yaml`).
 2.  In Home Assistant, go to **Settings > Automations & Scenes > Blueprints**.
 3.  Click the "Import Blueprint" button in the bottom right corner.
 4.  Paste the raw URL into the URL field and click "PREVIEW BLUEPRINT" then "IMPORT".
