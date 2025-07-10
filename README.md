@@ -70,4 +70,3 @@ When contributing a new blueprint, please ensure it includes:
 ---
 
 ## 📄 License
-
