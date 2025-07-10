@@ -40,7 +40,7 @@ Blueprint for Home Assistant to notify a device if a camera goes offline within 
 
 ---
 
-## ⚙️ How to Use or Import Blueprints
+## ⚙ How to Use or Import Blueprints
 
 1.  **Click the "Import Blueprint" button** above for the blueprint you wish to use. This will redirect you to your Home Assistant instance.
 2.  Confirm the import in Home Assistant.
