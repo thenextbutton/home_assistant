@@ -1,112 +1,135 @@
-Plex Webhook Handler, carries out actions based on the event taking place within PLEX.
+# Plex Webhook Handler Blueprint for Home Assistant
 
+Automate your Home Assistant with events from Plex! This blueprint allows you to trigger custom automations in Home Assistant based on various Plex playback events (e.g., play, pause, resume, stop) from specific Plex clients.
 
-Release:
+---
+
+## Release
+
+Click the badge below to easily import the blueprint directly into your Home Assistant instance:
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_release.yaml)
 
-
-
 <img width="718" alt="plex_webhook_blueprint" src="https://github.com/user-attachments/assets/c44efbb4-f314-4546-a774-2407f8f1689a" />
 
+---
 
+## Prerequisites
 
-Prerequisites:
+To use this blueprint, you'll need:
 
-Plex Pass: Enables Plex webhooks.
+* **Plex Pass:** A Plex Pass is required to enable webhook functionality within Plex Media Server.
+* **Home Assistant:** A working Home Assistant instance, accessible from your Plex Media Server.
 
-Understanding of Webhooks (Optional):
+---
 
-Home Assistant: [Webhook Trigger Documentation](https://www.home-assistant.io/docs/automation/trigger/#webhook-trigger)
+## How It Works
 
-Plex: [Webhooks Support Article](https://support.plex.tv/articles/115002267687-webhooks/)
+This blueprint leverages Plex's webhook functionality. When an event occurs in Plex (like playing, pausing, or stopping media), Plex sends a webhook to your Home Assistant instance. This blueprint then captures that webhook, extracts relevant information (like the client name or UUID), and triggers a Home Assistant automation that you create.
 
-Setup:
+---
 
-Generate a Unique Webhook ID:
+## Setup
 
-Use a tool like [GUID Generator](https://guidgenerator.com/) to create a random string.
-Configure Plex Webhook:
+Follow these steps to get your Plex Webhook Handler blueprint up and running:
 
-In Plex, create a webhook pointing to your Home Assistant server:
+### 1. Generate a Unique Webhook ID
 
-`http://home_assistant_ip:8123/api/webhook/{webhook_id}`
+First, generate a **unique and random string** to use as your **Webhook ID**. This ID acts as a secret key to ensure your webhook is secure. A [GUID generator](https://guidgenerator.com/) is a reliable tool for this purpose.
 
-Example: `http://10.0.1.2:8123/api/webhook/e9ee051d-31cd-464a-b3c4-034992a96be0`
+### 2. Configure Plex Webhook
 
-Import the Blueprint.
+Next, you need to tell Plex where to send its webhook events.
 
-Create Automation:
+1.  Open your **Plex Media Server settings**.
+2.  Navigate to **Settings** > **Webhooks**.
+3.  Click **Add Webhook**.
+4.  Enter your Home Assistant webhook URL in the following format, replacing `home_assistant_ip` with your Home Assistant's IP address (or hostname) and `{webhook_id}` with the unique ID you generated:
 
-Create a new automation using the imported blueprint.
+    `http://home_assistant_ip:8123/api/webhook/{webhook_id}`
 
-Enter your generated webhook ID and the Plex client name.
+    **Example:** `http://10.0.1.2:8123/api/webhook/e9ee051d-31cd-464a-b3c4-034992a96be0`
 
-Determine Plex Client Name:
+### 3. Import the Blueprint
 
-If unsure of the client name:
-Enable the 'Plex Client Name.UUID ?' option within the blueprint.
-Save the automation.
-As long as you have setup the webhook on Plex to send to Home Assistant, then...
-Play media on Plex.
-Look at Home Assistant and you will have a notification within the web page with the client name and the client uuid.
+If you haven't already, import the **Plex Webhook Handler** blueprint into your Home Assistant instance using the "Release" badge above, or by manually importing the blueprint's YAML file.
 
-![image](https://github.com/user-attachments/assets/540c68c0-4be0-499b-b5e6-b6120d744fd9)
+### 4. Create Your Automation
 
+1.  In Home Assistant, go to **Settings** > **Automations & Scenes**.
+2.  Click the **+ Create Automation** button and choose **Start with an empty automation**.
+3.  Select the **Plex Webhook Handler** blueprint from the list.
+4.  You will be prompted to enter:
+    * Your generated **Webhook ID**.
+    * The **Plex Client Name** (or UUID) for the device you want to monitor.
 
-Enter either the uuid or the client name into the blueprint’s Plex UUID / Client Name field.
+    ---
 
-UUID is preffered as you could have 2 devices with the same name on the network.
-(multiple player are allowed, incase there are more than 2 devices within the one room).
+    #### Determine Plex Client Name/UUID
 
-Configure Automation Actions:
+    If you're unsure of the exact **Plex Client Name** or **UUID** for your device:
 
-Define actions to trigger based on Plex playback events.
+    1.  Enable the **'Plex Client Name/UUID ?'** option within the blueprint's configuration.
+    2.  Save the automation.
+    3.  As long as you've set up the webhook correctly in Plex, now **play any media on Plex** using the client you wish to identify.
+    4.  Within Home Assistant, you will receive a persistent notification (like the example below) displaying the client's exact name and UUID.
 
+    ![image](https://github.com/user-attachments/assets/540c68c0-4be0-499b-b5e6-b612d744fd9)
 
-Resume Handling (Optional):
+    5.  Copy either the **UUID** or the **Client Name** and enter it into the blueprint’s **Plex UUID / Client Name** field.
 
-The webhook reports a resume event when pausing then playing again, or when you start media that is part way through (continue watching).
-The blueprint allows you to treat “resume” as “play” if desired.
+    **Note:** The **UUID is preferred** over the client name, as it provides a unique identifier for your device, preventing potential conflicts if you have multiple devices with the same or similar names on your network. Multiple players are supported, it is advised to create an automation from the the blueprint for each room.
 
+    ---
 
-Access Webhook Data:
+### 5. Configure Automation Actions
 
-Use payload.Metadata in templates to access data like cover art:
+Finally, define the **actions** you want your Home Assistant automation to perform when the blueprint triggers. The blueprint will expose various Plex playback events (e.g., `media_play`, `media_pause`, `media_stop`, `media_resume`) that you can use to design your automation logic.
 
-Example(s): 
+---
 
-Thumbnail (cover art)
-```yaml
-{{ payload.Metadata.thumb }}
-```
+## Resume Event Handling
 
-Here you can create the entire url to retreive the thumbnail:
-```yaml
-{% set base_url = "http://plex_ip:32400" %}
-{% if payload.Metadata.thumb %}
-{{ base_url + payload.Metadata.thumb }}
-{% endif %}
-```
+Plex's `resume` webhook event is triggered both when you resume previously paused media and when you start media from a "continue watching" point. This blueprint provides an option to treat the `resume` event identically to a `play` event, if desired, simplifying your automation logic.
 
-For Artitst and Song Title:
-```yaml
-{{ payload.Metadata.originalTitle  }} - {{ payload.Metadata.title }}
-```
+---
 
-An example of using the Admin Database Backup Actions:
+## Accessing Webhook Data
+
+Within your Home Assistant automations, you can access detailed information from the Plex webhook payload using Jinja2 templating. The primary data is available under `payload.Metadata`.
+
+**Example(s):**
+
+* **Thumbnail (cover art):**
+    ```yaml
+    {{ payload.Metadata.thumb }}
+    ```
+
+* **Full URL to retrieve thumbnail:**
+    ```yaml
+    {% set base_url = "http://plex_ip:32400" %}
+    {% if payload.Metadata.thumb %}
+    {{ base_url + payload.Metadata.thumb }}
+    {% endif %}
+    ```
+
+* **Artist and Song Title:**
+    ```yaml
+    {{ payload.Metadata.originalTitle }} - {{ payload.Metadata.title }}
+    ```
+
+For a comprehensive list of available `payload.Metadata` attributes, refer to the [Plex Webhooks Support Article](https://support.plex.tv/articles/115002267687-webhooks/) linked in the Prerequisites section.
+
+---
+
+## Example Automation Action
+
+Here's an example of how you might define an action within your Home Assistant automation to create a persistent notification upon a Plex event (e.g., after a Plex database backup completes, if your blueprint is configured to trigger on that):
 
 ```yaml
 action: persistent_notification.create
 metadata: {}
 data:
-  message: Plex Database Backup completed.  
-  notification_id: plex_db_backup  
-  title: Plex Alert  
-```
-
-
-produces this result:
-
-![image](https://github.com/user-attachments/assets/0629608b-b024-47c1-be27-5d5a72096e8d)
-
+  message: Plex Database Backup completed.
+  notification_id: plex_db_backup
+  title: Plex Alert
