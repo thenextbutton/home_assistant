@@ -74,7 +74,7 @@ If you haven't already, import the **Plex Webhook Handler** blueprint into your 
     3.  As long as you've set up the webhook correctly in Plex, now **play any media on Plex** using the client you wish to identify.
     4.  Within Home Assistant, you will receive a persistent notification (like the example below) displaying the client's exact name and UUID.
 
-    ![image](https://github.com/user-attachments/assets/540c68c0-4be0-499b-b5e6-b612d744fd9)
+    ![image](https://github.com/user-attachments/assets/540c68c0-4be0-499b-b5e6-b6120d744fd9)
 
     5.  Copy either the **UUID** or the **Client Name** and enter it into the blueprint’s **Plex UUID / Client Name** field.
 
