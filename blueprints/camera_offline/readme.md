@@ -42,9 +42,15 @@ If you haven't already, import the **Frigate Camera Offline Detector** blueprint
 2.  Click the **+ Create Automation** button and choose **Start with an empty automation**.
 3.  Select the **Frigate Camera Offline Detector** blueprint from the blueprint dropdown.
 4.  You will be prompted to configure the following options:
-    * **Camera(s) to Monitor:** Select one or more Frigate camera entities you want to monitor for offline status (e.g., `camera.front_door`, `camera.backdoor`).
-    * **Offline Time Limit (minutes):** Enter the number of minutes the camera(s) must be offline before a notification is sent. This helps prevent false alerts from brief network glitches.
-    * **Notification Device:** Choose the Home Assistant device(s) that should receive the offline alert (e.g., your mobile phone, a tablet).
+    * **Camera(s) to Monitor:** Select one or more camera entities you want to monitor for offline status (e.g., `camera.front_door`, `camera.backdoor`). These should be entities that report `unavailable` when offline.
+
+    * **Notification Settings:**
+        * **Device(s) to Notify:** Select the mobile device(s) (running the Home Assistant app) to receive offline notifications.
+        * **Offline Duration:** Set the duration a camera must be offline (unavailable) before a notification is sent. This helps prevent false alerts from brief network glitches.
+        * **Cooldown Duration:** Set a cooldown period. Once a camera offline notification is sent, **no further notifications (for any camera)** will be sent until this period expires. Set to `0` to disable this cooldown.
+        * **Notification Title:** Enter the desired title for the push notification (default: "🚨 Camera Offline Alert 🚨").
+        * **Notification Message:** Customize the message that will appear in the push notification. The default message includes the camera's friendly name, entity ID, and how long it has been offline.
+        * **Critical Notification:** Enable this option to send a critical alert that bypasses silent mode settings on the device (if supported by your device and the Home Assistant Companion app).
 
 ---
 
@@ -62,6 +68,7 @@ Upon a camera going offline for the specified duration, a notification similar t
 * **No Notifications:**
     * Verify that the "Notification Device" is correctly selected in the blueprint configuration.
     * Check your Home Assistant Companion app settings on your notification device to ensure notifications are enabled.
-    * Temporarily set the "Offline Time Limit" to a very low value (e.g., 1 minute) for testing purposes.
-* **False Alarms:** Adjust the "Offline Time Limit" to a higher value if you are receiving notifications for brief camera disconnections or network hiccups.
+    * Temporarily set the "Offline Duration" to a very low value (e.g., 1 minute) for testing purposes.
+    * Check if the "Cooldown Duration" is preventing notifications.
+* **False Alarms:** Adjust the "Offline Duration" to a higher value if you are receiving notifications for brief camera disconnections or network hiccups.
 * **Home Assistant Logs:** If issues persist, check your Home Assistant logs (Settings > System > Logs) for any errors related to the camera entity or the blueprint automation.
