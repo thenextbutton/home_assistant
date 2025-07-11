@@ -1,10 +1,10 @@
-# Jellyfin Webhook Handler Blueprint for Home Assistant
+# 🎉 Jellyfin Webhook Handler Blueprint for Home Assistant
 
 Automate your Home Assistant with events from Jellyfin! This blueprint allows you to trigger custom automations in Home Assistant based on various Jellyfin playback events (e.g., play, pause, stop, progress) and other server activities (e.g., item added/deleted, user actions).
 
 ---
 
-## Release
+## 🚀 Release
 
 Click the badge below to easily import the blueprint directly into your Home Assistant instance:
 
@@ -12,7 +12,45 @@ Click the badge below to easily import the blueprint directly into your Home Ass
 
 ---
 
-## Prerequisites
+## 📖 Table of Contents
+
+* [Project Overview](#-project-overview)
+* [Features](#-features)
+* [Prerequisites](#-prerequisites)
+* [How It Works](#-how-it-works)
+* [Setup](#-setup)
+    * [1. Install the Jellyfin Webhook Plugin](#1-install-the-jellyfin-webhook-plugin)
+    * [2. Generate a Unique Webhook ID](#2-generate-a-unique-webhook-id)
+    * [3. Configure the Webhook within Jellyfin](#3-configure-the-webhook-within-jellyfin)
+    * [4. Create a Home Assistant Toggle Helper](#4-create-a-home-assistant-toggle-helper)
+    * [5. Import the Blueprint into Home Assistant](#5-import-the-blueprint-into-home-assistant)
+    * [6. Create Your Automation](#6-create-your-automation)
+        * [Determine Jellyfin Client ID/Name](#determine-jellyfin-client-idname)
+    * [7. Configure Automation Actions](#7-configure-automation-actions)
+* [Accessing Blueprint Data / Payload Structure](#-accessing-blueprint-data--payload-structure)
+* [Example Automation Output / Actions](#-example-automation-output--actions)
+* [Troubleshooting & Tips](#-troubleshooting--tips)
+* [Contributing](#-contributing)
+* [License](#-license)
+
+---
+
+## 💡 Project Overview
+
+This blueprint integrates your Jellyfin server with Home Assistant using webhooks. When significant events occur in Jellyfin (e.g., media playback, library changes, user actions), Jellyfin sends a data packet (a webhook) to your Home Assistant instance. This blueprint then captures that webhook, extracts relevant information, and triggers a Home Assistant event. Your custom automations can then respond to these events, allowing for powerful home automation based on your Jellyfin activity.
+
+---
+
+## ✨ Features
+
+* Trigger automations based on various Jellyfin playback events (play, pause, stop, progress).
+* Monitor server activities like item added/deleted and user actions.
+* Supports multiple Jellyfin clients/rooms.
+* Provides detailed webhook data for advanced automation logic.
+
+---
+
+## 🛒 Prerequisites
 
 To use this blueprint, you'll need:
 
@@ -22,13 +60,13 @@ To use this blueprint, you'll need:
 
 ---
 
-## How It Works
+## ⚙️ How It Works
 
 This blueprint integrates your Jellyfin server with Home Assistant using webhooks. When significant events occur in Jellyfin (e.g., media playback, library changes, user actions), Jellyfin sends a data packet (a webhook) to your Home Assistant instance. This blueprint then captures that webhook, extracts relevant information, and triggers a Home Assistant event. Your custom automations can then respond to these events, allowing for powerful home automation based on your Jellyfin activity.
 
 ---
 
-## Setup
+## 🛠️ Setup
 
 Follow these steps to configure the Jellyfin Webhook and Home Assistant Blueprint:
 
@@ -58,7 +96,6 @@ Now, configure the Webhook plugin in your Jellyfin Dashboard to send events to H
         * Replace `{ha_port}` with your Home Assistant's port (default is `8123`).
         * Replace `{your_webhook_id}` with the unique ID you generated in step 2.
         * **Example:** `http://10.0.1.19:8123/api/webhook/-KeGmJuhypjHC7HL-fQUNyszy`
-
 4.  Under **Notification Type**, select the events you wish to receive. It is recommended to select all the following:
     * `[x] Authentication Failure`
     * `[x] Authentication Success`
@@ -72,7 +109,6 @@ Now, configure the Webhook plugin in your Jellyfin Dashboard to send events to H
     * `[x] User Locked Out`
     * `[x] User Password Changed`
     * `[x] User Updated`
-
 5.  Under **Item Type**, select the media types you wish to monitor:
     * `[x] Movies`
     * `[x] Episodes`
@@ -82,15 +118,12 @@ Now, configure the Webhook plugin in your Jellyfin Dashboard to send events to H
     * `[x] Songs`
     * `[x] Videos`
     * `[x] Trim leading and trailing whitespace from message body before sending` (Recommended)
-
 6.  For the **Template**, you **must** use the provided Handlebars template for this blueprint to function correctly.
     * Copy the contents from: `https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler_v2/webhook_template.handlebars`
     * Paste the entire content into the "Template" field within the Jellyfin Webhook plugin settings.
-
 7.  Under **Add Requester Header**, configure the following:
     * **Key:** `Content-Type`
     * **Value:** `application/json`
-
 8.  Ensure **`[x] Enabled`** is checked under **Status**.
 9.  Save your Webhook configuration in Jellyfin.
 
@@ -143,7 +176,7 @@ Finally, define the **actions** you want your Home Assistant automation to perfo
 
 ---
 
-## Accessing Webhook Data
+## 📊 Accessing Blueprint Data / Payload Structure
 
 Within your Home Assistant automations, you can access detailed information from the Jellyfin webhook payload using Jinja2 templating. The primary data is available under `payload`.
 
@@ -189,7 +222,7 @@ The Handlebars template ensures a consistent `payload` structure that maps to co
 
 ---
 
-## Troubleshooting & Tips
+## 🚧 Troubleshooting & Tips
 
 * **Webhook Not Triggering:**
     * **Check Plugin Installation:** Ensure the Webhook plugin is correctly installed and enabled in Jellyfin.
@@ -200,3 +233,15 @@ The Handlebars template ensures a consistent `payload` structure that maps to co
     * **Handlebars Template:** Verify that the correct `webhook_template.handlebars` content has been pasted entirely and correctly into the Jellyfin webhook template field.
 * **Home Assistant Logs:** If you're not seeing the expected behavior, review your Home Assistant logs (Settings > System > Logs) for any errors related to `webhook` or this blueprint.
 * **Multiple Clients:** The blueprint supports handling events from multiple Jellyfin clients. You will need to create a separate Home Assistant automation (and a separate toggle helper) for each distinct client/room you wish to monitor.
+
+---
+
+## 🤝 Contributing
+
+Feel free to open an issue or submit a pull request if you have suggestions for improvements or encounter any bugs. Your contributions are welcome!
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
