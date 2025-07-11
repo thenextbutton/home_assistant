@@ -1,10 +1,10 @@
-# Frigate Camera Offline Detector Blueprint for Home Assistant
+# 🎉 Frigate Camera Offline Detector Blueprint for Home Assistant
 
 Receive instant notifications when your Frigate NVR cameras go offline. This blueprint detects disconnected cameras and, after a user-defined delay, alerts your specified Home Assistant devices, ensuring you're always aware of your security system's status.
 
 ---
 
-## Release
+## 🚀 Release
 
 Click the badge below to easily import the blueprint directly into your Home Assistant instance:
 
@@ -12,7 +12,39 @@ Click the badge below to easily import the blueprint directly into your Home Ass
 
 ---
 
-## Prerequisites
+## 📖 Table of Contents
+
+* [Project Overview](#-project-overview)
+* [Features](#-features)
+* [Prerequisites](#-prerequisites)
+* [How It Works](#-how-it-works)
+* [Setup](#-setup)
+    * [1. Import the Blueprint](#1-import-the-blueprint)
+    * [2. Create Your Automation](#2-create-your-automation)
+* [Example Automation Output / Actions](#-example-automation-output--actions)
+* [Troubleshooting & Tips](#-troubleshooting--tips)
+* [Contributing](#-contributing)
+* [License](#-license)
+
+---
+
+## 💡 Project Overview
+
+This blueprint monitors the state of your Frigate cameras via their `camera` entities in Home Assistant. When a camera's state changes from `on` to `off`, a timer is started. If the camera remains `off` for the user-defined duration, the blueprint triggers an automation to send a notification to your chosen devices, alerting you to the offline camera.
+
+---
+
+## ✨ Features
+
+* Detects when Frigate cameras go offline.
+* User-defined delay to prevent false alerts from brief disconnections.
+* Sends customizable push notifications to selected Home Assistant devices.
+* Optional critical notifications to bypass silent mode.
+* Configurable cooldown period for notifications.
+
+---
+
+## 🛒 Prerequisites
 
 To use this blueprint, you'll need:
 
@@ -22,13 +54,13 @@ To use this blueprint, you'll need:
 
 ---
 
-## How It Works
+## ⚙️ How It Works
 
 This blueprint monitors the state of your Frigate cameras via their `camera` entities in Home Assistant. When a camera's state changes from `on` to `off`, a timer is started. If the camera remains `off` for the user-defined duration, the blueprint triggers an automation to send a notification to your chosen devices, alerting you to the offline camera.
 
 ---
 
-## Setup
+## 🛠️ Setup
 
 Follow these steps to configure the blueprint:
 
@@ -43,7 +75,6 @@ If you haven't already, import the **Frigate Camera Offline Detector** blueprint
 3.  Select the **Frigate Camera Offline Detector** blueprint from the blueprint dropdown.
 4.  You will be prompted to configure the following options:
     * **Camera(s) to Monitor:** Select one or more camera entities you want to monitor for offline status (e.g., `camera.front_door`, `camera.backdoor`). These should be entities that report `unavailable` when offline.
-
     * **Notification Settings:**
         * **Device(s) to Notify:** Select the mobile device(s) (running the Home Assistant app) to receive offline notifications.
         * **Offline Duration:** Set the duration a camera must be offline (unavailable) before a notification is sent. This helps prevent false alerts from brief network glitches.
@@ -52,19 +83,18 @@ If you haven't already, import the **Frigate Camera Offline Detector** blueprint
         * **Notification Message:** Customize the message that will appear in the push notification. The default message includes the camera's friendly name, entity ID, and how long it has been offline.
         * **Critical Notification:** Enable this option to send a critical alert that bypasses silent mode settings on the device (if supported by your device and the Home Assistant Companion app).
 
-![example notification](https://github.com/user-attachments/assets/d7dfd6de-249c-4c70-aecd-d6b78f8f476a)
-
 ---
 
-## Example Automation Output
+## 🖼️ Example Automation Output / Actions
 
 Upon a camera going offline for the specified duration, a notification similar to this will be sent to your chosen device(s):
 
+![example notification](https://github.com/user-attachments/assets/d7dfd6de-249c-4c70-aecd-d6b78f8f476a)
 ![image](https://github.com/user-attachments/assets/c3a06098-d09f-4afa-ba4f-cf8afb943e2b)
 
 ---
 
-## Troubleshooting & Tips
+## 🚧 Troubleshooting & Tips
 
 * **Camera State Not Updating:** Ensure your Frigate NVR is running and the Frigate integration in Home Assistant is connected and functioning correctly. Check the `camera` entity's state in Home Assistant Developer Tools.
 * **No Notifications:**
@@ -74,3 +104,15 @@ Upon a camera going offline for the specified duration, a notification similar t
     * Check if the "Cooldown Duration" is preventing notifications.
 * **False Alarms:** Adjust the "Offline Duration" to a higher value if you are receiving notifications for brief camera disconnections or network hiccups.
 * **Home Assistant Logs:** If issues persist, check your Home Assistant logs (Settings > System > Logs) for any errors related to the camera entity or the blueprint automation.
+
+---
+
+## 🤝 Contributing
+
+Feel free to open an issue or submit a pull request if you have suggestions for improvements or encounter any bugs. Your contributions are welcome!
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
