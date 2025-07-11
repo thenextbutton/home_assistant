@@ -1,20 +1,54 @@
-# Plex Webhook Handler Blueprint for Home Assistant
+# 🎉 Plex Webhook Handler Blueprint for Home Assistant
 
 Automate your Home Assistant with events from Plex! This blueprint allows you to trigger custom automations in Home Assistant based on various Plex playback events (e.g., play, pause, resume, stop) from specific Plex clients.
 
 ---
 
-## Release
+## 🚀 Release
 
 Click the badge below to easily import the blueprint directly into your Home Assistant instance:
 
 [![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_release.yaml)
 
-<img width="718" alt="plex_webhook_blueprint" src="https://github.com/user-attachments/assets/c44efbb4-f314-4546-a774-2407f8f1689a" />
+---
+
+## 📖 Table of Contents
+
+* [Project Overview](#-project-overview)
+* [Features](#-features)
+* [Prerequisites](#-prerequisites)
+* [How It Works](#-how-it-works)
+* [Setup](#-setup)
+    * [1. Generate a Unique Webhook ID](#1-generate-a-unique-webhook-id)
+    * [2. Configure Plex Webhook](#2-configure-plex-webhook)
+    * [3. Import the Blueprint](#3-import-the-blueprint)
+    * [4. Create Your Automation](#4-create-your-automation)
+        * [Determine Plex Client Name/UUID](#determine-plex-client-nameuuid)
+    * [5. Configure Automation Actions](#5-configure-automation-actions)
+* [Accessing Blueprint Data / Payload Structure](#-accessing-blueprint-data--payload-structure)
+* [Example Automation Output / Actions](#-example-automation-output--actions)
+* [Troubleshooting & Tips](#-troubleshooting--tips)
+* [Contributing](#-contributing)
+* [License](#-license)
 
 ---
 
-## Prerequisites
+## 💡 Project Overview
+
+This blueprint leverages Plex's webhook functionality. When an event occurs in Plex (like playing, pausing, or stopping media), Plex sends a webhook to your Home Assistant instance. This blueprint then captures that webhook, extracts relevant information (like the client name or UUID), and triggers a Home Assistant automation that you create.
+
+---
+
+## ✨ Features
+
+* Trigger automations based on various Plex playback events (play, pause, resume, stop).
+* Supports events from specific Plex clients.
+* Option to treat `resume` events identically to `play` events.
+* Provides detailed webhook data for advanced automation logic.
+
+---
+
+## 🛒 Prerequisites
 
 To use this blueprint, you'll need:
 
@@ -23,13 +57,13 @@ To use this blueprint, you'll need:
 
 ---
 
-## How It Works
+## ⚙️ How It Works
 
 This blueprint leverages Plex's webhook functionality. When an event occurs in Plex (like playing, pausing, or stopping media), Plex sends a webhook to your Home Assistant instance. This blueprint then captures that webhook, extracts relevant information (like the client name or UUID), and triggers a Home Assistant automation that you create.
 
 ---
 
-## Setup
+## 🛠️ Setup
 
 Follow these steps to get your Plex Webhook Handler blueprint up and running:
 
@@ -78,7 +112,7 @@ If you haven't already, import the **Plex Webhook Handler** blueprint into your 
 
     5.  Copy either the **UUID** or the **Client Name** and enter it into the blueprint’s **Plex UUID / Client Name** field.
 
-    **Note:** The **UUID is preferred** over the client name, as it provides a unique identifier for your device, preventing potential conflicts if you have multiple devices with the same or similar names on your network. Multiple players are supported, it is advised to create an automation from the the blueprint for each room.
+    **Note:** The **UUID is preferred** over the client name, as it provides a unique identifier for your device, preventing potential conflicts if you have multiple devices with the same or similar names on your network. Multiple players are supported, it is advised to create an automation from the blueprint for each room.
 
     ---
 
@@ -88,13 +122,7 @@ Finally, define the **actions** you want your Home Assistant automation to perfo
 
 ---
 
-## Resume Event Handling
-
-Plex's `resume` webhook event is triggered both when you resume previously paused media and when you start media from a "continue watching" point. This blueprint provides an option to treat the `resume` event identically to a `play` event, if desired, simplifying your automation logic.
-
----
-
-## Accessing Webhook Data
+## 📊 Accessing Blueprint Data / Payload Structure
 
 Within your Home Assistant automations, you can access detailed information from the Plex webhook payload using Jinja2 templating. The primary data is available under `payload.Metadata`.
 
@@ -122,7 +150,9 @@ For a comprehensive list of available `payload.Metadata` attributes, refer to th
 
 ---
 
-## Example Automation Action
+## 🖼️ Example Automation Output / Actions
+
+Plex's `resume` webhook event is triggered both when you resume previously paused media and when you start media from a "continue watching" point. This blueprint provides an option to treat the `resume` event identically to a `play` event, if desired, simplifying your automation logic.
 
 Here's an example of how you might define an action within your Home Assistant automation to create a persistent notification upon a Plex event (e.g., after a Plex database backup completes, if your blueprint is configured to trigger on that):
 
@@ -134,4 +164,34 @@ data:
   notification_id: plex_db_backup
   title: Plex Alert
 ```
-![image](https://github.com/user-attachments/assets/0629608b-b024-47c1-be27-5d5a72096e8d)
+
+---
+
+## 🚧 Troubleshooting & Tips
+
+* **Webhook Not Triggering:**
+    * **Check Plex Pass:** Ensure you have an active Plex Pass, as it's required for webhooks.
+
+    * **Verify Webhook URL:** Double-check your Plex webhook URL for any typos, especially the IP address, port (8123), and the unique Webhook ID.
+
+    * **Network Access:** Ensure your Home Assistant instance is accessible from your Plex Media Server (e.g., no firewall blocking port 8123 or routing issues).
+
+    * **Plex Logs:** Check your Plex Media Server logs for any errors related to webhooks.
+	
+* **Home Assistant Logs:** If you're not seeing the expected behavior, review your Home Assistant logs (Settings > System > Logs) for any errors related to webhook or this blueprint.
+
+* **Multiple Clients:** While multiple players are supported, it is advised to create an automation from the blueprint for each room.
+
+* **Client Name/UUID Mismatch:** Ensure the client name/UUID in your blueprint automation exactly matches what Plex reports (use the 'Determine Plex Client Name/UUID?' option if unsure).
+
+---
+
+## 🤝 Contributing
+
+Feel free to open an issue or submit a pull request if you have suggestions for improvements or encounter any bugs. Your contributions are welcome!
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
