@@ -52,6 +52,8 @@ If you haven't already, import the **Frigate Camera Offline Detector** blueprint
         * **Notification Message:** Customize the message that will appear in the push notification. The default message includes the camera's friendly name, entity ID, and how long it has been offline.
         * **Critical Notification:** Enable this option to send a critical alert that bypasses silent mode settings on the device (if supported by your device and the Home Assistant Companion app).
 
+![example notification](https://github.com/user-attachments/assets/d7dfd6de-249c-4c70-aecd-d6b78f8f476a)
+
 ---
 
 ## Example Automation Output
