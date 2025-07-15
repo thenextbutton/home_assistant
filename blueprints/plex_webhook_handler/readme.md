@@ -57,13 +57,13 @@ To use this blueprint, you'll need:
 
 ---
 
-## ⚙️ How It Works
+## ⚙ How It Works
 
 This blueprint leverages Plex's webhook functionality. When an event occurs in Plex (like playing, pausing, or stopping media), Plex sends a webhook to your Home Assistant instance. This blueprint then captures that webhook, extracts relevant information (like the client name or UUID), and triggers a Home Assistant automation that you create.
 
 ---
 
-## 🛠️ Setup
+## 🛠 Setup
 
 Follow these steps to get your Plex Webhook Handler blueprint up and running:
 
@@ -150,7 +150,7 @@ For a comprehensive list of available `payload.Metadata` attributes, refer to th
 
 ---
 
-## 🖼️ Example Automation Output / Actions
+## 🖼 Example Automation Output / Actions
 
 Plex's `resume` webhook event is triggered both when you resume previously paused media and when you start media from a "continue watching" point. This blueprint provides an option to treat the `resume` event identically to a `play` event, if desired, simplifying your automation logic.
 
