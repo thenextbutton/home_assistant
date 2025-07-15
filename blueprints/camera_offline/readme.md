@@ -54,13 +54,13 @@ To use this blueprint, you'll need:
 
 ---
 
-## ⚙️ How It Works
+## ⚙ How It Works
 
 This blueprint monitors the state of your Frigate cameras via their `camera` entities in Home Assistant. When a camera's state changes from `on` to `off`, a timer is started. If the camera remains `off` for the user-defined duration, the blueprint triggers an automation to send a notification to your chosen devices, alerting you to the offline camera.
 
 ---
 
-## 🛠️ Setup
+## 🛠 Setup
 
 Follow these steps to configure the blueprint:
 
@@ -85,7 +85,7 @@ If you haven't already, import the **Frigate Camera Offline Detector** blueprint
 
 ---
 
-## 🖼️ Example Automation Output / Actions
+## 🖼 Example Automation Output / Actions
 
 Upon a camera going offline for the specified duration, a notification similar to this will be sent to your chosen device(s):
 
