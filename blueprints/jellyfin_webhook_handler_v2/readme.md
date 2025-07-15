@@ -60,13 +60,13 @@ To use this blueprint, you'll need:
 
 ---
 
-## ⚙️ How It Works
+## ⚙ How It Works
 
 This blueprint integrates your Jellyfin server with Home Assistant using webhooks. When significant events occur in Jellyfin (e.g., media playback, library changes, user actions), Jellyfin sends a data packet (a webhook) to your Home Assistant instance. This blueprint then captures that webhook, extracts relevant information, and triggers a Home Assistant event. Your custom automations can then respond to these events, allowing for powerful home automation based on your Jellyfin activity.
 
 ---
 
-## 🛠️ Setup
+## 🛠 Setup
 
 Follow these steps to configure the Jellyfin Webhook and Home Assistant Blueprint:
 
