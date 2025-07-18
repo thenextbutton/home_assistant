@@ -184,39 +184,28 @@ The Handlebars template ensures a consistent `payload` structure that maps to co
 
 **Common `payload` attributes:**
 
-* `payload.EventType`: The type of event (e.g., `PlaybackStart`, `PlaybackStop`, `ItemAdded`).
-* `payload.Item.Name`: Name of the media item (e.g., movie title, song title).
-* `payload.Item.MediaType`: Type of media (e.g., `Video`, `Audio`).
-* `payload.Item.Type`: More specific item type (e.g., `Movie`, `Episode`, `Song`).
-* `payload.Item.OfficialRating`: Official rating (e.g., `PG-13`).
-* `payload.Item.Overview`: Synopsis/overview of the item.
-* `payload.Item.RunTimeTicks`: Total runtime of the item in ticks.
-* `payload.PlaybackPositionTicks`: Current playback position in ticks (for `PlaybackProgress` events).
-* `payload.Server.Name`: Name of the Jellyfin server.
-* `payload.User.Name`: Name of the user performing the action.
-* `payload.Client.Name`: Name of the client device (e.g., `Web`, `Android`).
-* `payload.Client.Id`: Unique ID of the client device.
+* `payload.notification_type`: The type of event (e.g., `PlaybackStart`, `PlaybackStop`, `ItemAdded`).
+* `payload.item_name`: Name of the media item (e.g., movie title, song title).
+* `payload.item_type`: More specific item type (e.g., `Movie`, `Episode`, `Song`).
+* `payload.overview`: Synopsis/overview of a movie/tv item.
+* `payload.runtime_ticks`: Total runtime of the item in ticks.
+* `payload.playback_position_ticks`: Current playback position in ticks (for `PlaybackProgress` events).
+* `payload.server_name`: Name of the Jellyfin server.
+* `payload.user_name`: Name of the user performing the action.
+* `payload.client_name`: Name of the client device (e.g., `Web`, `Android`).
+* `payload.device_id`: Unique ID of the client device.
 
 **Example(s):**
 
 * **Accessing the media item name:**
     ```yaml
-    {{ payload.Item.Name }}
+    {{ payload.item_name }}
     ```
 
 * **Getting the client name and event type:**
     ```yaml
-    Jellyfin {{ payload.Client.Name }} triggered {{ payload.EventType }}
+    Jellyfin {{ payload.client_name }} triggered {{ payload.event_type }}
     ```
-
-* **Full URL for Item Image (backdrop or thumbnail):**
-    ```yaml
-    {% set server_url = "http://YOUR_JELLYFIN_IP:8096" %}
-    {% if payload.Item.PrimaryImageTag and payload.Item.Id %}
-      {{ server_url }}/Items/{{ payload.Item.Id }}/Images/Primary?tag={{ payload.Item.PrimaryImageTag }}
-    {% elif payload.Item.BackdropImageTag and payload.Item.Id %}
-      {{ server_url }}/Items/{{ payload.Item.Id }}/Images/Backdrop?tag={{ payload.Item.BackdropImageTag }}
-    {% endif %}
     ```
     *Remember to replace `YOUR_JELLYFIN_IP:8096` with your actual Jellyfin server's IP and port.*
 
