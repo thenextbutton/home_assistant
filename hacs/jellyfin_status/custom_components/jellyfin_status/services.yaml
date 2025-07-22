@@ -1,4 +1,0 @@
-refresh:
-  name: Refresh Jellyfin Status
-  description: Manually triggers a data update for the Jellyfin integration.
-  fields: {}
