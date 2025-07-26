@@ -1,6 +1,6 @@
 id: jellyfin_webhook_handler_v2_release
 blueprint:
-  name: Jellyfin Webhook Handler RELEASE (v2.4.14)
+  name: Jellyfin Webhook Handler RELEASE (v2.4.20)
   homeassistant:
     min_version: "2024.6.0"
   description: |
@@ -418,6 +418,31 @@ blueprint:
             action: {}
           default: []
 
+    generic_playback_action:
+      name: Generic Playback Actions
+      description: These actions will trigger no matter what client is playing back. These can be used for notifying that someone has started a playback on a device somewhere, they should not be confused for when you are trying to trigger actions on a particular client for mood lighting effects.
+      icon: mdi:play-circle
+      collapsed: true
+      input:
+        generic_playback_started:
+          name: Playback Started
+          description: Actions when a new movie is added to the library.
+          selector:
+            action: {}
+          default: []
+        generic_playback_progress:
+          name: Playback Progress
+          description: Actions when new music is added to the library.
+          selector:
+            action: {}
+          default: []
+        generic_playback_stopped:
+          name: Playback Stopped
+          description: Actions when new music album is added to the library.
+          selector:
+            action: {}
+          default: []
+
     automation_actions:
       name: Automation Actions
       description: Advanced settings for automation behavior.
@@ -492,6 +517,28 @@ action:
             Client: {{ payload.device_name if 'device_name' in payload else 'Not Found!' }}
             ID: {{ payload.device_id if 'device_id' in payload else 'Not Found!' }}
           notification_id: jellyfin_webhook_client_name
+
+  - if:
+      - condition: template
+        value_template: >
+          {{ payload.notification_type == 'PlaybackStart' or
+             payload.notification_type == 'PlaybackStop' or
+             payload.notification_type == 'PlaybackProgress' }}
+    then:
+      sequence:
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: "{{ payload.notification_type == 'PlaybackStart' }}"
+              sequence: !input generic_playback_started
+            - conditions:
+                - condition: template
+                  value_template: "{{ payload.notification_type == 'PlaybackProgress' }}"
+              sequence: !input generic_playback_progress
+            - conditions:
+                - condition: template
+                  value_template: "{{ payload.notification_type == 'PlaybackStop' }}"
+              sequence: !input generic_playback_stopped
 
   - choose:
       - conditions:
