@@ -2,6 +2,7 @@
 
 [![Community Blueprints](https://img.shields.io/badge/Community-Blueprints-blue?logo=home-assistant&logoColor=white)](https://community.home-assistant.io/)
 [![Home Assistant 2024.6.0+](https://img.shields.io/badge/Home%20Assistant-2024.6.0+-orange?logo=home-assistant&logoColor=white)](https://www.home-assistant.io/)
+[![Language: YAML](https://img.shields.io/badge/Language-YAML-cb171e?logo=yaml&logoColor=white)](https://yaml.org/)
 ![Plex Webhooks](https://img.shields.io/static/v1?label=%20&message=Webhooks&labelColor=E5A001&color=blue&logo=plex&logoColor=white)
 [![Jellyfin Webhooks](https://img.shields.io/badge/Jellyfin-Webhooks-blue?logo=jellyfin&logoColor=white)](https://jellyfin.org/)
 [![Frigate Monitor](https://img.shields.io/badge/Frigate-Monitor-blue?logo=frigate&logoColor=white)](https://frigate.video/)
