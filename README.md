@@ -18,12 +18,6 @@ This repository houses a growing collection of Home Assistant Blueprints designe
 
 ---
 
-# 🏠 Home Assistant Blueprints Collection
-
-This repository houses a growing collection of Home Assistant Blueprints designed to simplify various automation tasks. Each blueprint offers a ready-to-use automation template that you can import directly into your Home Assistant instance, helping you get powerful automations running quickly without extensive YAML coding.
-
----
-
 * [Plex Webhooks](#plex-webhooks)
 * [Jellyfin Webhooks](#jellyfin-webhooks)
 * [Frigate Camera Offline](#frigate-camera-offline)
