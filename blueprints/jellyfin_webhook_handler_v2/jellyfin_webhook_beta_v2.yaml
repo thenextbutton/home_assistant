@@ -25,7 +25,7 @@ blueprint:
 
   domain: automation
   
-#  source_url:
+  source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler_v2/jellyfin_webhook_beta_v2.yaml
   
   input:
     webhook_id:
