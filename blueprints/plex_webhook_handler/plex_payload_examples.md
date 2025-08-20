@@ -47,7 +47,7 @@ Here are example payloads of data sent from the Plex server
 ##### Movie starts playing.
 ```yaml
 payload:
-  event: media.stop
+  event: media.play
   user: true
   owner: true
   Account:
@@ -594,7 +594,7 @@ payload:
 ##### Movie playback pauses.
 ```yaml
 payload:
-  event: media.resume
+  event: media.pause
   user: true
   owner: true
   Account:
@@ -1141,7 +1141,7 @@ payload:
 ##### Movie playback resumes.
 ```yaml
 payload:
-  event: media.pause
+  event: media.resume
   user: true
   owner: true
   Account:
@@ -2238,7 +2238,7 @@ payload:
 ##### Movie playback stops.
 ```yaml
 payload:
-  event: media.play
+  event: media.stop
   user: true
   owner: true
   Account:
