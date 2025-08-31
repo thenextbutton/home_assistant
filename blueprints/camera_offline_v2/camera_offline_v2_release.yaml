@@ -1,0 +1,384 @@
+blueprint:
+  name: Camera Offline (v2.1.3)
+  homeassistant:
+    min_version: "2024.6.0"
+  description: "Receive instant mobile notifications for camera outages and recoveries, with logic to prevent notification spam from brief, intermittent disconnections."
+
+  domain: automation
+
+  source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/camera_offline_v2/camera_offline_v2_release.yaml
+
+  input:
+    cameras:
+      name: 📹️ Camera(s) to Monitor
+      description: "Select the camera entities you want to monitor for their status."
+      selector:
+        entity:
+          domain: camera
+          multiple: true
+
+    notify_target:
+      name: 📱 Notify Target (Mobile Devices)
+      description: "Select the mobile devices that will receive the status notifications."
+      selector:
+        device:
+          integration: mobile_app
+          multiple: true
+
+    status_tracker:
+      name: 📰 Camera Status Tracker (var entity)
+      description: "A 'var' entity used to store and track the state and last status change of your cameras.<br><br>[Var](https://github.com/snarky-snark/home-assistant-variables) can be installed via [HACS](https://www.hacs.xyz)"
+      selector:
+        entity:
+          domain: var
+
+    garbage_collection:
+      name: Garbage Collection
+      description: "Control how data is automatically removed.<br>This includes removing data for cameras no longer monitored and removing stale data after a set duration.<br>All options require 'Enable Data Pruning' to be active."
+      icon: mdi:trash-can
+      collapsed: true
+      input:
+        garbage_collection_enabled:
+          name: ✔️ Enable Data Pruning
+          description: "Enable or disable automatic removal of stale camera data from the `var` entity."
+          default: true
+          selector:
+            boolean:
+
+        garbage_collection_entity_removal:
+          name: ✔️ Camera(s) removed from monitoring
+          description: "Enable or disable automatic removal camera data when removed from monitoring."
+          default: true
+          selector:
+            boolean:
+
+        garbage_collection_stale_duration_enabled:
+          name: ✔️ Stale Data Duration
+          description: "Enabled the removal of stale camera data when they reach the duration time "
+          default: false
+          selector:
+            boolean:
+
+        garbage_collection_stale_duration:
+          name: ⏳ Stale Data Duration
+          description: "Remove the camera data if the last changed timestamp has not been updated."
+          default: 14
+          selector:
+            number:
+              min: 1
+              unit_of_measurement: day(s)
+              mode: box
+
+
+    offline_notification_details:
+      name: Offline Notification Details
+      description: ""
+      icon: mdi:bullhorn
+      collapsed: true
+      input:
+        offline_notification_enabled:
+          name: ✔️ Enable Offline Notifications?
+          description: "Enable or disable notifications for when a camera goes offline."
+          default: true
+          selector:
+            boolean:
+
+        offline_stability_duration:
+          name: ⏳️ Offline Stability Duration
+          description: "The duration a camera must be 'unavailable' for before an offline notification is sent."
+          default:
+            hours: 0
+            minutes: 2
+            seconds: 0
+          selector:
+            duration:
+
+        offline_critical:
+          name: ❗️️ Critical Offline Notification?
+          description: "Set to 'true' for critical, high-priority offline notifications that bypass Do Not Disturb."
+          default: true
+          selector:
+            boolean:
+
+        offline_message_title:
+          name: 💬 Offline Message Title
+          description: "The message title for offline notifications."
+          default: "🔴 CAMERA OFFLINE 🔴"
+          selector:
+            text:
+              multiline: false
+
+        offline_message_template:
+          name: 💬 Offline Message Template
+          description: "The message template for offline notifications. Use {friendly_name} for dynamic content."
+          default: "{friendly_name} has been detected as being offline."
+          selector:
+            text:
+              multiline: true
+
+
+    online_notification_details:
+      name: Online Notification Details
+      description: ""
+      icon: mdi:bullhorn
+      collapsed: true
+      input:
+        recovery_notification_enabled:
+          name: ✔️ Enable Recovery Notifications?
+          description: "Enable or disable notifications for when a camera comes back online."
+          default: true
+          selector:
+            boolean:
+
+        recovery_stability_duration:
+          name: ⏳ Recovery Stability Duration
+          description: "The duration a camera must be 'recording' for before a recovery notification is sent and the offline flag is reset."
+          default:
+            hours: 0
+            minutes: 10
+            seconds: 0
+          selector:
+            duration:
+
+        recovery_critical:
+          name: ❗️ Critical Recovery Notification?
+          description: "Set to 'true' for critical, high-priority recovery notifications that bypass Do Not Disturb."
+          default: false
+          selector:
+            boolean:
+
+        recovery_message_title:
+          name: 💬 Recovery Message Title
+          description: "The message title for recovery notifications."
+          default: "🟢 CAMERA ONLINE 🟢"
+          selector:
+            text:
+              multiline: false
+
+        recovery_message_template:
+          name: 💬 Recovery Message Template
+          description: "The message template for recovery notifications. Use {friendly_name} and/or {offline_duration} for dynamic content."
+          default: "{friendly_name} is back online after {offline_duration} offline."
+          selector:
+            text:
+              multiline: true
+
+
+    notification_mode:
+      name: Notification Mode
+      description: "Choose to send notifications to mobile devices, persistent notifications (for debugging), or both."
+      default: both
+      selector:
+        select:
+          options:
+            - label: Device(s) Only
+              value: "device_only"
+            - label: Debug Only
+              value: "debug_only"
+            - label: Both Device(s) & Debug
+              value: "both"
+
+mode: queued
+max_exceeded: silent
+
+trigger:
+  - platform: state
+    entity_id: !input cameras
+    to: unavailable
+    for: !input offline_stability_duration
+    
+  - platform: state
+    entity_id: !input cameras
+    to: recording
+    for: !input recovery_stability_duration
+
+action:
+  - variables:
+      cameras_input: !input cameras
+      notify_target_input: !input notify_target
+      status_tracker_input: !input status_tracker
+      offline_critical_input: !input offline_critical
+      recovery_critical_input: !input recovery_critical
+      offline_notification_enabled_input: !input offline_notification_enabled
+      recovery_notification_enabled_input: !input recovery_notification_enabled
+      offline_message_template_input: !input offline_message_template
+      recovery_message_template_input: !input recovery_message_template
+      notification_mode_input: !input notification_mode
+      offline_message_title_input: !input offline_message_title
+      recovery_message_title_input: !input recovery_message_title
+      garbage_collection_enabled_input: !input garbage_collection_enabled
+      garbage_collection_entity_removal_input: !input garbage_collection_entity_removal
+      garbage_collection_stale_duration_enabled_input: !input garbage_collection_stale_duration_enabled
+      garbage_collection_stale_duration_input: !input garbage_collection_stale_duration
+      
+  - choose:
+      # Action when a camera's state changes
+      - conditions:
+          - condition: template
+            value_template: "{{ trigger.platform in ['state'] }}"
+        sequence:
+          - variables:
+              recovery_stability_duration_input: !input recovery_stability_duration
+              camera: "{{ trigger.entity_id }}"
+              friendly_name: "{{ trigger.to_state.attributes.friendly_name or camera }}"
+              is_recovery: "{{ trigger.to_state.state == 'recording' }}"
+              # Load existing camera status data from the var entity
+              status_json: >
+                {% set raw = state_attr(status_tracker_input, 'camera_states') %}
+                {% if raw in ['unknown', 'unavailable', None] %}
+                  {}
+                {% else %}
+                  {{ raw | from_json }}
+                {% endif %}
+              # Prune old cameras that no longer exist, using a supported for loop
+              pruned_json: >
+                {% set kept = {} %}
+                {% if garbage_collection_enabled_input %}
+                  {% if garbage_collection_stale_duration_enabled_input %}
+                    {% set stale_time = now() - timedelta(days=garbage_collection_stale_duration_input) %}
+                  {% endif %}
+                  {% for camera_id, camera_data in status_json.items() %}
+                    {% set keep_by_entity_removal = not garbage_collection_entity_removal_input or (garbage_collection_entity_removal_input and camera_id in cameras_input) %}
+                    {% set keep_by_stale_duration = not garbage_collection_stale_duration_enabled_input or (garbage_collection_stale_duration_enabled_input and as_datetime(camera_data.last_changed, now()) > stale_time) %}
+                    {% if keep_by_entity_removal and keep_by_stale_duration %}
+                      {% set kept = kept | combine({camera_id: camera_data}) %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ kept }}
+                {% else %}
+                  {{ status_json }}
+                {% endif %}
+            # Update the JSON payload with the new state, timestamps, and notification flag
+              updated_json: >
+                {% set existing_data = status_json.get(camera, {}) %}
+                {% set is_offline = trigger.to_state.state == 'unavailable' %}
+                {% set is_recovery = trigger.to_state.state == 'recording' %}
+                {% set offline_started_existing = existing_data.get('offline_started') %}
+                {% set offline_started_should_set = is_offline and (
+                  offline_started_existing is none or
+                  offline_started_existing in ['null', 'None', '', 'unknown']
+                ) %}
+
+                {% set new_entry = {
+                  "state": trigger.to_state.state,
+                  "last_changed": now().isoformat(),
+                  "offline_started": (
+                    none if is_recovery else
+                    trigger.to_state.last_changed.astimezone(now().tzinfo).isoformat()
+                      if offline_started_should_set else
+                    offline_started_existing
+                  ),
+                  "offline_notified": (
+                    false if is_recovery
+                    else true if offline_started_should_set
+                    else existing_data.get("offline_notified", false)
+                  )
+                } %}
+
+                {{ pruned_json | combine({ camera: new_entry }) }}
+
+              # Notification data variables
+              notify_ttl: >
+                {% if (is_recovery and recovery_critical_input) or (not is_recovery and offline_critical_input) %} 0 {% else %} 300 {% endif %}
+              notify_priority: >
+                {% if (is_recovery and recovery_critical_input) or (not is_recovery and offline_critical_input) %} high {% else %} normal {% endif %}
+              notify_critical: >
+                {% if (is_recovery and recovery_critical_input) or (not is_recovery and offline_critical_input) %} 1 {% else %} 0 {% endif %}
+              notify_volume: >
+                {% if (is_recovery and recovery_critical_input) or (not is_recovery and offline_critical_input) %} 1.0 {% else %} 0.5 {% endif %}
+              notify_channel: >
+                {% if (is_recovery and recovery_critical_input) or (not is_recovery and offline_critical_input) %} critical {% else %} default {% endif %}
+              offline_duration: >
+                {% set offline_started = status_json.get(camera, {}).get('offline_started') %}
+                {% if offline_started and is_recovery %}
+                  {% set offline_time = as_datetime(offline_started) %}
+                  {% set recovery_time = trigger.to_state.last_changed.astimezone(now().tzinfo) %}
+                  {% set raw_duration = (recovery_time - offline_time).total_seconds() | int %}
+
+                  {% set display_duration = raw_duration %}
+                  {% set days = display_duration // 86400 %}
+                  {% set hours = (display_duration % 86400) // 3600 %}
+                  {% set minutes = (display_duration % 3600) // 60 %}
+                  {% set seconds = display_duration % 60 %}
+
+                  {% if display_duration < 60 %}
+                    {{ '%02d' | format(seconds) ~ 's' }}
+                  {% else %}
+                    {% set output = '' %}
+                    {% if days > 0 %}
+                      {% set output = output ~ '%02d' | format(days) ~ 'd ' %}
+                    {% endif %}
+                    {% if hours > 0 or days > 0 %}
+                      {% set output = output ~ '%02d' | format(hours) ~ 'h ' %}
+                    {% endif %}
+                    {% if minutes > 0 or hours > 0 or days > 0 %}
+                      {% set output = output ~ '%02d' | format(minutes) ~ 'm ' %}
+                    {% endif %}
+                    {% set output = output ~ '%02d' | format(seconds) ~ 's' %}
+                    {{ output.strip() }}
+                  {% endif %}
+                {% else %}
+                  unknown duration
+                {% endif %}
+
+          - service: var.set
+            data:
+              entity_id: "{{ status_tracker_input }}"
+              value: "tracking"
+              attributes:
+                camera_states: "{{ updated_json | to_json }}"
+          - if:
+              - condition: or
+                conditions:
+                  - condition: template
+                    value_template: "{{ offline_notification_enabled_input and not is_recovery and not status_json.get(camera, {}).get('offline_notified') }}"
+                  - condition: template
+                    value_template: "{{ recovery_notification_enabled_input and is_recovery and status_json.get(camera, {}).get('offline_notified') }}"
+            then:
+              - if:
+                  - condition: template
+                    value_template: "{{ notification_mode_input in ['both', 'device_only'] }}"
+                then:
+                  - repeat:
+                      for_each: "{{ notify_target_input }}"
+                      sequence:
+                        - service_template: >
+                            notify.mobile_app_{{ device_attr(repeat.item, 'name') | lower | replace(' ', '_') | replace("'", '') | replace('’', '') }}
+                          data:
+                            title: >
+                              {% if is_recovery %}
+                                {{ recovery_message_title_input.format(friendly_name=friendly_name, offline_duration=offline_duration) }}
+                              {% else %}
+                                {{ offline_message_title_input.format(friendly_name=friendly_name) }}
+                              {% endif %}
+                            message: >
+                              {% if is_recovery %}
+                                {{ recovery_message_template_input.format(friendly_name=friendly_name, offline_duration=offline_duration) }}
+                              {% else %}
+                                {{ offline_message_template_input.format(friendly_name=friendly_name) }}
+                              {% endif %}
+                            data:
+                              ttl: "{{ notify_ttl }}"
+                              priority: "{{ notify_priority }}"
+                              push:
+                                sound:
+                                  name: "default"
+                                  critical: "{{ notify_critical }}"
+                                  volume: "{{ notify_volume }}"
+                              tag: "{{ camera }}"
+                              channel: "{{ notify_channel }}"
+              - if:
+                  - condition: template
+                    value_template: "{{ notification_mode_input in ['both', 'debug_only'] }}"
+                then:
+                  - service: persistent_notification.create
+                    data:
+                      title: "🧪 Debug: {{ friendly_name }} State"
+                      message: >
+                        Entity: {{ camera }}<br>
+                        Friendly Name: {{ friendly_name }}<br>
+                        State Transition: {{ trigger.from_state.state }} ➝ {{ trigger.to_state.state }}<br>
+                        Triggered At: {{ now().isoformat() }}<br>
+                        Offline Started: {{ updated_json.get(camera, {}).get('offline_started') }}<br>
+                        Current JSON Record: {{ updated_json | to_json }}
+                      notification_id: "{{ friendly_name | slugify }}_status"
