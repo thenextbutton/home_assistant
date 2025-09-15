@@ -121,12 +121,12 @@ var:
 
 ### **🖼 Example Automation Output / Actions**
 
-Upon a camera going offline for the specified duration, a notification similar to this will be sent to your chosen device(s):
+Upon a camera going offline for the specified duration, a notification similar to this will be sent to your chosen device(s):<br>
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/ccb4b7ee-c9a0-4a2c-b389-279045e90424" />
 
 
 
-When a camera comes back online after a prolonged outage, a notification similar to this will be sent:
+When a camera comes back online after a prolonged outage, a notification similar to this will be sent:<br>
 <img width="300" alt="image" src="https://github.com/user-attachments/assets/c497c89a-fa89-4db1-87ca-7ec4890cd2ce" />
 
 
