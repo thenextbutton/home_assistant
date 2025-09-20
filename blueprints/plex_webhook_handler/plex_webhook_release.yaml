@@ -376,7 +376,6 @@ blueprint:
                   interacting with Plex Media Server {{ payload.Server.title }} 
                   {% endif %} 
                   on the device {{ payload.Player.title }}"
-
     automation_actions:
       name: Automation Actions
       description: "<br>These options control how the automation behaves.<br></br>"
