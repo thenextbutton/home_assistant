@@ -1,6 +1,6 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.4.6)
+  name: Plex Webhook Handler BETA (v0.4.7)
   homeassistant:
     min_version: "2024.6.0"
   description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/)."
@@ -363,18 +363,19 @@ blueprint:
               data:
                 title: "{{ payload.Account.title }} -  Playback started"
                 notification_id: "plex_user_playback_{{ payload.Account.title }}"
-                message: " {{ payload.Account.title }} has started
-                  {% if payload.Metadata.type == 'album' %}
-                  listening to the album {{ payload.Metadata.title }} by {{ payload.Metadata.parentTitle }}
-                  {% elif payload.Metadata.type == 'movie' %}
-                  to watch the movie {{ payload.Metadata.title }}
-                  {% elif payload.Metadata.type == 'episode' %}
-                  to watch the TV show {{ payload.Metadata.grandparentTitle }}
+                message: "  {{ payload.Account.title }} has started 
+                  {% if payload.Metadata.type == 'track' %} 
+                  listening to {{ payload.Metadata.title}} by {% if payload.Metadata.originalTitle is defined and payload.Metadata.originalTitle|length > 0 %} {{ payload.Metadata.originalTitle }} {% else %} {{ payload.Metadata.grandparentTitle }} {% endif %} from the album {{ payload.Metadata.parentTitle }} 
+                  {% elif payload.Metadata.type == 'movie' %} 
+                  to watch the movie {{ payload.Metadata.title }} ({{ payload.Metadata.year }}) directed by {{ payload.Metadata.Director[0].tag }} 
+                  {% elif payload.Metadata.type == 'episode' %} 
+                  to watch the TV show {{ payload.Metadata.grandparentTitle }} Season {{ payload.Metadata.parentIndex }} Episode {{ payload.Metadata.index }} ({{ payload.Metadata.title }}) 
+                  {% elif payload.Metadata.type == 'album' %} 
+                  listening to the album {{ payload.Metadata.title }} by {{ payload.Metadata.parentTitle }} 
                   {% else %}
-                  interacting with Plex Media Server {{ payload.Server.title }}
-                  {% endif %}
+                  interacting with Plex Media Server {{ payload.Server.title }} 
+                  {% endif %} 
                   on the device {{ payload.Player.title }}"
-
     automation_actions:
       name: Automation Actions
       description: "<br>These options control how the automation behaves.<br></br>"
@@ -489,7 +490,7 @@ action:
 
       - conditions:
           - condition: template
-            value_template: "{{ payload.event == 'playback.started' }}"
+            value_template: "{{ payload.event == 'media.play' }}"
         sequence: !input admin_playback_started
 
       - conditions:
