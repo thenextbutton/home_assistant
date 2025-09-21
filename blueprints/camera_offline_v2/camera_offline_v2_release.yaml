@@ -345,6 +345,7 @@ action:
                       sequence:
                         - service_template: >
                             notify.mobile_app_{{ device_attr(repeat.item, 'name') | lower | replace(' ', '_') | replace("'", '') | replace('’', '') }}
+                          continue_on_error: true
                           data:
                             title: >
                               {% if is_recovery %}
@@ -368,7 +369,6 @@ action:
                                   volume: "{{ notify_volume }}"
                               tag: "{{ camera }}"
                               channel: "{{ notify_channel }}"
-                      continue_on_error: true
               - if:
                   - condition: template
                     value_template: "{{ notification_mode_input in ['both', 'debug_only'] }}"
