@@ -1,4 +1,4 @@
-id: camera_offline_notifier _v2
+id: camera_offline_notifier_v2
 blueprint:
   name: Camera Offline (v2.1.4)
   homeassistant:
