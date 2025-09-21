@@ -1,6 +1,6 @@
 id: camera_offline_notifier _v2
 blueprint:
-  name: Camera Offline (v2.1.3)
+  name: Camera Offline (v2.1.4)
   homeassistant:
     min_version: "2024.6.0"
   description: "Receive instant mobile notifications for camera outages and recoveries, with logic to prevent notification spam from brief, intermittent disconnections."
