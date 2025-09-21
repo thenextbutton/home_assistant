@@ -368,7 +368,7 @@ action:
                                   volume: "{{ notify_volume }}"
                               tag: "{{ camera }}"
                               channel: "{{ notify_channel }}"
-                      continue_on_error: true
+                  - continue_on_error: true
               - if:
                   - condition: template
                     value_template: "{{ notification_mode_input in ['both', 'debug_only'] }}"
