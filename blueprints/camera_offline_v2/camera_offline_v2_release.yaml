@@ -1,5 +1,6 @@
+id: camera_offline_notifier _v2
 blueprint:
-  name: Camera Offline (v2.1.3)
+  name: Camera Offline (v2.1.4)
   homeassistant:
     min_version: "2024.6.0"
   description: "Receive instant mobile notifications for camera outages and recoveries, with logic to prevent notification spam from brief, intermittent disconnections."
@@ -248,7 +249,7 @@ action:
                 {% else %}
                   {{ status_json }}
                 {% endif %}
-            # Update the JSON payload with the new state, timestamps, and notification flag
+              # Update the JSON payload with the new state, timestamps, and notification flag
               updated_json: >
                 {% set existing_data = status_json.get(camera, {}) %}
                 {% set is_offline = trigger.to_state.state == 'unavailable' %}
@@ -367,6 +368,7 @@ action:
                                   volume: "{{ notify_volume }}"
                               tag: "{{ camera }}"
                               channel: "{{ notify_channel }}"
+                      continue_on_error: true
               - if:
                   - condition: template
                     value_template: "{{ notification_mode_input in ['both', 'debug_only'] }}"
@@ -382,3 +384,4 @@ action:
                         Offline Started: {{ updated_json.get(camera, {}).get('offline_started') }}<br>
                         Current JSON Record: {{ updated_json | to_json }}
                       notification_id: "{{ friendly_name | slugify }}_status"
+```
