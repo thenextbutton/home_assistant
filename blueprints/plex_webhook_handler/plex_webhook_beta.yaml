@@ -490,7 +490,7 @@ action:
 
       - conditions:
           - condition: template
-            value_template: "{{ payload.event == 'media.play' }}"
+            value_template: "{{ payload.event == 'playback.started' }}"
         sequence: !input admin_playback_started
 
       - conditions:
