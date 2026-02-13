@@ -3,7 +3,7 @@ blueprint:
   name: Plex Webhook Handler BETA (v0.5.1)
   homeassistant:
     min_version: "2024.6.0"
-  description: "Plex webhook events are handled by this blueprint. Supports time ranges that cross midnight."
+  description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/).<br><br>**Requirements:**<br>- The **Sun** integration must be enabled if you plan to use 'Use Sunset/Sunrise' filters."
   domain: automation
   source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_beta.yaml
 
