@@ -1,18 +1,16 @@
 id: plex_webhook_handler_beta
 blueprint:
-  name: Plex Webhook Handler BETA (v0.5.0)
+  name: Plex Webhook Handler BETA (v0.5.1)
   homeassistant:
     min_version: "2024.6.0"
-  description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/).<br><br>**Requirements:**<br>- The **Sun** integration must be enabled if you plan to use 'Use Sunset/Sunrise' filters."
-
+  description: "Plex webhook events are handled by this blueprint. Supports time ranges that cross midnight."
   domain: automation
-  
   source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/plex_webhook_handler/plex_webhook_beta.yaml
 
   input:
     webhook_id:
       name: Webhook ID
-      description: "Configure your Plex Media Server webhook to send notifications to:<br>http://{your-home-assistant}:8123/api/webhook/{webhook_id}"
+      description: "Configure your Plex Media Server webhook to send notifications to: http://{your-home-assistant}:8123/api/webhook/{webhook_id}"
       selector:
         text:
           multiline: false
@@ -20,38 +18,30 @@ blueprint:
       default: ""
     webhook_local_only:
       name: Webhook Local Only
-      description: "Enable to only accept webhook requests from your local network.<br>For enhanced security, keep this on unless triggering directly from the internet."
+      description: "Enable to only accept webhook requests from your local network."
       selector:
         boolean: {}
       default: true
 
     plex_player_details:
       name: Player Details
-      description: "<br>Please enter the name <b>OR</b> the UUID of the Plex client. You can place both if you want, uuid will take precedence.<br></br>"
       icon: mdi:plex
       collapsed: false
       input:
         plex_client_uuid:
           name: Plex Client UUID
-          description: "Enter the Plex client UUID to trigger the Movie, Music and TV Show actions."
           selector:
             text:
-              multiline: false
               multiple: true
-              type: text
           default: ""
         plex_client:
           name: Plex Client Name
-          description: "Enter the Plex client name to trigger the Movie, Music and TV Show actions."
           selector:
             text:
-              multiline: false
               multiple: true
-              type: text
           default: ""
         plex_client_retrieve:
           name: Plex Client Name/UUID ?
-          description: "Enable this to generate a notification in Home Assistant with the Plex client name/UUID when a webhook is triggered.<br>Ensure webhooks are correctly configured and sending to your Home Assistant instance."
           selector:
             boolean: {}
           default: false
@@ -63,13 +53,11 @@ blueprint:
       input:
         movie_time_filter_enabled:
           name: Enable Time Constraints
-          description: "If OFF, all Movie actions run 24/7."
           default: false
           selector:
             boolean: {}
         movie_use_sun:
           name: Use Sunset/Sunrise
-          description: "If ON, ignores the times below and only runs when the sun is down. (Requires the Sun integration to be active)."
           default: false
           selector:
             boolean: {}
@@ -86,43 +74,36 @@ blueprint:
 
     movie_actions:
       name: Movie Actions
-      description: "<br>Define actions to execute for Movie Plex events.<br></br>"
       icon: mdi:movie
       collapsed: true
       input:
         movie_play_actions:
           name: Movie Play Actions
-          description: "Actions to perform when a movie starts."
           selector:
             action: {}
           default: []
         movie_resume_mimics_play:
           name: Movie Resume Mimics Play Actions
-          description: "When a movie resumes, execute the same actions as when it starts."
           selector:
             boolean: {}
           default: false
         movie_resume_actions:
           name: Movie Resume Actions
-          description: "Actions to perform when a movie resumes playback.<br>**These are not executed if 'Movie Resume Mimics Play Actions' is enabled.**"
           selector:
             action: {}
           default: []
         movie_pause_actions:
           name: Movie Pause Actions
-          description: "Actions to perform when a movie is paused."
           selector:
             action: {}
           default: []
         movie_stop_actions:
           name: Movie Stop Actions
-          description: "Actions to perform when a movie stops playing."
           selector:
             action: {}
           default: []
         movie_scrobble_actions:
           name: Movie Scrobble Actions
-          description: "Actions to perform when Plex sends a scrobble event."
           selector:
             action: {}
           default: []
@@ -134,13 +115,11 @@ blueprint:
       input:
         track_time_filter_enabled:
           name: Enable Time Constraints
-          description: "If OFF, all Music actions run 24/7."
           default: false
           selector:
             boolean: {}
         track_use_sun:
           name: Use Sunset/Sunrise
-          description: "If ON, ignores the times below and only runs when the sun is down. (Requires the Sun integration to be active)."
           default: false
           selector:
             boolean: {}
@@ -157,43 +136,36 @@ blueprint:
 
     music_actions:
       name: Music Actions
-      description: "<br>Define actions to execute for Music Plex events.<br></br>"
       icon: mdi:music
       collapsed: true
       input:
         track_play_actions:
           name: Music Play Actions
-          description: "Actions to perform when a music track starts playback."
           selector:
             action: {}
           default: []
         track_resume_mimics_play:
           name: Music Resume Mimics Play Actions
-          description: "When a track resumes, execute the same actions as when it starts."
           selector:
             boolean: {}
           default: false
         track_resume_actions:
           name: Music Resume Actions
-          description: "Actions to perform when a music track resumes playback.<br>**These are not executed if 'Music Resume Mimics Play Actions' is enabled.**"
           selector:
             action: {}
           default: []
         track_pause_actions:
           name: Music Pause Action
-          description: "Actions to perform when a music track is paused."
           selector:
             action: {}
           default: []
         track_stop_actions:
           name: Music Stop Actions
-          description: "Actions to perform when a music track stops playing."
           selector:
             action: {}
           default: []
         track_scrobble_actions:
           name: Music Scrobble Actions
-          description: "Actions to perform when Plex sends a scrobble event."
           selector:
             action: {}
           default: []
@@ -205,13 +177,11 @@ blueprint:
       input:
         episode_time_filter_enabled:
           name: Enable Time Constraints
-          description: "If OFF, all TV Show actions run 24/7."
           default: false
           selector:
             boolean: {}
         episode_use_sun:
           name: Use Sunset/Sunrise
-          description: "If ON, ignores the times below and only runs when the sun is down. (Requires the Sun integration to be active)."
           default: false
           selector:
             boolean: {}
@@ -228,251 +198,197 @@ blueprint:
 
     television_actions:
       name: TV Show Actions
-      description: "<br>Define actions to execute for TV Plex events.<br></br>"
       icon: mdi:television
       collapsed: true
       input:
         episode_play_actions:
           name: TV Show Play Actions
-          description: "Actions to perform when a TV episode starts playback."
           selector:
             action: {}
           default: []
         episode_resume_mimics_play:
           name: TV Show Resume Mimics Play Actions
-          description: "When an episode resumes, execute the same actions as when it starts."
           selector:
             boolean: {}
           default: false
         episode_resume_actions:
           name: TV Show Resume Actions
-          description: "Actions to perform when a TV episode resumes playback.<br>**These are not executed if 'TV Show Resume Mimics Play Actions' is enabled.**"
           selector:
             action: {}
           default: []
         episode_pause_actions:
           name: TV Show Pause Actions
-          description: "Actions to perform when a TV episode is paused."
           selector:
             action: {}
           default: []
         episode_stop_actions:
           name: TV Show Stop Actions
-          description: "Actions to perform when a TV episode stops playing."
           selector:
             action: {}
           default: []
         episode_scrobble_actions:
           name: TV Show Scrobble Actions
-          description: "Actions to perform when Plex sends a scrobble event."
           selector:
             action: {}
           default: []
 
     media_rated_actions:
       name: Media Rated Actions
-      description: "<br>Define actions to execute when media is rated.<br></br>"
       icon: mdi:star-half-full
       collapsed: true
       input:
         movie_rated_actions:
           name: Movie Rated Actions
-          description: "Actions to run when a movie receives a rating."
           selector:
             action: {}
           default: []
         movie_collection_rated_actions:
           name: Movie Collection Rated Actions
-          description: "Actions to run when a movie collection receives a rating."
           selector:
             action: {}
           default: []
         album_rated_actions:
           name: Music Album Rated Actions
-          description: "Actions to run when an album receives a rating."
           selector:
             action: {}
           default: []
         album_artist_rated_actions:
           name: Music Artist Rated Actions
-          description: "Actions to run when an album artist receives a rating."
           selector:
             action: {}
           default: []
         track_artist_rated_actions:
           name: Music Track Rated Actions
-          description: Actions to run when a music track receives a rating.
           selector:
             action: {}
           default: []
         season_rated_actions:
           name: TV Season Rated Actions
-          description: "Actions to run when a TV season receives a rating."
           selector:
             action: {}
           default: []
         show_rated_actions:
           name: TV Show Rated Actions
-          description: "Actions to run when a TV show receives a rating."
           selector:
             action: {}
           default: []
 
     new_item_actions:
       name: NEW Content Actions
-      description: "<br>Define actions to execute for new Plex content.<br></br>"
       icon: mdi:alert-decagram
       collapsed: true
       input:
         library_new_movie:
           name: New Library Movie Item(s)
-          description: "Actions to run when a new movie is added to your library."
           selector:
             action: {}
           default: []
         library_new_music_album:
           name: New Library Music Item(s)
-          description: "Actions to run when a new album is added to your library."
           selector:
             action: {}
           default: []
         library_new_music_artist:
           name: New Library Music Artist
-          description: "Actions to run when a new music artist is added to your library."
           selector:
             action: {}
           default: []
         library_new_tv_show:
           name: New Library TV Show Item(s)
-          description: "Actions to run when a new TV show is added to your library."
           selector:
             action: {}
           default: []
         library_new_tv_episode:
           name: New Library TV episode Item(s)
-          description: "Actions to run when a new TV episode is added to your library."
           selector:
             action: {}
           default: []
 
     generic_playback_action:
       name: Generic Playback Actions
-      description: These actions will trigger no matter what client is playing back. These can be used for notifying that someone has started a playback on a device somewhere, they should not be confused for when you are trying to trigger actions on a particular client for mood lighting effects.
       icon: mdi:play-circle
       collapsed: true
       input:
         generic_playback_started:
           name: Playback Started
-          description: "Actions when ANY media playback is started."
           selector:
             action: {}
           default: []
         generic_resume_mimics_play:
           name: Playback Resume mimics playback.
-          description: "When resuming media the actions from the playback started are actioned instead of resume."
           selector:
             boolean: {}
           default: false
         generic_playback_resume:
           name: Playback Resume
-          description: "Actions when ANY media playback is resumed."
           selector:
             action: {}
           default: []
         generic_playback_pause:
           name: Playback Pause
-          description: "Actions when ANY media playback is paused."
           selector:
             action: {}
           default: []
         generic_playback_stopped:
           name: Playback Stopped
-          description: "Actions when ANY media playback is stopped."
           selector:
             action: {}
           default: []
 
     server_actions:
       name: Server Owner Actions
-      description: "<br>These events are only for the server owner/admin and relate to general server events.<br></br>"
       icon: mdi:database-cog
       collapsed: true
       input:
         admin_database_backup_actions:
           name: Admin Database Backup Actions
-          description: "Actions to run when a scheduled database backup completes successfully."
           selector:
             action: {}
           default:
             - service: persistent_notification.create
-              metadata: {}
               data:
                 message: Plex Database Backup completed for {{ payload.Server.title }}
                 notification_id: plex_db_backup
                 title: Plex Alert
-
         admin_database_corruption_actions:
           name: Admin Database Corruption Actions
-          description: "Actions to run when corruption is detected in the server database."
           selector:
             action: {}
           default:
             - service: persistent_notification.create
-              metadata: {}
               data:
                 message: Plex Database CORRUPTION Detected for {{ payload.Server.title }}
                 notification_id: plex_db_corruption
                 title: "!! Plex Alert !!"
-
         admin_device_new:
           name: Admin New Device
-          description: "A device accesses the server (which may come from background connection testing and doesn’t necessarily indicate active browsing or playback)"
           selector:
             action: {}
           default:
             - service: persistent_notification.create
-              metadata: {}
               data:
                 title: "New Plex Client Connection:"
                 message: "{{ payload.Player.title }}"
-
         admin_playback_started:
           name: Admin Playback Started
-          description: "Playback is started by a shared user for the server."
           selector:
             action: {}
           default:
             - service: persistent_notification.create
-              metadata: {}
               data:
                 title: "{{ payload.Account.title }} -  Playback started"
                 notification_id: "plex_user_playback_{{ payload.Account.title }}"
-                message: "  {{ payload.Account.title }} has started 
-                  {% if payload.Metadata.type == 'track' %} 
-                  listening to {{ payload.Metadata.title}} by {% if payload.Metadata.originalTitle is defined and payload.Metadata.originalTitle|length > 0 %} {{ payload.Metadata.originalTitle }} {% else %} {{ payload.Metadata.grandparentTitle }} {% endif %} from the album {{ payload.Metadata.parentTitle }} 
-                  {% elif payload.Metadata.type == 'movie' %} 
-                  to watch the movie {{ payload.Metadata.title }} ({{ payload.Metadata.year }}) directed by {{ payload.Metadata.Director[0].tag }} 
-                  {% elif payload.Metadata.type == 'episode' %} 
-                  to watch the TV show {{ payload.Metadata.grandparentTitle }} Season {{ payload.Metadata.parentIndex }} Episode {{ payload.Metadata.index }} ({{ payload.Metadata.title }}) 
-                  {% elif payload.Metadata.type == 'album' %} 
-                  listening to the album {{ payload.Metadata.title }} by {{ payload.Metadata.parentTitle }} 
-                  {% else %}
-                  interacting with Plex Media Server {{ payload.Server.title }} 
-                  {% endif %} 
-                  on the device {{ payload.Player.title }}"
+                message: "  {{ payload.Account.title }} has started playback on {{ payload.Player.title }}"
+
     automation_actions:
       name: Automation Actions
-      description: "<br>These options control how the automation behaves.<br></br>"
       icon: mdi:cog
       collapsed: true
       input:
         automation_mode:
           name: Automation Mode
-          description: "Set the automation's mode to manage how it handles new triggers during an active run."
           selector:
             select:
-              mode: list
-              multiple: false
               options:
                 - label: Single
                   value: single
@@ -485,17 +401,16 @@ blueprint:
           default: restart
         trace_count:
           name: Trace Count
-          description: "Specify the number of trace logs to keep (1-20, default is 5).<br>Increasing this can be helpful for debugging purposes."
           selector:
             number:
               min: 1
               max: 20
-              step: 1
-              mode: box
           default: 5
+
 mode: !input automation_mode
 trace:
   stored_traces: !input trace_count
+
 triggers:
   - trigger: webhook
     allowed_methods:
@@ -503,7 +418,7 @@ triggers:
       - PUT
     local_only: !input webhook_local_only
     webhook_id: !input webhook_id
-conditions: []
+
 action:
   - variables:
       sun_exists: "{{ states('sun.sun') not in ['unknown', 'unavailable', None] }}"
@@ -529,7 +444,6 @@ action:
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
       generic_resume_mimics_play: !input generic_resume_mimics_play
-      trace_count: !input trace_count
 
   - if:
       - condition: template
@@ -541,122 +455,78 @@ action:
           message: |
             Name: {{ payload.Player.title if 'Player' in payload else 'Not Found!' }}
             UUID: {{ payload.Player.uuid if 'Player' in payload else 'Not Found!' }}
-          notification_id: plex_webhook_blueprint_client_name
-
 
   - if:
       - condition: template
-        value_template: >
-          {{ payload.event == 'media.play' or
-             payload.event == 'media.resume' or
-             payload.event == 'media.pause' or
-             payload.event == 'media.stop' }}
+        value_template: "{{ payload.event in ['media.play', 'media.resume', 'media.pause', 'media.stop'] }}"
     then:
-      sequence:
-        - choose:
-            - conditions:
-                - condition: template
-                  value_template: "{{ payload.event == 'media.play' or ( payload.event == 'media.resume' and generic_resume_mimics_play) }}"
-              sequence: !input generic_playback_started
-            - conditions:
-                - condition: template
-                  value_template: "{{ payload.event == 'media.pause' }}"
-              sequence: !input generic_playback_pause
-            - conditions:
-                - condition: template
-                  value_template: "{{ payload.event == 'media.resume' and not generic_resume_mimics_play }}"
-              sequence: !input generic_playback_resume
-            - conditions:
-                - condition: template
-                  value_template: "{{ payload.event == 'media.stop' }}"
-              sequence: !input generic_playback_stopped
+      - choose:
+          - conditions:
+              - condition: template
+                value_template: "{{ payload.event == 'media.play' or ( payload.event == 'media.resume' and generic_resume_mimics_play) }}"
+            sequence: !input generic_playback_started
+          - conditions:
+              - condition: template
+                value_template: "{{ payload.event == 'media.pause' }}"
+            sequence: !input generic_playback_pause
+          - conditions:
+              - condition: template
+                value_template: "{{ payload.event == 'media.resume' and not generic_resume_mimics_play }}"
+            sequence: !input generic_playback_resume
+          - conditions:
+              - condition: template
+                value_template: "{{ payload.event == 'media.stop' }}"
+            sequence: !input generic_playback_stopped
 
   - choose:
       - conditions:
           - condition: template
             value_template: "{{ payload.event == 'admin.database.backup' }}"
         sequence: !input admin_database_backup_actions
-
       - conditions:
           - condition: template
             value_template: "{{ payload.event == 'admin.database.corrupted' }}"
         sequence: !input admin_database_corruption_actions
-
       - conditions:
           - condition: template
             value_template: "{{ payload.event == 'device.new' }}"
         sequence: !input admin_device_new
-
       - conditions:
           - condition: template
             value_template: "{{ payload.event == 'playback.started' }}"
         sequence: !input admin_playback_started
-
       - conditions:
           - condition: template
             value_template: "{{ payload.event == 'library.new' }}"
         sequence:
           - choose:
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'movie' }}"
+              - conditions: "{{ payload.Metadata.type == 'movie' }}"
                 sequence: !input library_new_movie
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'album' }}"
+              - conditions: "{{ payload.Metadata.type == 'album' }}"
                 sequence: !input library_new_music_album
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'artist' }}"
+              - conditions: "{{ payload.Metadata.type == 'artist' }}"
                 sequence: !input library_new_music_artist
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'show' }}"
+              - conditions: "{{ payload.Metadata.type == 'show' }}"
                 sequence: !input library_new_tv_show
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'episode' }}"
+              - conditions: "{{ payload.Metadata.type == 'episode' }}"
                 sequence: !input library_new_tv_episode
-
       - conditions:
           - condition: template
             value_template: "{{ payload.event == 'media.rate' }}"
         sequence:
           - choose:
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'movie' }}"
+              - conditions: "{{ payload.Metadata.type == 'movie' }}"
                 sequence: !input movie_rated_actions
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'collection' }}"
-                sequence: !input movie_collection_rated_actions
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'album' }}"
-                sequence: !input album_rated_actions
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'artist' }}"
-                sequence: !input album_artist_rated_actions
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'track' }}"
+              - conditions: "{{ payload.Metadata.type == 'track' }}"
                 sequence: !input track_artist_rated_actions
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'season' }}"
-                sequence: !input season_rated_actions
-              - conditions:
-                  - condition: template
-                    value_template: "{{ payload.Metadata.type == 'show' }}"
+              - conditions: "{{ payload.Metadata.type == 'episode' }}"
                 sequence: !input show_rated_actions
 
       - conditions:
           - condition: template
-            value_template:
-              "{{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or\n
-              (player_title | default('')).lower().strip() in (plex_client | map('lower') | map('trim') | list) }}\n"
+            value_template: >
+              {{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or
+              (player_title | default('')).lower().strip() in (plex_client | map('lower') | map('trim') | list) }}
         sequence:
           - choose:
               - conditions:
@@ -680,28 +550,24 @@ action:
                               - condition: template
                                 value_template: "{{ not movie_sun_enabled }}"
                               - condition: template
-                                value_template: "{{ now().strftime('%H:%M:%S') >= movie_start_time and now().strftime('%H:%M:%S') <= movie_end_time }}"
+                                value_template: >
+                                  {% set n = now().strftime('%H:%M:%S') %}
+                                  {% if movie_start_time <= movie_end_time %}
+                                    {{ n >= movie_start_time and n <= movie_end_time }}
+                                  {% else %}
+                                    {{ n >= movie_start_time or n <= movie_end_time }}
+                                  {% endif %}
                     then:
                       - choose:
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and movie_resume_mimics_play) }}"
+                          - conditions: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and movie_resume_mimics_play) }}"
                             sequence: !input movie_play_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.resume' and not movie_resume_mimics_play }}"
+                          - conditions: "{{ payload.event == 'media.resume' and not movie_resume_mimics_play }}"
                             sequence: !input movie_resume_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.pause' }}"
+                          - conditions: "{{ payload.event == 'media.pause' }}"
                             sequence: !input movie_pause_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.stop' }}"
+                          - conditions: "{{ payload.event == 'media.stop' }}"
                             sequence: !input movie_stop_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.scrobble' }}"
+                          - conditions: "{{ payload.event == 'media.scrobble' }}"
                             sequence: !input movie_scrobble_actions
 
               - conditions:
@@ -725,28 +591,24 @@ action:
                               - condition: template
                                 value_template: "{{ not track_sun_enabled }}"
                               - condition: template
-                                value_template: "{{ now().strftime('%H:%M:%S') >= track_start_time and now().strftime('%H:%M:%S') <= track_end_time }}"
+                                value_template: >
+                                  {% set n = now().strftime('%H:%M:%S') %}
+                                  {% if track_start_time <= track_end_time %}
+                                    {{ n >= track_start_time and n <= track_end_time }}
+                                  {% else %}
+                                    {{ n >= track_start_time or n <= track_end_time }}
+                                  {% endif %}
                     then:
                       - choose:
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and track_resume_mimics_play) }}"
+                          - conditions: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and track_resume_mimics_play) }}"
                             sequence: !input track_play_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.resume' and not track_resume_mimics_play }}"
+                          - conditions: "{{ payload.event == 'media.resume' and not track_resume_mimics_play }}"
                             sequence: !input track_resume_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.pause' }}"
+                          - conditions: "{{ payload.event == 'media.pause' }}"
                             sequence: !input track_pause_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.stop' }}"
+                          - conditions: "{{ payload.event == 'media.stop' }}"
                             sequence: !input track_stop_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.scrobble' }}"
+                          - conditions: "{{ payload.event == 'media.scrobble' }}"
                             sequence: !input track_scrobble_actions
 
               - conditions:
@@ -770,27 +632,22 @@ action:
                               - condition: template
                                 value_template: "{{ not episode_sun_enabled }}"
                               - condition: template
-                                value_template: "{{ now().strftime('%H:%M:%S') >= episode_start_time and now().strftime('%H:%M:%S') <= episode_end_time }}"
+                                value_template: >
+                                  {% set n = now().strftime('%H:%M:%S') %}
+                                  {% if episode_start_time <= episode_end_time %}
+                                    {{ n >= episode_start_time and n <= episode_end_time }}
+                                  {% else %}
+                                    {{ n >= episode_start_time or n <= episode_end_time }}
+                                  {% endif %}
                     then:
                       - choose:
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and episode_resume_mimics_play) }}"
+                          - conditions: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and episode_resume_mimics_play) }}"
                             sequence: !input episode_play_actions
-                          - conditions:
-                              - condition: template
-                                value_template:
-                                  "{{ payload.event == 'media.resume' and not episode_resume_mimics_play }}"
+                          - conditions: "{{ payload.event == 'media.resume' and not episode_resume_mimics_play }}"
                             sequence: !input episode_resume_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.pause' }}"
+                          - conditions: "{{ payload.event == 'media.pause' }}"
                             sequence: !input episode_pause_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.stop' }}"
+                          - conditions: "{{ payload.event == 'media.stop' }}"
                             sequence: !input episode_stop_actions
-                          - conditions:
-                              - condition: template
-                                value_template: "{{ payload.event == 'media.scrobble' }}"
+                          - conditions: "{{ payload.event == 'media.scrobble' }}"
                             sequence: !input episode_scrobble_actions
