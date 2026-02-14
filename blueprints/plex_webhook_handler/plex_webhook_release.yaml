@@ -1,9 +1,9 @@
 id: plex_webhook_handler_release
 blueprint:
-  name: Plex Webhook Handler RELEASE (v0.4.7)
+  name: Plex Webhook Handler RELEASE (v0.5.2)
   homeassistant:
     min_version: "2024.6.0"
-  description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/)."
+  description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/).<br><br>**Requirements:**<br>- The **Sun** integration must be enabled if you plan to use 'Use Sunset/Sunrise' filters within Time Constraints options."
 
   domain: automation
   
@@ -56,6 +56,52 @@ blueprint:
             boolean: {}
           default: false
 
+    movie_time_settings:
+      name: "Movie Time Constraints"
+      description: "<br>Choose ONE method to restrict when Movie Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
+      icon: mdi:clock-check
+      collapsed: true
+      input:
+        movie_time_filter_enabled:
+          name: Enable Time Constraints
+          description: "Must be ON for any of the filters below to work. If OFF, actions run 24/7."
+          default: false
+          selector:
+            boolean: {}
+        movie_use_sun:
+          name: Use Sunset/Sunrise
+          description: "HIGHEST PRIORITY: If ON, actions only run 'Below Horizon'. This ignores the Schedule and Manual times below."
+          default: false
+          selector:
+            boolean: {}
+        movie_schedule:
+          name: Movie Schedule Helper
+          description: "SECOND PRIORITY: Select a Schedule Helper. If a helper is picked, Manual Times below are ignored."
+          selector:
+            entity:
+              domain: schedule
+          default: []
+        movie_manual_header:
+          name: "Manual Time Fallback"
+          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
+          selector:
+            constant:
+              label: ""
+              value: ""
+          default: ""
+        movie_start_time:
+          name: Start Time
+          description: ""
+          default: "00:00:00"
+          selector:
+            time: {}
+        movie_end_time:
+          name: End Time
+          description: ""
+          default: "23:59:59"
+          selector:
+            time: {}
+
     movie_actions:
       name: Movie Actions
       description: "<br>Define actions to execute for Movie Plex events.<br></br>"
@@ -99,6 +145,52 @@ blueprint:
             action: {}
           default: []
 
+    track_time_settings:
+      name: "Music Time Constraints"
+      icon: mdi:clock-check
+      collapsed: true
+      description: "<br>Choose ONE method to restrict when Music Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
+      input:
+        track_time_filter_enabled:
+          name: Enable Time Constraints
+          description: "If OFF, all Music actions run 24/7."
+          default: false
+          selector:
+            boolean: {}
+        track_use_sun:
+          name: Use Sunset/Sunrise
+          description: "If ON, ignores the times below and only runs when the sun is down. (Requires the Sun integration to be active)."
+          default: false
+          selector:
+            boolean: {}
+        track_schedule:
+          name: Music Schedule Helper
+          description: "Select a Schedule Helper for complex schedules. If selected, manual times below are ignored."
+          selector:
+            entity:
+              domain: schedule
+          default: []
+        track_manual_header:
+          name: "Manual Time Fallback"
+          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
+          selector:
+            constant:
+              label: ""
+              value: ""
+          default: ""
+        track_start_time:
+          name: Start Time
+          description: ""
+          default: "00:00:00"
+          selector:
+            time: {}
+        track_end_time:
+          name: End Time
+          description: ""
+          default: "23:59:59"
+          selector:
+            time: {}
+
     music_actions:
       name: Music Actions
       description: "<br>Define actions to execute for Music Plex events.<br></br>"
@@ -141,6 +233,52 @@ blueprint:
           selector:
             action: {}
           default: []
+
+    television_time_settings:
+      name: "TV Show Time Constraints"
+      icon: mdi:clock-check
+      description: "<br>Choose ONE method to restrict when TV Show Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
+      collapsed: true
+      input:
+        episode_time_filter_enabled:
+          name: Enable Time Constraints
+          description: "If OFF, all TV Show actions run 24/7."
+          default: false
+          selector:
+            boolean: {}
+        episode_use_sun:
+          name: Use Sunset/Sunrise
+          description: "If ON, ignores the times below and only runs when the sun is down. (Requires the Sun integration to be active)."
+          default: false
+          selector:
+            boolean: {}
+        episode_schedule:
+          name: TV Show Schedule Helper
+          description: "Select a Schedule Helper for complex schedules. If selected, manual times below are ignored."
+          selector:
+            entity:
+              domain: schedule
+          default: []
+        television_manual_header:
+          name: "Manual Time Fallback"
+          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
+          selector:
+            constant:
+              label: ""
+              value: ""
+          default: ""
+        episode_start_time:
+          name: Start Time
+          description: ""
+          default: "00:00:00"
+          selector:
+            time: {}
+        episode_end_time:
+          name: End Time
+          description: ""
+          default: "23:59:59"
+          selector:
+            time: {}
 
     television_actions:
       name: TV Show Actions
@@ -217,7 +355,7 @@ blueprint:
           default: []
         track_artist_rated_actions:
           name: Music Track Rated Actions
-          description: Actions to run when a music track receives a rating.
+          description: "Actions to run when a music track receives a rating."
           selector:
             action: {}
           default: []
@@ -273,7 +411,7 @@ blueprint:
 
     generic_playback_action:
       name: Generic Playback Actions
-      description: These actions will trigger no matter what client is playing back. These can be used for notifying that someone has started a playback on a device somewhere, they should not be confused for when you are trying to trigger actions on a particular client for mood lighting effects.
+      description: "These actions will trigger no matter what client is playing back. These can be used for notifying that someone has started a playback on a device somewhere, they should not be confused for when you are trying to trigger actions on a particular client for mood lighting effects."
       icon: mdi:play-circle
       collapsed: true
       input:
@@ -363,19 +501,19 @@ blueprint:
               data:
                 title: "{{ payload.Account.title }} -  Playback started"
                 notification_id: "plex_user_playback_{{ payload.Account.title }}"
-                message: "  {{ payload.Account.title }} has started 
-                  {% if payload.Metadata.type == 'track' %} 
-                  listening to {{ payload.Metadata.title}} by {% if payload.Metadata.originalTitle is defined and payload.Metadata.originalTitle|length > 0 %} {{ payload.Metadata.originalTitle }} {% else %} {{ payload.Metadata.grandparentTitle }} {% endif %} from the album {{ payload.Metadata.parentTitle }} 
-                  {% elif payload.Metadata.type == 'movie' %} 
-                  to watch the movie {{ payload.Metadata.title }} ({{ payload.Metadata.year }}) directed by {{ payload.Metadata.Director[0].tag }} 
-                  {% elif payload.Metadata.type == 'episode' %} 
-                  to watch the TV show {{ payload.Metadata.grandparentTitle }} Season {{ payload.Metadata.parentIndex }} Episode {{ payload.Metadata.index }} ({{ payload.Metadata.title }}) 
-                  {% elif payload.Metadata.type == 'album' %} 
-                  listening to the album {{ payload.Metadata.title }} by {{ payload.Metadata.parentTitle }} 
+                message: "  {{ payload.Account.title }} has started
+                  {% if payload.Metadata.type == 'track' %}
+                  listening to {{ payload.Metadata.title}} by {% if payload.Metadata.originalTitle is defined and payload.Metadata.originalTitle|length > 0 %} {{ payload.Metadata.originalTitle }} {% else %} {{ payload.Metadata.grandparentTitle }} {% endif %} from the album {{ payload.Metadata.parentTitle }}
+                  {% elif payload.Metadata.type == 'movie' %}
+                  to watch the movie {{ payload.Metadata.title }} ({{ payload.Metadata.year }}) directed by {{ payload.Metadata.Director[0].tag }}
+                  {% elif payload.Metadata.type == 'episode' %}
+                  to watch the TV show {{ payload.Metadata.grandparentTitle }} Season {{ payload.Metadata.parentIndex }} Episode {{ payload.Metadata.index }} ({{ payload.Metadata.title }})
+                  {% elif payload.Metadata.type == 'album' %}
+                  listening to the album {{ payload.Metadata.title }} by {{ payload.Metadata.parentTitle }}
                   {% else %}
-                  interacting with Plex Media Server {{ payload.Server.title }} 
-                  {% endif %} 
-                  {% if payload.Player.title|length > 0 %} on the device {{ payload.Player.title }}{% endif %}"
+                  interacting with Plex Media Server {{ payload.Server.title }}
+                  {% endif %}
+                  on the device {{ payload.Player.title }}"
     automation_actions:
       name: Automation Actions
       description: "<br>These options control how the automation behaves.<br></br>"
@@ -410,6 +548,8 @@ blueprint:
               mode: box
           default: 5
 mode: !input automation_mode
+trace:
+  stored_traces: !input trace_count
 triggers:
   - trigger: webhook
     allowed_methods:
@@ -420,12 +560,28 @@ triggers:
 conditions: []
 action:
   - variables:
+      sun_exists: "{{ states('sun.sun') not in ['unknown', 'unavailable', None] }}"
       payload: "{{ trigger.data['payload'].decode('utf-8') | from_json }}"
       player_title: "{{ payload.Player.title if 'Player' in payload else None }}"
       player_uuid: "{{ payload.Player.uuid if 'Player' in payload else None }}"
       plex_client_retrieve: !input plex_client_retrieve
       plex_client: !input plex_client
       plex_client_uuid: !input plex_client_uuid
+      movie_time_enabled: !input movie_time_filter_enabled
+      movie_sun_enabled: !input movie_use_sun
+      movie_schedule: !input movie_schedule
+      movie_start_time: !input movie_start_time
+      movie_end_time: !input movie_end_time
+      track_time_enabled: !input track_time_filter_enabled
+      track_sun_enabled: !input track_use_sun
+      track_schedule: !input track_schedule
+      track_start_time: !input track_start_time
+      track_end_time: !input track_end_time
+      episode_time_enabled: !input episode_time_filter_enabled
+      episode_sun_enabled: !input episode_use_sun
+      episode_schedule: !input episode_schedule
+      episode_start_time: !input episode_start_time
+      episode_end_time: !input episode_end_time
       movie_resume_mimics_play: !input movie_resume_mimics_play
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
@@ -443,7 +599,6 @@ action:
             Name: {{ payload.Player.title if 'Player' in payload else 'Not Found!' }}
             UUID: {{ payload.Player.uuid if 'Player' in payload else 'Not Found!' }}
           notification_id: plex_webhook_blueprint_client_name
-
 
   - if:
       - condition: template
@@ -564,81 +719,157 @@ action:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'movie' }}"
                 sequence:
-                  - choose:
-                      - conditions:
+                  - if:
+                      - condition: or
+                        conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and movie_resume_mimics_play) }}"
-                        sequence: !input movie_play_actions
-                      - conditions:
+                            value_template: "{{ not movie_time_enabled }}"
+                          - condition: and
+                            conditions:
+                              - condition: template
+                                value_template: "{{ movie_sun_enabled and sun_exists }}"
+                              - condition: state
+                                entity_id: sun.sun
+                                state: "below_horizon"
                           - condition: template
-                            value_template: "{{ payload.event == 'media.resume' and not movie_resume_mimics_play }}"
-                        sequence: !input movie_resume_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.pause' }}"
-                        sequence: !input movie_pause_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.stop' }}"
-                        sequence: !input movie_stop_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.scrobble' }}"
-                        sequence: !input movie_scrobble_actions
+                            value_template: "{{ movie_schedule != none and movie_schedule != [] and is_state(movie_schedule, 'on') }}"
+                          - condition: and
+                            conditions:
+                              - condition: template
+                                value_template: "{{ not movie_sun_enabled and (movie_schedule == none or movie_schedule == []) }}"
+                              - condition: template
+                                value_template: >
+                                  {% set n = now().strftime('%H:%M:%S') %}
+                                  {% if movie_start_time <= movie_end_time %}
+                                    {{ n >= movie_start_time and n <= movie_end_time }}
+                                  {% else %}
+                                    {{ n >= movie_start_time or n <= movie_end_time }}
+                                  {% endif %}
+                    then:
+                      - choose:
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and movie_resume_mimics_play) }}"
+                            sequence: !input movie_play_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.resume' and not movie_resume_mimics_play }}"
+                            sequence: !input movie_resume_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.pause' }}"
+                            sequence: !input movie_pause_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.stop' }}"
+                            sequence: !input movie_stop_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.scrobble' }}"
+                            sequence: !input movie_scrobble_actions
 
               - conditions:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'track' }}"
                 sequence:
-                  - choose:
-                      - conditions:
+                  - if:
+                      - condition: or
+                        conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and track_resume_mimics_play) }}"
-                        sequence: !input track_play_actions
-                      - conditions:
+                            value_template: "{{ not track_time_enabled }}"
+                          - condition: and
+                            conditions:
+                              - condition: template
+                                value_template: "{{ track_sun_enabled and sun_exists }}"
+                              - condition: state
+                                entity_id: sun.sun
+                                state: "below_horizon"
                           - condition: template
-                            value_template: "{{ payload.event == 'media.resume' and not track_resume_mimics_play }}"
-                        sequence: !input track_resume_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.pause' }}"
-                        sequence: !input track_pause_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.stop' }}"
-                        sequence: !input track_stop_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.scrobble' }}"
-                        sequence: !input track_scrobble_actions
+                            value_template: "{{ track_schedule != none and track_schedule != [] and is_state(track_schedule, 'on') }}"
+                          - condition: and
+                            conditions:
+                              - condition: template
+                                value_template: "{{ not track_sun_enabled and (track_schedule == none or track_schedule == []) }}"
+                              - condition: template
+                                value_template: >
+                                  {% set n = now().strftime('%H:%M:%S') %}
+                                  {% if track_start_time <= track_end_time %}
+                                    {{ n >= track_start_time and n <= track_end_time }}
+                                  {% else %}
+                                    {{ n >= track_start_time or n <= track_end_time }}
+                                  {% endif %}
+                    then:
+                      - choose:
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and track_resume_mimics_play) }}"
+                            sequence: !input track_play_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.resume' and not track_resume_mimics_play }}"
+                            sequence: !input track_resume_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.pause' }}"
+                            sequence: !input track_pause_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.stop' }}"
+                            sequence: !input track_stop_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.scrobble' }}"
+                            sequence: !input track_scrobble_actions
 
               - conditions:
                   - condition: template
                     value_template: "{{ payload.Metadata.type == 'episode' }}"
                 sequence:
-                  - choose:
-                      - conditions:
+                  - if:
+                      - condition: or
+                        conditions:
                           - condition: template
-                            value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and episode_resume_mimics_play) }}"
-                        sequence: !input episode_play_actions
-                      - conditions:
+                            value_template: "{{ not episode_time_enabled }}"
+                          - condition: and
+                            conditions:
+                              - condition: template
+                                value_template: "{{ episode_sun_enabled and sun_exists }}"
+                              - condition: state
+                                entity_id: sun.sun
+                                state: "below_horizon"
                           - condition: template
-                            value_template:
-                              "{{ payload.event == 'media.resume' and not episode_resume_mimics_play
-                              }}"
-                        sequence: !input episode_resume_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.pause' }}"
-                        sequence: !input episode_pause_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.stop' }}"
-                        sequence: !input episode_stop_actions
-                      - conditions:
-                          - condition: template
-                            value_template: "{{ payload.event == 'media.scrobble' }}"
-                        sequence: !input episode_scrobble_actions
-
-trace:
-  stored_traces: !input trace_count
+                            value_template: "{{ episode_schedule != none and episode_schedule != [] and is_state(episode_schedule, 'on') }}"
+                          - condition: and
+                            conditions:
+                              - condition: template
+                                value_template: "{{ not episode_sun_enabled and (episode_schedule == none or episode_schedule == []) }}"
+                              - condition: template
+                                value_template: >
+                                  {% set n = now().strftime('%H:%M:%S') %}
+                                  {% if episode_start_time <= episode_end_time %}
+                                    {{ n >= episode_start_time and n <= episode_end_time }}
+                                  {% else %}
+                                    {{ n >= episode_start_time or n <= episode_end_time }}
+                                  {% endif %}
+                    then:
+                      - choose:
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and episode_resume_mimics_play) }}"
+                            sequence: !input episode_play_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.resume' and not episode_resume_mimics_play }}"
+                            sequence: !input episode_resume_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.pause' }}"
+                            sequence: !input episode_pause_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.stop' }}"
+                            sequence: !input episode_stop_actions
+                          - conditions:
+                              - condition: template
+                                value_template: "{{ payload.event == 'media.scrobble' }}"
+                            sequence: !input episode_scrobble_actions
