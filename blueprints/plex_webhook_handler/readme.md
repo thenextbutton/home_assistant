@@ -28,6 +28,7 @@ Click the badge below to easily import the blueprint directly into your Home Ass
 * [Accessing Blueprint Data / Payload Structure](#-accessing-blueprint-data--payload-structure)
 * [Example Automation Output / Actions](#-example-automation-output--actions)
 * [Troubleshooting & Tips](#-troubleshooting--tips)
+* [Advanced: Deep Metadata Integration](#-advanced-deep-metadata-integration)
 * [Contributing](#-contributing)
 * [License](#-license)
 
@@ -41,10 +42,12 @@ This blueprint leverages Plex's webhook functionality. When an event occurs in P
 
 ## ✨ Features
 
-* Trigger automations based on various Plex playback events (play, pause, resume, stop).
-* Supports events from specific Plex clients.
-* Option to treat `resume` events identically to `play` events.
-* Provides detailed webhook data for advanced automation logic.
+* **Event Triggering:** Play, pause, resume, and stop events.
+* **Client Filtering:** Target specific Plex clients via Name or UUID.
+* **Smart Scheduling (New v0.5.2):** * **GUI Schedule Support:** Use Home Assistant Schedule Helpers for visual timing.
+    * **Sun Elevation:** Only run when the sun is down.
+    * **Manual Fallback:** Precise start/end times with cross-midnight support.
+* **Deep Metadata:** Access rating keys, thumbnails, and technical data.
 
 ---
 
@@ -54,12 +57,20 @@ To use this blueprint, you'll need:
 
 * **Plex Pass:** A Plex Pass is required to enable webhook functionality within Plex Media Server.
 * **Home Assistant:** A working Home Assistant instance, accessible from your Plex Media Server.
+* **Sun Integration:** Must be enabled to use sunset/sunrise filters.
 
 ---
 
 ## ⚙ How It Works
 
 This blueprint leverages Plex's webhook functionality. When an event occurs in Plex (like playing, pausing, or stopping media), Plex sends a webhook to your Home Assistant instance. This blueprint then captures that webhook, extracts relevant information (like the client name or UUID), and triggers a Home Assistant automation that you create.
+
+### Time Logic Priority 
+To prevent conflicting settings, the blueprint follows a strict hierarchy. Once a higher-priority condition is met, the others are ignored:
+
+1. **Sunset Mode (Highest Priority):** If "Use Sunset/Sunrise" is ON, actions only run when the sun is below the horizon. Manual times and Schedules are ignored.
+2. **Schedule Helper (Secondary):** If a Schedule Helper is selected, the automation follows that grid. This overrides Manual Times.
+3. **Manual Fallback:** If neither Sunset nor a Schedule is used, the automation reverts to the Manual Start and End time boxes.
 
 ---
 
@@ -167,6 +178,83 @@ data:
 
 ---
 
+## ⚡ Advanced: Deep Metadata Integration
+Standard Plex webhooks are great for playback states, but they lack technical details like **Aspect Ratio**, **Audio Codecs**, or **Channels**. You can "pull" this data by having Home Assistant query the Plex API using the `ratingKey`.
+
+### 1. Configure the REST Command
+Add the following to your `configuration.yaml`. Replace `<plex_server_ip>` with your local IP and `<plex_token_id>` with your Plex Authentication Token.
+
+```yaml
+rest_command:
+  plex_get_full_details:
+    url: "http://<plex_server_ip>:32400/library/metadata/{{ rating_key }}?X-Plex-Token=<plex_token_id>"
+    method: GET
+    headers:
+      Accept: "application/json"
+```
+
+### 2. Implementation in Automation Actions
+Within your blueprint automation, call the command and capture the response into a variable.
+
+**The Action:**
+```yaml
+action: rest_command.plex_get_full_details
+data:
+  rating_key: "{{ payload.Metadata.ratingKey }}"
+response_variable: plex_api_response
+```
+
+**The Variables:**
+Define these variables to extract specific data from the JSON response:
+
+```yaml
+variables:
+  plex_aspect_ratio: >
+    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].aspectRatio }}
+  plex_audio_codec: >
+    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].Part[0].Stream[1].codec }}
+  plex_audio_channels: >
+    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].Part[0].Stream[1].channels }}
+  plex_audio_layout: >
+    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].Part[0].Stream[1].audioChannelLayout }}
+```
+
+### 3. Use Case: Context-Aware Actions
+Now you can use a `choose` block to trigger specific scenes based on the media format:
+
+```yaml
+choose:
+  - conditions:
+      - condition: template
+        value_template: "{{ plex_aspect_ratio == 1.85 }}"
+    sequence:
+      - action: persistent_notification.create
+        metadata: {}
+        data:
+          message: "aspect ratio: 1.85"
+          title: "Ratio: 1.85"
+  - conditions:
+      - condition: template
+        value_template: "{{ plex_aspect_ratio == 2.35 }}"
+    sequence:
+      - action: persistent_notification.create
+        metadata: {}
+        data:
+          message: "aspect ratio: 2.35"
+          title: "Ratio: 2.35"
+  - conditions:
+      - condition: template
+        value_template: "{{ plex_aspect_ratio == 1.78 }}"
+    sequence:
+      - action: persistent_notification.create
+        metadata: {}
+        data:
+          message: "aspect ratio: 1.78"
+          title: "Ratio: 1.78"
+```
+
+---
+
 ## 🚧 Troubleshooting & Tips
 
 * **Webhook Not Triggering:**
@@ -183,6 +271,12 @@ data:
 * **Multiple Clients:** While multiple players are supported, it is advised to create an automation from the blueprint for each room.
 
 * **Client Name/UUID Mismatch:** Ensure the client name/UUID in your blueprint automation exactly matches what Plex reports (use the 'Determine Plex Client Name/UUID?' option if unsure).
+
+* **"Unknown entity selected":** If you aren't using a Schedule Helper, the UI shows a warning. This is expected behavior; the automation will simply fall back to your Manual Times.
+  
+* **REST Command Failures:** Check your Home Assistant Logs. Ensure your Plex Token is correct and that HA can reach the Plex IP on port 32400.
+  
+* **Trace Insights:** To see what other data is available, run a media file, open the **Automation Trace**, and look at the `plex_api_response` variable.
 
 ---
 
