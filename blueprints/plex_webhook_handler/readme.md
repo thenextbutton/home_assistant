@@ -27,8 +27,8 @@ Click the badge below to easily import the blueprint directly into your Home Ass
     * [5. Configure Automation Actions](#5-configure-automation-actions)
 * [Accessing Blueprint Data / Payload Structure](#-accessing-blueprint-data--payload-structure)
 * [Example Automation Output / Actions](#-example-automation-output--actions)
-* [Troubleshooting & Tips](#-troubleshooting--tips)
 * [Advanced: Deep Metadata Integration](#-advanced-deep-metadata-integration)
+* [Troubleshooting & Tips](#-troubleshooting--tips)
 * [Contributing](#-contributing)
 * [License](#-license)
 
