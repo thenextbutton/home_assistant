@@ -1,9 +1,9 @@
-id: plex_webhook_handler_beta
+id: plex_webhook_handler_release
 blueprint:
-  name: Plex Webhook Handler BETA (v0.5.2)
+  name: Plex Webhook Handler BETA (v0.5.3)
   homeassistant:
     min_version: "2024.6.0"
-  description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/).<br><br>**Requirements:**<br>- The **Sun** integration must be enabled if you plan to use 'Use Sunset/Sunrise' filters."
+  description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/).<br><br>**Requirements:**<br>- The **Sun** integration must be enabled if you plan to use 'Use Sunset/Sunrise' filters within Time Constraints options."
 
   domain: automation
   
@@ -87,7 +87,7 @@ blueprint:
           selector:
             constant:
               label: ""
-              value: "" 
+              value: ""
           default: ""
         movie_start_time:
           name: Start Time
@@ -176,7 +176,7 @@ blueprint:
           selector:
             constant:
               label: ""
-              value: "" 
+              value: ""
           default: ""
         track_start_time:
           name: Start Time
@@ -265,7 +265,7 @@ blueprint:
           selector:
             constant:
               label: ""
-              value: "" 
+              value: ""
           default: ""
         episode_start_time:
           name: Start Time
@@ -411,7 +411,7 @@ blueprint:
 
     generic_playback_action:
       name: Generic Playback Actions
-      description: "These actions will trigger no matter what client is playing back. These can be used for notifying that someone has started a playback on a device somewhere, they should not be confused for when you are trying to trigger actions on a particular client for mood lighting effects."
+      description: "<br>These actions will trigger no matter what client is playing back. These can be used for notifying that someone has started a playback on a device somewhere, they should not be confused for when you are trying to trigger actions on a particular client for mood lighting effects.<br></br>"
       icon: mdi:play-circle
       collapsed: true
       input:
@@ -442,6 +442,49 @@ blueprint:
         generic_playback_stopped:
           name: Playback Stopped
           description: "Actions when ANY media playback is stopped."
+          selector:
+            action: {}
+          default: []
+
+    plex_client_generic_playback:
+      name: "Plex Client: Generic Playback Options"
+      description: "<br>Actions that trigger for <b>Plex Client UUID/Name</b>, from the player details secton, regardless of the media type (Movie, TV, or Music).<br></br>"
+      icon: mdi:play-network
+      collapsed: true
+      input:
+        plex_client_generic_play_actions:
+          name: Plex Client Playback Started
+          description: "Actions when THIS specific client starts ANY media."
+          selector:
+            action: {}
+          default: []
+        plex_client_generic_resume_mimics_play:
+          name: Plex Client Resume Mimics Play Actions
+          description: "When THIS specific client resumes, execute the same actions as if it starts."
+          selector:
+            boolean: {}
+          default: false
+        plex_client_generic_resume_actions:
+          name: Plex Client Resume Actions
+          description: "Actions when THIS specific client resumes ANY media..<br>**These are not executed if 'Resume Mimics Play Actions' is enabled.**"
+          selector:
+            action: {}
+          default: []
+        plex_client_generic_pause_actions:
+          name: Plex Client Pause Actions
+          description: "Actions when THIS specific client pauses ANY media."
+          selector:
+            action: {}
+          default: []
+        plex_client_generic_stop_actions:
+          name: Plex Client Stop Actions
+          description: "Actions when THIS specific client stops ANY media."
+          selector:
+            action: {}
+          default: []
+        plex_client_generic_scrobble_actions:
+          name: Plex Client Scrobble Actions
+          description: "Actions to perform when THIS specific client triggers a scrobble event."
           selector:
             action: {}
           default: []
@@ -501,18 +544,18 @@ blueprint:
               data:
                 title: "{{ payload.Account.title }} -  Playback started"
                 notification_id: "plex_user_playback_{{ payload.Account.title }}"
-                message: "  {{ payload.Account.title }} has started 
-                  {% if payload.Metadata.type == 'track' %} 
-                  listening to {{ payload.Metadata.title}} by {% if payload.Metadata.originalTitle is defined and payload.Metadata.originalTitle|length > 0 %} {{ payload.Metadata.originalTitle }} {% else %} {{ payload.Metadata.grandparentTitle }} {% endif %} from the album {{ payload.Metadata.parentTitle }} 
-                  {% elif payload.Metadata.type == 'movie' %} 
-                  to watch the movie {{ payload.Metadata.title }} ({{ payload.Metadata.year }}) directed by {{ payload.Metadata.Director[0].tag }} 
-                  {% elif payload.Metadata.type == 'episode' %} 
-                  to watch the TV show {{ payload.Metadata.grandparentTitle }} Season {{ payload.Metadata.parentIndex }} Episode {{ payload.Metadata.index }} ({{ payload.Metadata.title }}) 
-                  {% elif payload.Metadata.type == 'album' %} 
-                  listening to the album {{ payload.Metadata.title }} by {{ payload.Metadata.parentTitle }} 
+                message: "  {{ payload.Account.title }} has started
+                  {% if payload.Metadata.type == 'track' %}
+                  listening to {{ payload.Metadata.title}} by {% if payload.Metadata.originalTitle is defined and payload.Metadata.originalTitle|length > 0 %} {{ payload.Metadata.originalTitle }} {% else %} {{ payload.Metadata.grandparentTitle }} {% endif %} from the album {{ payload.Metadata.parentTitle }}
+                  {% elif payload.Metadata.type == 'movie' %}
+                  to watch the movie {{ payload.Metadata.title }} ({{ payload.Metadata.year }}) directed by {{ payload.Metadata.Director[0].tag }}
+                  {% elif payload.Metadata.type == 'episode' %}
+                  to watch the TV show {{ payload.Metadata.grandparentTitle }} Season {{ payload.Metadata.parentIndex }} Episode {{ payload.Metadata.index }} ({{ payload.Metadata.title }})
+                  {% elif payload.Metadata.type == 'album' %}
+                  listening to the album {{ payload.Metadata.title }} by {{ payload.Metadata.parentTitle }}
                   {% else %}
-                  interacting with Plex Media Server {{ payload.Server.title }} 
-                  {% endif %} 
+                  interacting with Plex Media Server {{ payload.Server.title }}
+                  {% endif %}
                   on the device {{ payload.Player.title }}"
     automation_actions:
       name: Automation Actions
@@ -586,6 +629,7 @@ action:
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
       generic_resume_mimics_play: !input generic_resume_mimics_play
+      
       trace_count: !input trace_count
 
   - if:
@@ -599,7 +643,6 @@ action:
             Name: {{ payload.Player.title if 'Player' in payload else 'Not Found!' }}
             UUID: {{ payload.Player.uuid if 'Player' in payload else 'Not Found!' }}
           notification_id: plex_webhook_blueprint_client_name
-
 
   - if:
       - condition: template
@@ -714,7 +757,30 @@ action:
             value_template:
               "{{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or\n
               (player_title | default('')).lower().strip() in (plex_client | map('lower') | map('trim') | list) }}\n"
+
         sequence:
+          - choose:
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and plex_client_generic_resume_mimics_play) }}"
+                sequence: !input plex_client_generic_play_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.event == 'media.resume' and not plex_client_generic_resume_mimics_play }}"
+                sequence: !input plex_client_generic_resume_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.event == 'media.pause' }}"
+                sequence: !input plex_client_generic_pause_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.event == 'media.stop' }}"
+                sequence: !input plex_client_generic_stop_actions
+              - conditions:
+                  - condition: template
+                    value_template: "{{ payload.event == 'media.scrobble' }}"
+                sequence: !input plex_client_generic_scrobble_actions
+
           - choose:
               - conditions:
                   - condition: template
@@ -860,8 +926,7 @@ action:
                             sequence: !input episode_play_actions
                           - conditions:
                               - condition: template
-                                value_template:
-                                  "{{ payload.event == 'media.resume' and not episode_resume_mimics_play }}"
+                                value_template: "{{ payload.event == 'media.resume' and not episode_resume_mimics_play }}"
                             sequence: !input episode_resume_actions
                           - conditions:
                               - condition: template
