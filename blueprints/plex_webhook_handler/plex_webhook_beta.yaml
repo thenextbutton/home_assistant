@@ -447,7 +447,7 @@ blueprint:
           default: []
 
     plex_client_generic_time_settings:
-      name: "Plex Client: Generic Playback Constraints"
+      name: "Plex Client: Generic Time Constraints"
       icon: mdi:clock-check
       collapsed: true
       description: "<br>Choose ONE method to restrict when Plex Client Generic Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
@@ -494,7 +494,7 @@ blueprint:
 
 
     plex_client_generic_playback:
-      name: "Plex Client: Generic Playback Options"
+      name: "Plex Client: Generic Actions"
       description: "<br>Actions that trigger for <b>Plex Client UUID/Name</b>, from the player details secton, regardless of the media type (Movie, TV, or Music).<br></br>"
       icon: mdi:play-network
       collapsed: true
