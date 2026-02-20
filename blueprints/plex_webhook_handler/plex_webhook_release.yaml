@@ -1,6 +1,6 @@
 id: plex_webhook_handler_release
 blueprint:
-  name: Plex Webhook Handler RELEASE (v0.5.2)
+  name: Plex Webhook Handler RELEASE (v0.5.5)
   homeassistant:
     min_version: "2024.6.0"
   description: "Plex webhook events are handled by this blueprint.<br></br>A Plex Client name is needed for Movie, Music, and TV Show actions.<br>For webhook details, see the [Home Assistant website](https://www.home-assistant.io/docs/automation/trigger#webhook-trigger).<br>Need help with Plex and webhooks? [Click here](https://support.plex.tv/articles/115002267687-webhooks/).<br><br>**Requirements:**<br>- The **Sun** integration must be enabled if you plan to use 'Use Sunset/Sunrise' filters within Time Constraints options."
@@ -56,55 +56,9 @@ blueprint:
             boolean: {}
           default: false
 
-    movie_time_settings:
-      name: "Movie Time Constraints"
-      description: "<br>Choose ONE method to restrict when Movie Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
-      icon: mdi:clock-check
-      collapsed: true
-      input:
-        movie_time_filter_enabled:
-          name: Enable Time Constraints
-          description: "Must be ON for any of the filters below to work. If OFF, actions run 24/7."
-          default: false
-          selector:
-            boolean: {}
-        movie_use_sun:
-          name: Use Sunset/Sunrise
-          description: "HIGHEST PRIORITY: If ON, actions only run 'Below Horizon'. This ignores the Schedule and Manual times below."
-          default: false
-          selector:
-            boolean: {}
-        movie_schedule:
-          name: Movie Schedule Helper
-          description: "SECOND PRIORITY: Select a Schedule Helper. If a helper is picked, Manual Times below are ignored."
-          selector:
-            entity:
-              domain: schedule
-          default: []
-        movie_manual_header:
-          name: "Manual Time Fallback"
-          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
-          selector:
-            constant:
-              label: ""
-              value: ""
-          default: ""
-        movie_start_time:
-          name: Start Time
-          description: ""
-          default: "00:00:00"
-          selector:
-            time: {}
-        movie_end_time:
-          name: End Time
-          description: ""
-          default: "23:59:59"
-          selector:
-            time: {}
-
     movie_actions:
-      name: Movie Actions
-      description: "<br>Define actions to execute for Movie Plex events.<br></br>"
+      name: "Movie: Actions"
+      description: "<br>Define actions to execute for Movie events, when the content is playing on the <b>Plex Client (UUID/Name)</b> defined in the 'Player Details' section.<br></br>"
       icon: mdi:movie
       collapsed: true
       input:
@@ -145,46 +99,46 @@ blueprint:
             action: {}
           default: []
 
-    track_time_settings:
-      name: "Music Time Constraints"
+    movie_time_settings:
+      name: "Movie: Time Constraints"
+      description: "<br>Choose ONE method to restrict when Movie Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
       icon: mdi:clock-check
       collapsed: true
-      description: "<br>Choose ONE method to restrict when Music Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
       input:
-        track_time_filter_enabled:
+        movie_time_filter_enabled:
           name: Enable Time Constraints
-          description: "If OFF, all Music actions run 24/7."
+          description: "Must be ON for any of the filters below to work. If OFF, actions run 24/7."
           default: false
           selector:
             boolean: {}
-        track_use_sun:
+        movie_use_sun:
           name: Use Sunset/Sunrise
-          description: "If ON, ignores the times below and only runs when the sun is down. (Requires the Sun integration to be active)."
+          description: "If ON, actions only run 'Below Horizon'. This ignores the Schedule and Manual times below."
           default: false
           selector:
             boolean: {}
-        track_schedule:
-          name: Music Schedule Helper
-          description: "Select a Schedule Helper for complex schedules. If selected, manual times below are ignored."
+        movie_schedule:
+          name: Movie Schedule Helper
+          description: "Select a Schedule Helper. If a helper is picked, Manual Times below are ignored."
           selector:
             entity:
               domain: schedule
           default: []
-        track_manual_header:
-          name: "Manual Time Fallback"
+        movie_manual_header:
+          name: Manual Time Fallback
           description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
           selector:
             constant:
               label: ""
               value: ""
           default: ""
-        track_start_time:
+        movie_start_time:
           name: Start Time
           description: ""
           default: "00:00:00"
           selector:
             time: {}
-        track_end_time:
+        movie_end_time:
           name: End Time
           description: ""
           default: "23:59:59"
@@ -192,8 +146,8 @@ blueprint:
             time: {}
 
     music_actions:
-      name: Music Actions
-      description: "<br>Define actions to execute for Music Plex events.<br></br>"
+      name: "Music: Actions"
+      description: "<br>Define actions to execute for Music events, when the content is playing on the <b>Plex Client (UUID/Name)</b> defined in the 'Player Details' section.<br></br>"
       icon: mdi:music
       collapsed: true
       input:
@@ -234,46 +188,46 @@ blueprint:
             action: {}
           default: []
 
-    television_time_settings:
-      name: "TV Show Time Constraints"
+    track_time_settings:
+      name: "Music: Time Constraints"
       icon: mdi:clock-check
-      description: "<br>Choose ONE method to restrict when TV Show Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
       collapsed: true
+      description: "<br>Choose ONE method to restrict when Music Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
       input:
-        episode_time_filter_enabled:
+        track_time_filter_enabled:
           name: Enable Time Constraints
-          description: "If OFF, all TV Show actions run 24/7."
+          description: "Must be ON for any of the filters below to work. If OFF, actions run 24/7."
           default: false
           selector:
             boolean: {}
-        episode_use_sun:
+        track_use_sun:
           name: Use Sunset/Sunrise
-          description: "If ON, ignores the times below and only runs when the sun is down. (Requires the Sun integration to be active)."
+          description: "If ON, actions only run 'Below Horizon'. This ignores the Schedule and Manual times below."
           default: false
           selector:
             boolean: {}
-        episode_schedule:
-          name: TV Show Schedule Helper
-          description: "Select a Schedule Helper for complex schedules. If selected, manual times below are ignored."
+        track_schedule:
+          name: Music Schedule Helper
+          description: "Select a Schedule Helper. If a helper is picked, Manual Times below are ignored."
           selector:
             entity:
               domain: schedule
           default: []
-        television_manual_header:
-          name: "Manual Time Fallback"
+        track_manual_header:
+          name: Manual Time Fallback
           description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
           selector:
             constant:
               label: ""
               value: ""
           default: ""
-        episode_start_time:
+        track_start_time:
           name: Start Time
           description: ""
           default: "00:00:00"
           selector:
             time: {}
-        episode_end_time:
+        track_end_time:
           name: End Time
           description: ""
           default: "23:59:59"
@@ -281,8 +235,8 @@ blueprint:
             time: {}
 
     television_actions:
-      name: TV Show Actions
-      description: "<br>Define actions to execute for TV Plex events.<br></br>"
+      name: "TV Show: Actions"
+      description: "<br>Define actions to execute for TV Show events, when the content is playing on the <b>Plex Client (UUID/Name)</b> defined in the 'Player Details' section.<br></br>"
       icon: mdi:television
       collapsed: true
       input:
@@ -322,6 +276,52 @@ blueprint:
           selector:
             action: {}
           default: []
+
+    television_time_settings:
+      name: "TV Show: Time Constraints"
+      icon: mdi:clock-check
+      description: "<br>Choose ONE method to restrict when TV Show Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
+      collapsed: true
+      input:
+        episode_time_filter_enabled:
+          name: Enable Time Constraints
+          description: "Must be ON for any of the filters below to work. If OFF, all TV Show actions run 24/7."
+          default: false
+          selector:
+            boolean: {}
+        episode_use_sun:
+          name: Use Sunset/Sunrise
+          description: "If ON, actions only run 'Below Horizon'. This ignores the Schedule and Manual times below."
+          default: false
+          selector:
+            boolean: {}
+        episode_schedule:
+          name: TV Show Schedule Helper
+          description: "Select a Schedule Helper. If a helper is picked, Manual Times below are ignored."
+          selector:
+            entity:
+              domain: schedule
+          default: []
+        television_manual_header:
+          name: Manual Time Fallback
+          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
+          selector:
+            constant:
+              label: ""
+              value: ""
+          default: ""
+        episode_start_time:
+          name: Start Time
+          description: ""
+          default: "00:00:00"
+          selector:
+            time: {}
+        episode_end_time:
+          name: End Time
+          description: ""
+          default: "23:59:59"
+          selector:
+            time: {}
 
     media_rated_actions:
       name: Media Rated Actions
@@ -410,9 +410,9 @@ blueprint:
           default: []
 
     generic_playback_action:
-      name: Generic Playback Actions
-      description: "These actions will trigger no matter what client is playing back. These can be used for notifying that someone has started a playback on a device somewhere, they should not be confused for when you are trying to trigger actions on a particular client for mood lighting effects."
-      icon: mdi:play-circle
+      name: "Global Server Actions"
+      description: "<br>These actions trigger for <b>ANY</b> client interacting with the server. Use this for server-wide notifications (e.g., 'Someone started a movie') rather than specific room lighting effects.<br></br>"
+      icon: mdi:earth
       collapsed: true
       input:
         generic_playback_started:
@@ -445,6 +445,95 @@ blueprint:
           selector:
             action: {}
           default: []
+
+    plex_client_generic_playback:
+      name: "Plex Client: Generic Actions"
+      description: "<br>Actions that trigger for <b>Plex Client UUID/Name</b>, from the player details section, regardless of the media type (Movie, TV, or Music).<br></br>"
+      icon: mdi:play-network
+      collapsed: true
+      input:
+        plex_client_generic_play_actions:
+          name: Plex Client Playback Started
+          description: "Actions when THIS specific client starts ANY media."
+          selector:
+            action: {}
+          default: []
+        plex_client_generic_resume_mimics_play:
+          name: Plex Client Resume Mimics Play Actions
+          description: "When THIS specific client resumes, execute the same actions as if it starts."
+          selector:
+            boolean: {}
+          default: false
+        plex_client_generic_resume_actions:
+          name: Plex Client Resume Actions
+          description: "Actions when THIS specific client resumes ANY media..<br>**These are not executed if 'Resume Mimics Play Actions' is enabled.**"
+          selector:
+            action: {}
+          default: []
+        plex_client_generic_pause_actions:
+          name: Plex Client Pause Actions
+          description: "Actions when THIS specific client pauses ANY media."
+          selector:
+            action: {}
+          default: []
+        plex_client_generic_stop_actions:
+          name: Plex Client Stop Actions
+          description: "Actions when THIS specific client stops ANY media."
+          selector:
+            action: {}
+          default: []
+        plex_client_generic_scrobble_actions:
+          name: Plex Client Scrobble Actions
+          description: "Actions to perform when THIS specific client triggers a scrobble event."
+          selector:
+            action: {}
+          default: []
+
+    plex_client_generic_time_settings:
+      name: "Plex Client: Generic Time Constraints"
+      icon: mdi:clock-check
+      collapsed: true
+      description: "<br>Choose ONE method to restrict when Plex Client Generic Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
+      input:
+        plex_client_generic_time_filter_enabled:
+          name: Enable Time Constraints
+          description: "If OFF, all actions run 24/7."
+          default: false
+          selector:
+            boolean: {}
+        plex_client_generic_use_sun:
+          name: Use Sunset/Sunrise
+          description: "If ON, ignores the times below and only runs when the sun is down. (Requires the Sun integration to be active)."
+          default: false
+          selector:
+            boolean: {}
+        plex_client_generic_schedule:
+          name: Plex Client Generic Schedule Helper
+          description: "Select a Schedule Helper for complex schedules. If selected, manual times below are ignored."
+          selector:
+            entity:
+              domain: schedule
+          default: []
+        plex_client_generic_manual_header:
+          name: Manual Time Fallback
+          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
+          selector:
+            constant:
+              label: ""
+              value: ""
+          default: ""
+        plex_client_generic_start_time:
+          name: Start Time
+          description: ""
+          default: "00:00:00"
+          selector:
+            time: {}
+        plex_client_generic_end_time:
+          name: End Time
+          description: ""
+          default: "23:59:59"
+          selector:
+            time: {}
 
     server_actions:
       name: Server Owner Actions
@@ -582,10 +671,16 @@ action:
       episode_schedule: !input episode_schedule
       episode_start_time: !input episode_start_time
       episode_end_time: !input episode_end_time
+      plex_client_generic_time_enabled: !input plex_client_generic_time_filter_enabled
+      plex_client_generic_sun_enabled: !input plex_client_generic_use_sun
+      plex_client_generic_schedule: !input plex_client_generic_schedule
+      plex_client_generic_start_time: !input plex_client_generic_start_time
+      plex_client_generic_end_time: !input plex_client_generic_end_time
       movie_resume_mimics_play: !input movie_resume_mimics_play
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
       generic_resume_mimics_play: !input generic_resume_mimics_play
+ 
       trace_count: !input trace_count
 
   - if:
@@ -713,7 +808,57 @@ action:
             value_template:
               "{{ (player_uuid | default('')).lower().strip() in (plex_client_uuid | map('lower') | map('trim') | list) or\n
               (player_title | default('')).lower().strip() in (plex_client | map('lower') | map('trim') | list) }}\n"
+
         sequence:
+          - if:
+              - condition: or
+                conditions:
+                  - condition: template
+                    value_template: "{{ not plex_client_generic_time_enabled }}"
+                  - condition: and
+                    conditions:
+                      - condition: template
+                        value_template: "{{ plex_client_generic_sun_enabled and sun_exists }}"
+                      - condition: state
+                        entity_id: sun.sun
+                        state: "below_horizon"
+                  - condition: template
+                    value_template: "{{ plex_client_generic_schedule != none and plex_client_generic_schedule != [] and is_state(plex_client_generic_schedule, 'on') }}"
+                  - condition: and
+                    conditions:
+                      - condition: template
+                        value_template: "{{ not plex_client_generic_sun_enabled and (plex_client_generic_schedule == none or plex_client_generic_schedule == []) }}"
+                      - condition: template
+                        value_template: >
+                          {% set n = now().strftime('%H:%M:%S') %}
+                          {% if plex_client_generic_start_time <= plex_client_generic_end_time %}
+                            {{ n >= plex_client_generic_start_time and n <= plex_client_generic_end_time }}
+                          {% else %}
+                            {{ n >= plex_client_generic_start_time or n <= plex_client_generic_end_time }}
+                          {% endif %}
+            then:
+              - choose:
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ payload.event == 'media.play' or (payload.event == 'media.resume' and plex_client_generic_resume_mimics_play) }}"
+                    sequence: !input plex_client_generic_play_actions
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ payload.event == 'media.resume' and not plex_client_generic_resume_mimics_play }}"
+                    sequence: !input plex_client_generic_resume_actions
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ payload.event == 'media.pause' }}"
+                    sequence: !input plex_client_generic_pause_actions
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ payload.event == 'media.stop' }}"
+                    sequence: !input plex_client_generic_stop_actions
+                  - conditions:
+                      - condition: template
+                        value_template: "{{ payload.event == 'media.scrobble' }}"
+                    sequence: !input plex_client_generic_scrobble_actions
+
           - choose:
               - conditions:
                   - condition: template
