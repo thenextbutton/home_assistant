@@ -209,14 +209,21 @@ Define these variables to extract specific data from the JSON response:
 
 ```yaml
 variables:
+  # The aspect ratio
   plex_aspect_ratio: >
     {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].aspectRatio }}
-  plex_audio_codec: >
-    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].Part[0].Stream[1].codec }}
-  plex_audio_channels: >
-    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].Part[0].Stream[1].channels }}
-  plex_audio_layout: >
-    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].Part[0].Stream[1].audioChannelLayout }}
+
+  # Find the specific audio stream that is currently "selected"
+  plex_selected_audio: >
+    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].Part[0].Stream 
+       | selectattr('streamType', 'eq', 2) 
+       | selectattr('selected', 'eq', true) 
+       | first | default({}) }}
+
+  # Extract details from that selected stream
+  plex_audio_codec: "{{ plex_selected_audio.codec | default('unknown') }}"
+  plex_audio_channels: "{{ plex_selected_audio.channels | default('unknown') }}"
+  plex_audio_layout: "{{ plex_selected_audio.audioChannelLayout | default('unknown') }}"
 ```
 
 ### 3. Use Case: Context-Aware Actions
