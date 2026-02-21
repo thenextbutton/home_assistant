@@ -27,7 +27,7 @@ Click the badge below to easily import the blueprint directly into your Home Ass
     * [5. Configure Automation Actions](#5-configure-automation-actions)
 * [Accessing Blueprint Data / Payload Structure](#-accessing-blueprint-data--payload-structure)
 * [Example Automation Output / Actions](#-example-automation-output--actions)
-* [Advanced: Deep Metadata Integration](#-advanced-deep-metadata-integration)
+* [Advanced: Real-Time Session & Metadata Integration](#-advanced-real-time-session--metadata-integration)
 * [Troubleshooting & Tips](#-troubleshooting--tips)
 * [Contributing](#-contributing)
 * [License](#-license)
@@ -178,86 +178,91 @@ data:
 
 ---
 
-## ⚡ Advanced: Deep Metadata Integration
-Standard Plex webhooks are great for playback states, but they lack technical details like **Aspect Ratio**, **Audio Codecs**, or **Channels**. You can "pull" this data by having Home Assistant query the Plex API using the `ratingKey`.
+## ⚡ Advanced: Real-Time Session & Metadata Integration
+
+While standard webhooks tell you a movie has started, they don't tell you if it's being **transcoded** or what the **real-time aspect ratio** is. By querying the Plex `/status/sessions` endpoint, we can extract live data specific to the player that triggered the webhook.
 
 ### 1. Configure the REST Command
-Add the following to your `configuration.yaml`. Replace `<plex_server_ip>` with your local IP and `<plex_token_id>` with your Plex Authentication Token.
+Add this to your `configuration.yaml`. This command fetches all active sessions on your server. Replace `<plex_server_ip>` and `<plex_token_id>` with your specific details.
 
 ```yaml
 rest_command:
-  plex_get_full_details:
-    url: "http://<plex_server_ip>:32400/library/metadata/{{ rating_key }}?X-Plex-Token=<plex_token_id>"
+  plex_get_session_details:
+    url: "http://<plex_server_ip>:32400/status/sessions?X-Plex-Token=<plex_token_id>"
     method: GET
     headers:
       Accept: "application/json"
 ```
 
 ### 2. Implementation in Automation Actions
-Within your blueprint automation, call the command and capture the response into a variable.
+Because this data is live, we call the API and then use a series of variables to "chain" the data processing. This ensures we find the session matching the specific client (UUID) that triggered the webhook.
 
-**The Action:**
+**The Action & Variables:**
 ```yaml
-action: rest_command.plex_get_full_details
-data:
-  rating_key: "{{ payload.Metadata.ratingKey }}"
-response_variable: plex_api_response
+sequence:
+  - action: rest_command.plex_get_session_details
+    metadata: {}
+    data: {}
+    response_variable: plex_api_response
+  - variables:
+      all_sessions: "{{ plex_api_response.content.MediaContainer.Metadata | default([]) }}"
+      active_session: >
+        {{ all_sessions | selectattr('Player.machineIdentifier', 'eq',
+        payload.Player.uuid) | first | default({}) }}
+      media_block: "{{ active_session.get('Media', [{}])[0] }}"
+      transcode_block: "{{ active_session.get('TranscodeSession', {}) }}"
+      realtime_aspect_ratio: "{{ media_block.get('aspectRatio', 'unknown') }}"
+      audio_decision: "{{ media_block.get('Part', [{}])[0].get('decision', 'unknown') }}"
+      realtime_audio_channels: >
+        {% if transcode_block %}{{ transcode_block.get('audioChannels', 2) }}{%
+        else %}{{ media_block.get('audioChannels', 2) }}{% endif %}
+      realtime_audio_codec: >
+        {% if transcode_block %}{{ transcode_block.get('audioCodec', 'aac') }}{%
+        else %}{{ media_block.get('audioCodec', 'unknown') }}{% endif %}
+      primary_genre: "{{ active_session.get('Genre', [{}])[0].get('tag', 'None') }}"
+      collections: "{{ active_session.get('Collection', []) | map(attribute='tag') | list }}"
+      content_rating: "{{ active_session.get('contentRating', 'NR') }}"
 ```
 
-**The Variables:**
-Define these variables to extract specific data from the JSON response:
+### 3. Use Case: Real-Time AV Sync
+With these variables, you can automate your home theater hardware based on the stream properties.
 
-```yaml
-variables:
-  # The aspect ratio
-  plex_aspect_ratio: >
-    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].aspectRatio }}
-
-  # Find the specific audio stream that is currently "selected"
-  plex_selected_audio: >
-    {{ plex_api_response.content.MediaContainer.Metadata[0].Media[0].Part[0].Stream 
-       | selectattr('streamType', 'eq', 2) 
-       | selectattr('selected', 'eq', true) 
-       | first | default({}) }}
-
-  # Extract details from that selected stream
-  plex_audio_codec: "{{ plex_selected_audio.codec | default('unknown') }}"
-  plex_audio_channels: "{{ plex_selected_audio.channels | default('unknown') }}"
-  plex_audio_layout: "{{ plex_selected_audio.audioChannelLayout | default('unknown') }}"
-```
-
-### 3. Use Case: Context-Aware Actions
-Now you can use a `choose` block to trigger specific scenes based on the media format:
-
+**Example: Automated Screen Masking & Audio Mode**
 ```yaml
 choose:
+  # If the movie is in CinemaScope (2.35/2.39), adjust the screen masks
   - conditions:
       - condition: template
-        value_template: "{{ plex_aspect_ratio == 1.85 }}"
+        value_template: "{{ realtime_aspect_ratio in ['2.35', '2.39'] }}"
     sequence:
-      - action: persistent_notification.create
-        metadata: {}
+      - action: cover.set_cover_position
+        target:
+          entity_id: cover.screen_masks
         data:
-          message: "aspect ratio: 1.85"
-          title: "Ratio: 1.85"
+          position: 0
+
+  # If Plex is transcoding to Stereo, set the receiver to 'All Channel Stereo'
   - conditions:
       - condition: template
-        value_template: "{{ plex_aspect_ratio == 2.35 }}"
+        value_template: "{{ realtime_audio_channels == 2 }}"
     sequence:
-      - action: persistent_notification.create
-        metadata: {}
+      - action: media_player.select_source
+        target:
+          entity_id: media_player.receiver
         data:
-          message: "aspect ratio: 2.35"
-          title: "Ratio: 2.35"
+          source: "All Channel Stereo"
+
+  # If it's a Horror movie, set the lights to a dim Deep Red
   - conditions:
       - condition: template
-        value_template: "{{ plex_aspect_ratio == 1.78 }}"
+        value_template: "{{ primary_genre == 'Horror' }}"
     sequence:
-      - action: persistent_notification.create
-        metadata: {}
+      - action: light.turn_on
+        target:
+          entity_id: light.theater_leds
         data:
-          message: "aspect ratio: 1.78"
-          title: "Ratio: 1.78"
+          color_name: "darkred"
+          brightness_pct: 5
 ```
 
 ---
