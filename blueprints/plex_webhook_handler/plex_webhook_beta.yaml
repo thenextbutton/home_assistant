@@ -676,6 +676,7 @@ action:
       plex_client_generic_schedule: !input plex_client_generic_schedule
       plex_client_generic_start_time: !input plex_client_generic_start_time
       plex_client_generic_end_time: !input plex_client_generic_end_time
+      plex_client_generic_resume_mimics_play: !input plex_client_generic_resume_mimics_play
       movie_resume_mimics_play: !input movie_resume_mimics_play
       track_resume_mimics_play: !input track_resume_mimics_play
       episode_resume_mimics_play: !input episode_resume_mimics_play
