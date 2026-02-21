@@ -1,6 +1,6 @@
 id: jellyfin_webhook_handler_v2_beta
 blueprint:
-  name: Jellyfin Webhook Handler Beta (v2.4.30)
+  name: Jellyfin Webhook Handler Beta (v2.5.00)
   homeassistant:
     min_version: "2024.6.0"
   description: |
@@ -22,14 +22,13 @@ blueprint:
     - '{{ media_played_percentange }}': 008.8% (format 000.0%)
     - '{{ media_left_precentage }}': 091.2% (format 000.0%)
 
-
   domain: automation
-  
+
   source_url: https://github.com/thenextbutton/home_assistant/blob/main/blueprints/jellyfin_webhook_handler_v2/jellyfin_webhook_beta_v2.yaml
-  
+
   input:
     webhook_id:
-      name: Webhook ID
+      name: "Webhook ID"
       description: |
         Enter the unique ID for your webhook.
         Configure Jellyfin to send notifications to:
@@ -57,7 +56,7 @@ blueprint:
             - domain: input_boolean
 
     jellyfin_player_details:
-      name: Player Details
+      name: "Player Details"
       description: Jellyfin client name or ID. ID takes precedence if both are provided.
       icon: mdi:devices
       collapsed: false
@@ -90,7 +89,7 @@ blueprint:
           default: false
 
     movie_actions:
-      name: Movie Actions
+      name: "Movie: Actions"
       description: Configure actions for Jellyfin Movie events.
       icon: mdi:movie
       collapsed: true
@@ -151,8 +150,54 @@ blueprint:
                 title: Movie Progress
                 notification_id: "{{ payload.user_name }}_movie_jellyfin_playbackprogress"
 
+    movie_time_settings:
+      name: "Movie: Time Constraints"
+      description: "<br>Choose ONE method to restrict when Movie Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
+      icon: mdi:clock-check
+      collapsed: true
+      input:
+        movie_time_filter_enabled:
+          name: Enable Time Constraints
+          description: "Must be ON for any of the filters below to work. If OFF, actions run 24/7."
+          default: false
+          selector:
+            boolean: {}
+        movie_use_sun:
+          name: Use Sunset/Sunrise
+          description: "If ON, actions only run 'Below Horizon'. This ignores the Schedule and Manual times below."
+          default: false
+          selector:
+            boolean: {}
+        movie_schedule:
+          name: Movie Schedule Helper
+          description: "Select a Schedule Helper. If a helper is picked, Manual Times below are ignored."
+          selector:
+            entity:
+              domain: schedule
+          default: []
+        movie_manual_header:
+          name: Manual Time Fallback
+          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
+          selector:
+            constant:
+              label: ""
+              value: ""
+          default: ""
+        movie_start_time:
+          name: Start Time
+          description: ""
+          default: "00:00:00"
+          selector:
+            time: {}
+        movie_end_time:
+          name: End Time
+          description: ""
+          default: "23:59:59"
+          selector:
+            time: {}
+
     television_actions:
-      name: TV Show Actions
+      name: "TV Show: Actions"
       description: Configure actions for Jellyfin TV Show events.
       icon: mdi:television
       collapsed: true
@@ -214,8 +259,54 @@ blueprint:
                 title: TV Episode Progress
                 notification_id: "{{ payload.user_name }}_epsiode_jellyfin_playbackprogress"
 
+    television_time_settings:
+      name: "TV Show: Time Constraints"
+      icon: mdi:clock-check
+      description: "<br>Choose ONE method to restrict when TV Show Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
+      collapsed: true
+      input:
+        episode_time_filter_enabled:
+          name: Enable Time Constraints
+          description: "Must be ON for any of the filters below to work. If OFF, all TV Show actions run 24/7."
+          default: false
+          selector:
+            boolean: {}
+        episode_use_sun:
+          name: Use Sunset/Sunrise
+          description: "If ON, actions only run 'Below Horizon'. This ignores the Schedule and Manual times below."
+          default: false
+          selector:
+            boolean: {}
+        episode_schedule:
+          name: TV Show Schedule Helper
+          description: "Select a Schedule Helper. If a helper is picked, Manual Times below are ignored."
+          selector:
+            entity:
+              domain: schedule
+          default: []
+        television_manual_header:
+          name: Manual Time Fallback
+          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
+          selector:
+            constant:
+              label: ""
+              value: ""
+          default: ""
+        episode_start_time:
+          name: Start Time
+          description: ""
+          default: "00:00:00"
+          selector:
+            time: {}
+        episode_end_time:
+          name: End Time
+          description: ""
+          default: "23:59:59"
+          selector:
+            time: {}
+
     music_actions:
-      name: Music Actions
+      name: "Music: Actions"
       description: Configure actions for Jellyfin Music events.
       icon: mdi:music
       collapsed: true
@@ -275,6 +366,52 @@ blueprint:
                   total: {{ media_total_time }}
                 title: Music Progress
                 notification_id: "{{ payload.user_name }}_music_jellyfin_playbackprogress"
+
+    music_time_settings:
+      name: "Music: Time Constraints"
+      icon: mdi:clock-check
+      collapsed: true
+      description: "<br>Choose ONE method to restrict when Music Actions run.<br>If 'Sunset' is ON, it overrides everything. If a 'Schedule Helper' is picked, it overrides the Manual Times.<br></br>"
+      input:
+        audio_time_filter_enabled:
+          name: Enable Time Constraints
+          description: "Must be ON for any of the filters below to work. If OFF, actions run 24/7."
+          default: false
+          selector:
+            boolean: {}
+        audio_use_sun:
+          name: Use Sunset/Sunrise
+          description: "If ON, actions only run 'Below Horizon'. This ignores the Schedule and Manual times below."
+          default: false
+          selector:
+            boolean: {}
+        audio_schedule:
+          name: Music Schedule Helper
+          description: "Select a Schedule Helper. If a helper is picked, Manual Times below are ignored."
+          selector:
+            entity:
+              domain: schedule
+          default: []
+        audio_manual_header:
+          name: Manual Time Fallback
+          description: "Settings below only apply if Sunset is OFF and no Schedule is selected."
+          selector:
+            constant:
+              label: ""
+              value: ""
+          default: ""
+        audio_start_time:
+          name: Start Time
+          description: ""
+          default: "00:00:00"
+          selector:
+            time: {}
+        audio_end_time:
+          name: End Time
+          description: ""
+          default: "23:59:59"
+          selector:
+            time: {}
 
     securtity_actions:
       name: Security Events
@@ -506,6 +643,7 @@ action:
         {% endif %}
       player_id: "{{ payload.device_id if 'device_id' in payload else None }}"
       player_title: "{{ payload.device_name if 'device_name' in payload else None }}"
+      sun_exists: "{{ states('sun.sun') not in ['unknown', 'unavailable', None]}}"
       jellyfin_client_retrieve: !input jellyfin_client_retrieve
       jellyfin_client: !input jellyfin_client
       jellyfin_client_id: !input jellyfin_client_id
@@ -517,7 +655,21 @@ action:
       movie_progress_enabled: !input movie_progress_enabled
       episode_progress_enabled: !input episode_progress_enabled
       audio_progress_enabled: !input audio_progress_enabled
-
+      movie_time_enabled: !input movie_time_filter_enabled
+      movie_sun_enabled: !input movie_use_sun
+      movie_schedule: !input movie_schedule
+      movie_start_time: !input movie_start_time
+      movie_end_time: !input movie_end_time
+      audio_time_enabled: !input audio_time_filter_enabled
+      audio_sun_enabled: !input audio_use_sun
+      audio_schedule: !input audio_schedule
+      audio_start_time: !input audio_start_time
+      audio_end_time: !input audio_end_time
+      episode_time_enabled: !input episode_time_filter_enabled
+      episode_sun_enabled: !input episode_use_sun
+      episode_schedule: !input episode_schedule
+      episode_start_time: !input episode_start_time
+      episode_end_time: !input episode_end_time
 
   - if:
       - condition: template
@@ -689,7 +841,7 @@ action:
             then:
               - variables:
                   current_ticks_value: "{{ payload.playback_position_ticks | int(0) }}"
-                  total_ticks_value: "{{ payload.runtime_ticks | int(0) }}"
+                  total_ticks_value: "{{ payload.runtime_ticks | int(1) }}"
 
                   media_playback_time: >
                     {% set ticks = current_ticks_value | int %} {# Cast to int for calculation #}
@@ -773,32 +925,116 @@ action:
                     value_template: "{{ payload.notification_type == 'PlaybackStart' }}"
                 sequence:
                   - choose:
+                      # --- MOVIE PLAY ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Movie' }}"
                         sequence:
                           - parallel:
-                              - sequence: !input movie_play_actions
+                              - if:
+                                  - condition: or
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ not movie_time_enabled }}"
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ movie_sun_enabled and sun_exists }}"
+                                          - condition: state
+                                            entity_id: sun.sun
+                                            state: below_horizon
+                                      - condition: template
+                                        value_template: >-
+                                          {{ movie_schedule != none and movie_schedule != [] and is_state(movie_schedule, 'on') }}
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: >-
+                                              {{ not movie_sun_enabled and (movie_schedule == none or movie_schedule == []) }}
+                                          - condition: template
+                                            value_template: >
+                                              {% set n = now().strftime('%H:%M:%S') %} {% if movie_start_time <= movie_end_time %}
+                                                {{ n >= movie_start_time and n <= movie_end_time }}
+                                              {% else %}
+                                                {{ n >= movie_start_time or n <= movie_end_time }}
+                                              {% endif %}
+                                then: !input movie_play_actions
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input jellyfin_ispaused_helper
 
+                      # --- EPISODE PLAY ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Episode' }}"
                         sequence:
                           - parallel:
-                              - sequence: !input episode_play_actions
+                              - if:
+                                  - condition: or
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ not episode_time_enabled }}"
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ episode_sun_enabled and sun_exists }}"
+                                          - condition: state
+                                            entity_id: sun.sun
+                                            state: below_horizon
+                                      - condition: template
+                                        value_template: >-
+                                          {{ episode_schedule != none and episode_schedule != [] and is_state(episode_schedule, 'on') }}
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: >-
+                                              {{ not episode_sun_enabled and (episode_schedule == none or episode_schedule == []) }}
+                                          - condition: template
+                                            value_template: >
+                                              {% set n = now().strftime('%H:%M:%S') %} {% if episode_start_time <= episode_end_time %}
+                                                {{ n >= episode_start_time and n <= episode_end_time }}
+                                              {% else %}
+                                                {{ n >= episode_start_time or n <= episode_end_time }}
+                                              {% endif %}
+                                then: !input episode_play_actions
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input jellyfin_ispaused_helper
 
+                      # --- AUDIO PLAY ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Audio' }}"
                         sequence:
                           - parallel:
-                              - sequence: !input audio_play_actions
+                              - if:
+                                  - condition: or
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ not audio_time_enabled }}"
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ audio_sun_enabled and sun_exists }}"
+                                          - condition: state
+                                            entity_id: sun.sun
+                                            state: below_horizon
+                                      - condition: template
+                                        value_template: >-
+                                          {{ audio_schedule != none and audio_schedule != [] and is_state(audio_schedule, 'on') }}
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: >-
+                                              {{ not audio_sun_enabled and (audio_schedule == none or audio_schedule == []) }}
+                                          - condition: template
+                                            value_template: >
+                                              {% set n = now().strftime('%H:%M:%S') %} {% if audio_start_time <= audio_end_time %}
+                                                {{ n >= audio_start_time and n <= audio_end_time }}
+                                              {% else %}
+                                                {{ n >= audio_start_time or n <= audio_end_time }}
+                                              {% endif %}
+                                then: !input audio_play_actions
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input jellyfin_ispaused_helper
@@ -809,32 +1045,116 @@ action:
                     value_template: "{{ payload.notification_type == 'PlaybackStop' }}"
                 sequence:
                   - choose:
+                      # --- MOVIE STOP ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Movie' }}"
                         sequence:
                           - parallel:
-                              - sequence: !input movie_stop_actions
+                              - if:
+                                  - condition: or
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ not movie_time_enabled }}"
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ movie_sun_enabled and sun_exists }}"
+                                          - condition: state
+                                            entity_id: sun.sun
+                                            state: below_horizon
+                                      - condition: template
+                                        value_template: >-
+                                          {{ movie_schedule != none and movie_schedule != [] and is_state(movie_schedule, 'on') }}
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: >-
+                                              {{ not movie_sun_enabled and (movie_schedule == none or movie_schedule == []) }}
+                                          - condition: template
+                                            value_template: >
+                                              {% set n = now().strftime('%H:%M:%S') %} {% if movie_start_time <= movie_end_time %}
+                                                {{ n >= movie_start_time and n <= movie_end_time }}
+                                              {% else %}
+                                                {{ n >= movie_start_time or n <= movie_end_time }}
+                                              {% endif %}
+                                then: !input movie_stop_actions
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input jellyfin_ispaused_helper
 
+                      # --- EPISODE STOP ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Episode' }}"
                         sequence:
                           - parallel:
-                              - sequence: !input episode_stop_actions
+                              - if:
+                                  - condition: or
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ not episode_time_enabled }}"
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ episode_sun_enabled and sun_exists }}"
+                                          - condition: state
+                                            entity_id: sun.sun
+                                            state: below_horizon
+                                      - condition: template
+                                        value_template: >-
+                                          {{ episode_schedule != none and episode_schedule != [] and is_state(episode_schedule, 'on') }}
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: >-
+                                              {{ not episode_sun_enabled and (episode_schedule == none or episode_schedule == []) }}
+                                          - condition: template
+                                            value_template: >
+                                              {% set n = now().strftime('%H:%M:%S') %} {% if episode_start_time <= episode_end_time %}
+                                                {{ n >= episode_start_time and n <= episode_end_time }}
+                                              {% else %}
+                                                {{ n >= episode_start_time or n <= episode_end_time }}
+                                              {% endif %}
+                                then: !input episode_stop_actions
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input jellyfin_ispaused_helper
 
+                      # --- AUDIO STOP ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Audio' }}"
                         sequence:
                           - parallel:
-                              - sequence: !input audio_stop_actions
+                              - if:
+                                  - condition: or
+                                    conditions:
+                                      - condition: template
+                                        value_template: "{{ not audio_time_enabled }}"
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: "{{ audio_sun_enabled and sun_exists }}"
+                                          - condition: state
+                                            entity_id: sun.sun
+                                            state: below_horizon
+                                      - condition: template
+                                        value_template: >-
+                                          {{ audio_schedule != none and audio_schedule != [] and is_state(audio_schedule, 'on') }}
+                                      - condition: and
+                                        conditions:
+                                          - condition: template
+                                            value_template: >-
+                                              {{ not audio_sun_enabled and (audio_schedule == none or audio_schedule == []) }}
+                                          - condition: template
+                                            value_template: >
+                                              {% set n = now().strftime('%H:%M:%S') %} {% if audio_start_time <= audio_end_time %}
+                                                {{ n >= audio_start_time and n <= audio_end_time }}
+                                              {% else %}
+                                                {{ n >= audio_start_time or n <= audio_end_time }}
+                                              {% endif %}
+                                then: !input audio_stop_actions
                               - service: input_boolean.turn_off
                                 target:
                                   entity_id: !input jellyfin_ispaused_helper
@@ -845,6 +1165,7 @@ action:
                     value_template: "{{ payload.notification_type == 'PlaybackProgress' }}"
                 sequence:
                   - choose:
+                      # --- MOVIE PROGRESS ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Movie' }}"
@@ -852,30 +1173,55 @@ action:
                           - choose:
                               - conditions:
                                   - condition: template
-                                    value_template: >
-                                      {{ payload.is_paused == "True" and states(jellyfin_ispaused_helper) == 'off' }}
+                                    value_template: "{{ payload.is_paused == 'True' and states(jellyfin_ispaused_helper) == 'off' }}"
                                 sequence:
-                                  - service: input_boolean.turn_on
+                                  - action: input_boolean.turn_on
                                     target:
                                       entity_id: !input jellyfin_ispaused_helper
                                   - sequence: !input movie_paused_actions
                               - conditions:
                                   - condition: template
-                                    value_template: >
-                                      {{ payload.is_paused == "False" and states(jellyfin_ispaused_helper) == 'on' }}
+                                    value_template: "{{ payload.is_paused == 'False' and states(jellyfin_ispaused_helper) == 'on' }}"
                                 sequence:
-                                  - service: input_boolean.turn_off
-                                    target:
-                                      entity_id: !input jellyfin_ispaused_helper
-                                  - choose:
-                                      - conditions:
-                                          - condition: template
-                                            value_template: "{{ movie_resume_mimics_play }}"
-                                        sequence:
-                                          - sequence: !input movie_play_actions
-                                    default:
-                                      - sequence: !input movie_resume_actions
+                                  - parallel:
+                                      - action: input_boolean.turn_off
+                                        target:
+                                          entity_id: !input jellyfin_ispaused_helper
+                                      - if:
+                                          - condition: or
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ not movie_time_enabled }}"
+                                              - condition: and
+                                                conditions:
+                                                  - condition: template
+                                                    value_template: "{{ movie_sun_enabled and sun_exists }}"
+                                                  - condition: state
+                                                    entity_id: sun.sun
+                                                    state: below_horizon
+                                              - condition: template
+                                                value_template: "{{ movie_schedule != none and movie_schedule != [] and is_state(movie_schedule, 'on') }}"
+                                              - condition: and
+                                                conditions:
+                                                  - condition: template
+                                                    value_template: "{{ not movie_sun_enabled and (movie_schedule == none or movie_schedule == []) }}"
+                                                  - condition: template
+                                                    value_template: >
+                                                      {% set n = now().strftime('%H:%M:%S') %} 
+                                                      {% if movie_start_time <= movie_end_time %}
+                                                        {{ n >= movie_start_time and n <= movie_end_time }}
+                                                      {% else %}
+                                                        {{ n >= movie_start_time or n <= movie_end_time }}
+                                                      {% endif %}
+                                        then:
+                                          - choose:
+                                              - conditions:
+                                                  - condition: template
+                                                    value_template: "{{ movie_resume_mimics_play }}"
+                                                sequence: !input movie_play_actions
+                                            default: !input movie_resume_actions
 
+                      # --- EPISODE PROGRESS ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Episode' }}"
@@ -883,30 +1229,55 @@ action:
                           - choose:
                               - conditions:
                                   - condition: template
-                                    value_template: >
-                                      {{ payload.is_paused == "True" and states(jellyfin_ispaused_helper) == 'off' }}
+                                    value_template: "{{ payload.is_paused == 'True' and states(jellyfin_ispaused_helper) == 'off' }}"
                                 sequence:
-                                  - service: input_boolean.turn_on
+                                  - action: input_boolean.turn_on
                                     target:
                                       entity_id: !input jellyfin_ispaused_helper
                                   - sequence: !input episode_paused_actions
                               - conditions:
                                   - condition: template
-                                    value_template: >
-                                      {{ payload.is_paused == "False" and states(jellyfin_ispaused_helper) == 'on' }}
+                                    value_template: "{{ payload.is_paused == 'False' and states(jellyfin_ispaused_helper) == 'on' }}"
                                 sequence:
-                                  - service: input_boolean.turn_off
-                                    target:
-                                      entity_id: !input jellyfin_ispaused_helper
-                                  - choose:
-                                      - conditions:
-                                          - condition: template
-                                            value_template: "{{ episode_resume_mimics_play }}"
-                                        sequence:
-                                          - sequence: !input episode_play_actions
-                                    default:
-                                      - sequence: !input episode_resume_actions
+                                  - parallel:
+                                      - action: input_boolean.turn_off
+                                        target:
+                                          entity_id: !input jellyfin_ispaused_helper
+                                      - if:
+                                          - condition: or
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ not episode_time_enabled }}"
+                                              - condition: and
+                                                conditions:
+                                                  - condition: template
+                                                    value_template: "{{ episode_sun_enabled and sun_exists }}"
+                                                  - condition: state
+                                                    entity_id: sun.sun
+                                                    state: below_horizon
+                                              - condition: template
+                                                value_template: "{{ episode_schedule != none and episode_schedule != [] and is_state(episode_schedule, 'on') }}"
+                                              - condition: and
+                                                conditions:
+                                                  - condition: template
+                                                    value_template: "{{ not episode_sun_enabled and (episode_schedule == none or episode_schedule == []) }}"
+                                                  - condition: template
+                                                    value_template: >
+                                                      {% set n = now().strftime('%H:%M:%S') %} 
+                                                      {% if episode_start_time <= episode_end_time %}
+                                                        {{ n >= episode_start_time and n <= episode_end_time }}
+                                                      {% else %}
+                                                        {{ n >= episode_start_time or n <= episode_end_time }}
+                                                      {% endif %}
+                                        then:
+                                          - choose:
+                                              - conditions:
+                                                  - condition: template
+                                                    value_template: "{{ episode_resume_mimics_play }}"
+                                                sequence: !input episode_play_actions
+                                            default: !input episode_resume_actions
 
+                      # --- AUDIO PROGRESS ---
                       - conditions:
                           - condition: template
                             value_template: "{{ payload.item_type == 'Audio' }}"
@@ -914,29 +1285,53 @@ action:
                           - choose:
                               - conditions:
                                   - condition: template
-                                    value_template: >
-                                      {{ payload.is_paused == "True" and states(jellyfin_ispaused_helper) == 'off' }}
+                                    value_template: "{{ payload.is_paused == 'True' and states(jellyfin_ispaused_helper) == 'off' }}"
                                 sequence:
-                                  - service: input_boolean.turn_on
+                                  - action: input_boolean.turn_on
                                     target:
                                       entity_id: !input jellyfin_ispaused_helper
                                   - sequence: !input audio_paused_actions
                               - conditions:
                                   - condition: template
-                                    value_template: >
-                                      {{ payload.is_paused == "False" and states(jellyfin_ispaused_helper) == 'on' }}
+                                    value_template: "{{ payload.is_paused == 'False' and states(jellyfin_ispaused_helper) == 'on' }}"
                                 sequence:
-                                  - service: input_boolean.turn_off
-                                    target:
-                                      entity_id: !input jellyfin_ispaused_helper
-                                  - choose:
-                                      - conditions:
-                                          - condition: template
-                                            value_template: "{{ audio_resume_mimics_play }}"
-                                        sequence:
-                                          - sequence: !input audio_play_actions
-                                    default:
-                                      - sequence: !input audio_resume_actions
+                                  - parallel:
+                                      - action: input_boolean.turn_off
+                                        target:
+                                          entity_id: !input jellyfin_ispaused_helper
+                                      - if:
+                                          - condition: or
+                                            conditions:
+                                              - condition: template
+                                                value_template: "{{ not audio_time_enabled }}"
+                                              - condition: and
+                                                conditions:
+                                                  - condition: template
+                                                    value_template: "{{ audio_sun_enabled and sun_exists }}"
+                                                  - condition: state
+                                                    entity_id: sun.sun
+                                                    state: below_horizon
+                                              - condition: template
+                                                value_template: "{{ audio_schedule != none and audio_schedule != [] and is_state(audio_schedule, 'on') }}"
+                                              - condition: and
+                                                conditions:
+                                                  - condition: template
+                                                    value_template: "{{ not audio_sun_enabled and (audio_schedule == none or audio_schedule == []) }}"
+                                                  - condition: template
+                                                    value_template: >
+                                                      {% set n = now().strftime('%H:%M:%S') %} 
+                                                      {% if audio_start_time <= audio_end_time %}
+                                                        {{ n >= audio_start_time and n <= audio_end_time }}
+                                                      {% else %}
+                                                        {{ n >= audio_start_time or n <= audio_end_time }}
+                                                      {% endif %}
+                                        then:
+                                          - choose:
+                                              - conditions:
+                                                  - condition: template
+                                                    value_template: "{{ audio_resume_mimics_play }}"
+                                                sequence: !input audio_play_actions
+                                            default: !input audio_resume_actions
 
 trace:
   stored_traces: !input trace_count
