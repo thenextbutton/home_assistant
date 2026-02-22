@@ -27,8 +27,8 @@ Click the badge below to easily import the blueprint directly into your Home Ass
     * [6. Create Your Automation](#6-create-your-automation)
         * [Determine Jellyfin Client ID/Name](#determine-jellyfin-client-idname)
     * [7. Configure Automation Actions](#7-configure-automation-actions)
+    * [8. Configuring Time Constraints (v2.5+)](#8-configuring-time-constraints)
 * [Accessing Blueprint Data / Payload Structure](#-accessing-blueprint-data--payload-structure)
-* [Example Automation Output / Actions](#-example-automation-output--actions)
 * [Troubleshooting & Tips](#-troubleshooting--tips)
 * [Contributing](#-contributing)
 * [License](#-license)
@@ -162,7 +162,9 @@ If you haven't already, import the **Jellyfin Webhook Handler v2** blueprint int
     4.  As long as you've set up the webhook correctly in Jellyfin, now **play any media on Jellyfin** using the client you wish to identify.
     5.  Within Home Assistant, you will receive a persistent notification (like the example below) displaying the client's exact name and ID.
 
-    ![image](https://github.com/user-attachments/assets/d8ba6c65-e508-4109-b101-26628f7cd775)
+    <img width="68" height="184" alt="image" src="https://github.com/user-attachments/assets/2bf18684-f1a7-4e8b-a165-c2c2a76254b5" /><br>
+    <img width="492" height="325" alt="image" src="https://github.com/user-attachments/assets/196e8810-09f3-4cb2-8d9c-5faa9ff54cd8" />
+
 
     6.  Copy either the **Client ID** or the **Client Name** and enter it into the blueprint’s **Jellyfin Client ID / Name** field.
 
@@ -172,7 +174,14 @@ If you haven't already, import the **Jellyfin Webhook Handler v2** blueprint int
 
 ### 7. Configure Automation Actions
 
-Finally, define the **actions** you want your Home Assistant automation to perform when the blueprint triggers. The blueprint will expose various Jellyfin events (e.g., `media_play`, `media_pause`, `media_stop`, `media_progress`, `item_added`, `user_login`) that you can use to design your automation logic.
+Define the **actions** you want your Home Assistant automation to perform when the blueprint triggers. The blueprint will expose various Jellyfin events (e.g., `media_play`, `media_pause`, `media_stop`, `media_progress`, `item_added`, `user_login`) that you can use to design your automation logic.
+
+### 8. Configuring Time Constraints
+The blueprint includes a "Time Constraints" section for Movies, TV Shows, and Music. The logic follows this priority:
+1. **Enable Time Constraints:** This must be **ON** for any filters to apply. If **OFF**, actions run 24/7.
+2. **Sunset/Sunrise:** If enabled, actions only run when the sun is **Below Horizon**. This overrides schedules and manual times.
+3. **Schedule Helper:** If a Home Assistant Schedule entity is selected, it overrides Manual Times.
+4. **Manual Time Fallback:** If Sunset is OFF and no Schedule is selected, the Start/End times defined in the blueprint are used.
 
 ---
 
